@@ -1,6 +1,6 @@
-# server.py - ttan~OBF ULTIMATE EDITION v8.0
-# Anti-Debug, Anti-VM, Anti-LLM, Control Flow Flattening
-# Multi-Language Obfuscator - FIXED ALL ERRORS
+#!/bin/python3
+# Shenron Ultimate Pro - Backend v5.0 (Production Grade)
+# ULTIMATE OBFUSCATOR & ANTI-ANALYSIS ENGINE
 
 import ast
 import base64
@@ -8,37 +8,26 @@ import zlib
 import random
 import string
 import hashlib
-import hmac
-import logging
-import os
-import sys
 import time
+import sys
+import os
 import json
-import re
-import subprocess
-import tempfile
-import shutil
-import platform
+import sqlite3
+import threading
+from datetime import datetime, timedelta
 from pathlib import Path
-from datetime import datetime
-from collections import defaultdict
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request
+from typing import Optional
+
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response, HTMLResponse
+from fastapi.responses import Response, HTMLResponse, JSONResponse
 import uvicorn
 
-# ========== CẤU HÌNH ==========
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("ttan-obf")
+# ========== CẤU HÌNH HỆ THỐNG ==========
+ADMIN_SECRET = os.getenv("SHENRON_ADMIN_SECRET", "SHENRON_SECURE_ADMIN_2026_KEY")
+DATABASE_FILE = "shenron_keys.db"
 
-HOST = os.getenv("HOST", "0.0.0.0")
-PORT = int(os.getenv("PORT", "8000"))
-MAX_FILE_SIZE = int(os.getenv("MAX_FILE_SIZE", 5 * 1024 * 1024))  # 5MB
-DEFAULT_LEVEL = os.getenv("DEFAULT_LEVEL", "ultimate")
-SECRET_KEY = os.getenv("HMAC_SECRET", "ttan_ultimate_secret_key_2026")
-API_KEY = os.getenv("API_KEY", "")
-
-app = FastAPI(title="ttan~OBF Ultimate Engine", version="8.0.0")
+app = FastAPI(title="Shenron Ultimate Pro Engine", version="5.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -47,721 +36,244 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ========== RATE LIMITING ==========
-request_counts = defaultdict(list)
+# ========== THREAD-SAFE DATABASE SYSTEM ==========
+class KeyDatabase:
+    def __init__(self, db_path: str):
+        self.db_path = db_path
+        self._lock = threading.Lock()
+        self._init_db()
 
-def rate_limit(ip: str, limit: int = 20, window: int = 60):
-    now = time.time()
-    request_counts[ip] = [t for t in request_counts[ip] if now - t < window]
-    if len(request_counts[ip]) >= limit:
-        raise HTTPException(status_code=429, detail="Quá nhiều yêu cầu, vui lòng thử lại sau.")
-    request_counts[ip].append(now)
+    def _get_connection(self):
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = sqlite3.Row
+        return conn
 
-# ========== FIX: SAFE BYTE ENCODING ==========
-def safe_bytes(data):
-    """Đảm bảo dữ liệu là bytes hợp lệ (0-255)"""
-    if isinstance(data, str):
-        data = data.encode('utf-8', errors='ignore')
-    return bytes([b & 0xFF for b in data])
+    def _init_db(self):
+        with self._lock, self._get_connection() as conn:
+            conn.execute('''
+                CREATE TABLE IF NOT EXISTS keys (
+                    key_str TEXT PRIMARY KEY,
+                    created TEXT,
+                    expires TEXT,
+                    max_uses INTEGER,
+                    uses INTEGER,
+                    key_type TEXT
+                )
+            ''')
+            conn.commit()
 
-def safe_xor(data, key):
-    """XOR an toàn, đảm bảo giá trị trong khoảng 0-255"""
-    data = safe_bytes(data)
-    key = key & 0xFF
-    return bytes([(b ^ key) & 0xFF for b in data])
+    def generate_key(self, valid_days: int = 30, max_uses: int = 100, key_type: str = "premium") -> str:
+        prefix = "SHENRON"
+        suffix = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+        key = f"{prefix}-{suffix}"
+        
+        created = datetime.now().isoformat()
+        expires = (datetime.now() + timedelta(days=valid_days)).isoformat()
 
-# ========== ANTI-DEBUG + ANTI-VM GENERATOR ==========
-def generate_anti_debug_ultimate() -> str:
-    return '''
-# =====================================================
-# ANTI-DEBUG + ANTI-VM ULTIMATE v3.0
-# =====================================================
-import os, sys, time, platform, subprocess, hashlib
+        with self._lock, self._get_connection() as conn:
+            conn.execute(
+                "INSERT INTO keys VALUES (?, ?, ?, ?, ?, ?)",
+                (key, created, expires, max_uses, 0, key_type)
+            )
+            conn.commit()
+        return key
 
-def _anti_debug_vm_check():
+    def verify_and_use_key(self, key_str: str) -> bool:
+        if not key_str:
+            return False
+        
+        with self._lock, self._get_connection() as conn:
+            cursor = conn.execute("SELECT * FROM keys WHERE key_str = ?", (key_str,))
+            row = cursor.fetchone()
+            if not row:
+                return False
+
+            expires = datetime.fromisoformat(row["expires"])
+            if expires < datetime.now() or row["uses"] >= row["max_uses"]:
+                return False
+
+            conn.execute("UPDATE keys SET uses = uses + 1 WHERE key_str = ?", (key_str,))
+            conn.commit()
+            return True
+
+    def get_info(self, key_str: str) -> Optional[dict]:
+        with self._lock, self._get_connection() as conn:
+            cursor = conn.execute("SELECT * FROM keys WHERE key_str = ?", (key_str,))
+            row = cursor.fetchone()
+            return dict(row) if row else None
+
+    def total_keys(self) -> int:
+        with self._lock, self._get_connection() as conn:
+            cursor = conn.execute("SELECT COUNT(*) as count FROM keys")
+            return cursor.fetchone()["count"]
+
+db = KeyDatabase(DATABASE_FILE)
+
+# ========== ADVANCED OBFUSCATOR ENGINE V5.0 ==========
+class ShenronUltimateObfuscator:
+    def __init__(self, source_code: str, level: str = "ultimate", key: str = None):
+        self.source_code = source_code
+        self.level = level
+        self.key = key
+        self.name_map = {}
+        self.counter = 0
+
+    def _new_name(self, old_name: str, length: int = 20) -> str:
+        if old_name not in self.name_map:
+            self.counter += 1
+            chars = string.ascii_letters + string.digits + "_"
+            prefix = random.choice(['_', '__', '___', 'x_'])
+            suffix = ''.join(random.choices(chars, k=length))
+            self.name_map[old_name] = f"{prefix}{self.counter:06x}_{suffix}"
+        return self.name_map[old_name]
+
+    def _generate_anti_debug_crossplatform(self) -> str:
+        return '''
+import os, sys, time, platform, ctypes
+
+def _shenron_v5_guard():
     try:
-        if sys.gettrace() is not None:
-            raise SystemExit("Debugger detected!")
-        
-        if hasattr(sys, 'flags') and sys.flags.debug:
-            raise SystemExit("Debug mode detected!")
-        
-        _start = time.perf_counter()
-        for _ in range(100000):
-            _ = _ * _
-        if time.perf_counter() - _start > 0.01:
-            pass
-        
-        if os.path.exists('/proc/self/status'):
-            with open('/proc/self/status', 'r') as f:
-                for line in f:
-                    if line.startswith('TracerPid:'):
-                        pid = int(line.split(':')[1].strip())
-                        if pid != 0:
-                            raise SystemExit("Debugger detected!")
-        
-        if os.path.exists('/proc/cpuinfo'):
-            with open('/proc/cpuinfo', 'r') as f:
-                content = f.read().lower()
-                vm_indicators = ['hypervisor', 'vmx', 'svm', 'kvm', 'qemu', 'virtualbox', 'vmware']
-                if any(ind in content for ind in vm_indicators):
-                    raise SystemExit("VM detected!")
-        
-        dmi_paths = [
-            '/sys/class/dmi/id/product_name',
-            '/sys/class/dmi/id/sys_vendor',
-            '/sys/class/dmi/id/board_name'
-        ]
-        for dmi_path in dmi_paths:
-            if os.path.exists(dmi_path):
-                with open(dmi_path, 'r') as f:
-                    content = f.read().lower()
-                    vm_keywords = ['vmware', 'virtualbox', 'qemu', 'kvm', 'xen', 'hyper-v', 'innotek', 'oracle']
-                    if any(k in content for k in vm_keywords):
-                        raise SystemExit("VM detected!")
-        
-        vm_files = [
-            '/dev/vboxguest', '/dev/vmci', '/dev/xen',
-            '/proc/vz', '/proc/xen', '/usr/bin/vmware-checkvm'
-        ]
-        for f in vm_files:
-            if os.path.exists(f):
-                raise SystemExit("VM detected!")
-        
-        try:
-            import multiprocessing
-            if multiprocessing.cpu_count() < 2:
-                raise SystemExit("VM detected!")
-        except:
-            pass
-        
-        if os.name == 'posix':
-            try:
-                import ctypes
-                libc = ctypes.CDLL('libc.so.6')
-                if hasattr(libc, 'ptrace'):
-                    result = libc.ptrace(0, 0, 0, 0)
-                    if result == -1:
-                        raise SystemExit("Debugger detected!")
-            except:
-                pass
-        
-    except SystemExit:
-        raise
-    except:
-        pass
+        # Cross-platform Anti-Debug
+        if sys.gettrace() is not None or (hasattr(sys, 'flags') and sys.flags.debug):
+            sys.exit(1)
 
-_anti_debug_vm_check()
+        # Windows-specific Anti-Debug checks
+        if platform.system() == 'Windows':
+            kernel32 = ctypes.windll.kernel32
+            if kernel32.IsDebuggerPresent() != 0:
+                sys.exit(1)
+            is_remote_present = ctypes.c_bool(False)
+            kernel32.CheckRemoteDebuggerPresent(kernel32.GetCurrentProcess(), ctypes.byref(is_remote_present))
+            if is_remote_present.value:
+                sys.exit(1)
+
+        # Anti-Hooking Protection Check for builtins
+        if str(exec) != "<built-in function exec>" or str(compile) != "<built-in function compile>":
+            sys.exit(1)
+
+        # Time-based Anti-Analysis Check
+        t0 = time.perf_counter()
+        for _ in range(200000): pass
+        if time.perf_counter() - t0 > 0.05:
+            sys.exit(1)
+    except Exception:
+        sys.exit(1)
+
+_shenron_v5_guard()
 '''
 
-# ========== ANTI-LLM: Code Poisoning NÂNG CAO ==========
-def inject_llm_poison_advanced(code: str, level: str = "ultimate") -> str:
-    if level != "ultimate":
-        return code
-    
-    poisons = [
-        '''
-# ===== LLM POISON: Opaque Predicate Chain =====
-_llm_guard = (lambda x: (lambda y: (lambda z: z ^ (z >> 1) ^ (z << 2))(y ^ 0xDEADBEEF))(x))
-_llm_check = _llm_guard(0x1337)
-if _llm_check == 0xDEADBEEF:
-    pass
-elif _llm_check == 0xCAFEBABE:
-    pass
-else:
-    pass
-''',
-        '''
-# ===== LLM POISON: Self-Modifying Code =====
-_llm_payload = "cHJpbnQoJ0FJIEFuYWx5c2lzIERldGVjdGVkJyk="
-_llm_decoded = __import__('base64').b64decode(_llm_payload).decode()
-_llm_hash = hash(_llm_decoded)
-if _llm_hash != -9223372036854775808:
-    exec(_llm_decoded)
-''',
-        f'''
-# ===== LLM POISON: Complex Math Trap =====
-_llm_a = {random.randint(1, 9999)}
-_llm_b = {random.randint(1, 9999)}
-_llm_c = (_llm_a ** 4 + _llm_b ** 4) % (_llm_a * _llm_b + _llm_a + _llm_b + 1)
-_llm_d = (_llm_a ** 3 + _llm_b ** 3) % (_llm_a * _llm_b + _llm_a + _llm_b + 1)
-if _llm_c == _llm_d and _llm_a != _llm_b:
-    __import__('os').system('echo "AI detected by math trap"')
-''',
-        '''
-# ===== LLM POISON: Lambda Labyrinth =====
-_llm_lab = (lambda x: (lambda y: (lambda z: (lambda w: w * 3 + 1)(z * 2))(y + 1))(x * 2))(1)
-if _llm_lab == 7:
-    pass
-elif _llm_lab == 13:
-    pass
-''',
-        '''
-# ===== LLM POISON: Anti-Decompiler =====
-_llm_decomp = (lambda x: [y for y in range(x) if y % 2 == 0])(100)
-_llm_decomp2 = (lambda x: (lambda y: y * y)(x))(42)
-if _llm_decomp == _llm_decomp2:
-    __import__('os').system('echo "Decompiler fooled"')
-''',
-        '''
-# ===== LLM POISON: Try-Except Trap =====
-try:
-    _llm_trap = 1 / 0
-except ZeroDivisionError:
-    pass
-except:
-    raise SystemExit("Exception system modified!")
-''',
-        '''
-# ===== LLM POISON: Infinite Loop Decoy =====
-_llm_loop_count = 0
-for _llm_i in range(1000):
-    _llm_loop_count ^= _llm_i
-    if _llm_loop_count > 999999:
-        break
-    _llm_loop_count = (_llm_loop_count * 7 + 13) & 0xFFFFFFFF
-'''
-    ]
-    
-    selected = random.sample(poisons, min(5, len(poisons)))
-    poison_code = "\n\n".join(selected)
-    poison_code = "# AI/LLM Obfuscation Layer v2.0\n" + poison_code
-    
-    lines = code.split('\n')
-    import_lines = []
-    other_lines = []
-    for line in lines:
-        stripped = line.strip()
-        if stripped.startswith('import ') or stripped.startswith('from ') or stripped.startswith('#'):
-            import_lines.append(line)
-        else:
-            other_lines.append(line)
-    
-    return '\n'.join(import_lines) + '\n\n# === LLM Poison Injection ===\n' + poison_code + '\n\n' + '\n'.join(other_lines)
+    def _rename_all_variables(self, node: ast.AST) -> ast.AST:
+        class UltimateRenamer(ast.NodeTransformer):
+            def __init__(self, parent):
+                self.parent = parent
+                self.builtins = set(dir(__builtins__))
 
-# ========== ULTIMATE RUNTIME WRAPPER ==========
-def generate_ultimate_runtime(payload: str, signature: str, keys: tuple, level: str = "ultimate") -> str:
-    anti_debug = generate_anti_debug_ultimate()
-    
-    runtime = f'''# =====================================================
-# ttan~OBF ULTIMATE RUNTIME v8.0
-# Anti-Debug + Anti-VM + Anti-LLM + Self-Defending
-# =====================================================
+            def visit_Name(self, node):
+                if node.id not in self.builtins and not node.id.startswith('__'):
+                    if node.id not in self.parent.name_map:
+                        self.parent.name_map[node.id] = self.parent._new_name(node.id)
+                    return ast.Name(id=self.parent.name_map[node.id], ctx=node.ctx)
+                return node
 
-import zlib, base64, sys, hmac, hashlib, time, os, random, platform
+            def visit_FunctionDef(self, node):
+                if node.name not in self.builtins and not node.name.startswith('__'):
+                    node.name = self.parent._new_name(node.name)
+                self.generic_visit(node)
+                return node
 
-{anti_debug}
+            def visit_ClassDef(self, node):
+                if node.name not in self.builtins and not node.name.startswith('__'):
+                    node.name = self.parent._new_name(node.name)
+                self.generic_visit(node)
+                return node
 
-# ====== ANTI-LLM: AI Detection ======
-def _llm_guard_advanced():
-    try:
-        suspicious_env = ['PYCHARM', 'VSCODE', 'JETBRAINS', 'CODESPACES', 'GITHUB_CODESPACES', 'REPLIT']
-        for env in suspicious_env:
-            if env in os.environ:
-                pass
-        
-        _start = time.perf_counter()
-        _dummy = sum([i**2 for i in range(10000)])
-        if time.perf_counter() - _start > 0.001:
-            pass
-    except:
-        pass
+        return UltimateRenamer(self).visit(node)
 
-_llm_guard_advanced()
+    def obfuscate_and_encrypt(self) -> str:
+        tree = ast.parse(self.source_code)
+        tree = self._rename_all_variables(tree)
 
-# ====== INTEGRITY CHECK ======
+        # Inject Cross-Platform Anti-Debug to top
+        guard_ast = ast.parse(self._generate_anti_debug_crossplatform()).body
+        tree.body = guard_ast + tree.body
+        ast.fix_missing_locations(tree)
+
+        unparsed_code = ast.unparse(tree)
+
+        # Multi-layer Payload Protection
+        compressed = zlib.compress(unparsed_code.encode('utf-8'))
+        k1, k2, k3 = [random.randint(1, 255) for _ in range(3)]
+
+        l1 = bytes([(b ^ k1) & 0xFF for b in compressed])
+        l2 = bytes([(b ^ k2) & 0xFF for b in l1])
+        l3 = bytes([(b ^ k3) & 0xFF for b in l2[::-1]])
+
+        payload = base64.b64encode(l3).decode('ascii')
+
+        return f'''# Shenron Pro v5.0 Protected
+import base64, zlib, sys, time, ctypes, platform
+
+_k1, _k2, _k3 = {k1}, {k2}, {k3}
 _p = "{payload}"
-_sig = "{signature}"
-_k1, _k2, _k3 = {keys[0]}, {keys[1]}, {keys[2]}
 
-if hmac.new(b"{SECRET_KEY}", _p.encode(), hashlib.sha256).hexdigest() != _sig:
-    raise SystemExit("Integrity check failed!")
+if str(exec) != "<built-in function exec>":
+    sys.exit(1)
 
-# ====== DECRYPTION (3 layers - SAFE) ======
 _d2 = bytes([(b ^ _k3) & 0xFF for b in base64.b64decode(_p)[::-1]])
 _d1 = bytes([(b ^ _k2) & 0xFF for b in _d2])
 _d0 = bytes([(b ^ _k1) & 0xFF for b in _d1])
 
-# ====== EXECUTION ======
-try:
-    _code = zlib.decompress(_d0).decode('utf-8', errors='ignore')
-    exec(compile(_code, '<ttan_obf_ultimate>', 'exec'))
-except SystemExit:
-    raise
-except:
-    pass
+exec(compile(zlib.decompress(_d0).decode('utf-8'), '<shenron_v5>', 'exec'))
 '''
-
-    return runtime
-
-# ========== CONTROL FLOW FLATTENING ==========
-class ControlFlowFlattener(ast.NodeTransformer):
-    def __init__(self):
-        self.counter = 0
-        
-    def visit_FunctionDef(self, node):
-        self.counter += 1
-        if len(node.body) < 3:
-            return node
-        
-        states = list(range(len(node.body)))
-        shuffled = states[:]
-        random.shuffle(shuffled)
-        
-        state_map = {}
-        for i, s in enumerate(shuffled):
-            next_state = shuffled[i+1] if i < len(shuffled)-1 else -1
-            state_map[s] = next_state
-        
-        dispatcher = ast.Dict(
-            keys=[ast.Constant(value=k) for k in state_map.keys()],
-            values=[ast.Constant(value=v) for v in state_map.values()]
-        )
-        
-        new_body = [
-            ast.Assign(
-                targets=[ast.Name(id=f'_flow_{self.counter}', ctx=ast.Store())],
-                value=dispatcher
-            ),
-            ast.Assign(
-                targets=[ast.Name(id=f'_state_{self.counter}', ctx=ast.Store())],
-                value=ast.Constant(value=shuffled[0])
-            ),
-            ast.While(
-                test=ast.Compare(
-                    left=ast.Name(id=f'_state_{self.counter}', ctx=ast.Load()),
-                    ops=[ast.NotEq()],
-                    comparators=[ast.Constant(value=-1)]
-                ),
-                body=[
-                    ast.If(
-                        test=ast.Compare(
-                            left=ast.Name(id=f'_state_{self.counter}', ctx=ast.Load()),
-                            ops=[ast.Eq()],
-                            comparators=[ast.Constant(value=k)]
-                        ),
-                        body=node.body[s] + [
-                            ast.Assign(
-                                targets=[ast.Name(id=f'_state_{self.counter}', ctx=ast.Store())],
-                                value=ast.Subscript(
-                                    value=ast.Name(id=f'_flow_{self.counter}', ctx=ast.Load()),
-                                    slice=ast.Constant(value=k),
-                                    ctx=ast.Load()
-                                )
-                            )
-                        ],
-                        orelse=[]
-                    )
-                    for k, s in zip(shuffled, list(range(len(node.body))))
-                ],
-                orelse=[]
-            )
-        ]
-        
-        node.body = new_body
-        self.generic_visit(node)
-        return node
-
-# ========== PYTHON OBFUSCATOR ULTIMATE (FIXED) ==========
-def obfuscate_python_ultimate(source_code: str, level: str = "ultimate") -> str:
-    try:
-        # Phase 1: AST Transformation
-        tree = ast.parse(source_code)
-        transformer = UltimateASTObfuscator(level=level)
-        transformed_tree = transformer.visit(tree)
-        ast.fix_missing_locations(transformed_tree)
-        stage1_code = ast.unparse(transformed_tree)
-        
-        # Phase 2: Anti-LLM Poison
-        stage1_code = inject_llm_poison_advanced(stage1_code, level)
-        
-        # Phase 3: Control Flow Flattening
-        if level == "ultimate":
-            try:
-                tree2 = ast.parse(stage1_code)
-                flattener = ControlFlowFlattener()
-                flattened = flattener.visit(tree2)
-                ast.fix_missing_locations(flattened)
-                stage1_code = ast.unparse(flattened)
-            except Exception as e:
-                logger.warning(f"Control flow flattening skipped: {e}")
-        
-        # Phase 4: Compression + Encryption (SAFE)
-        # Convert to bytes safely
-        code_bytes = stage1_code.encode('utf-8', errors='ignore')
-        compressed = zlib.compress(code_bytes)
-        
-        key1 = random.randint(1, 255)
-        key2 = random.randint(1, 255)
-        key3 = random.randint(1, 255)
-        
-        # SAFE XOR with byte masking
-        layer1 = bytes([(b ^ key1) & 0xFF for b in compressed])
-        layer2 = bytes([(b ^ key2) & 0xFF for b in layer1])
-        layer3 = bytes([(b ^ key3) & 0xFF for b in layer2[::-1]])
-        
-        payload = base64.b64encode(layer3).decode('ascii')
-        signature = hmac.new(SECRET_KEY.encode(), payload.encode('ascii'), hashlib.sha256).hexdigest()
-        
-        runtime = generate_ultimate_runtime(payload, signature, (key1, key2, key3), level)
-        
-        return runtime
-        
-    except SyntaxError as e:
-        logger.error(f"Syntax error: {e}")
-        raise HTTPException(status_code=400, detail=f"Lỗi cú pháp Python: {e}")
-    except Exception as e:
-        logger.error(f"Unexpected error: {e}")
-        raise HTTPException(status_code=400, detail=f"Lỗi xử lý: {str(e)}")
-
-# ========== ULTIMATE AST OBFUSCATOR ==========
-
-class UltimateASTObfuscator(ast.NodeTransformer):
-    def __init__(self, level="ultimate"):
-        self.level = level
-        self.name_map = {}
-        self.counter = 0
-        self.junk_counter = 0
-        
-    def _new_name(self, old_name):
-        if old_name not in self.name_map:
-            self.counter += 1
-            suffix = ''.join(random.choices(string.ascii_letters + string.digits, k=random.randint(12, 20)))
-            prefix = ''.join(random.choices(['_', '_0x', '_x', '__'], weights=[2, 3, 1, 1]))
-            self.name_map[old_name] = f"{prefix}{self.counter:04x}_{suffix}"
-        return self.name_map[old_name]
-    
-    def _make_complex_expression(self, value, depth=0):
-        if depth > 8:
-            return ast.Constant(value=value)
-        
-        ops = [
-            lambda x: ast.BinOp(left=x, op=ast.BitXor(), right=ast.Constant(value=random.randint(1, 0xFFFFFFFF))),
-            lambda x: ast.BinOp(left=x, op=ast.Add(), right=ast.Constant(value=random.randint(-1000, 1000))),
-            lambda x: ast.BinOp(left=x, op=ast.Sub(), right=ast.Constant(value=random.randint(-1000, 1000))),
-            lambda x: ast.BinOp(left=x, op=ast.Mult(), right=ast.Constant(value=random.randint(1, 10))),
-            lambda x: ast.BinOp(left=x, op=ast.BitOr(), right=ast.Constant(value=random.randint(0, 0xFFFF))),
-            lambda x: ast.BinOp(left=x, op=ast.BitAnd(), right=ast.Constant(value=random.randint(0, 0xFFFF))),
-        ]
-        
-        num_ops = random.randint(2, 5)
-        result = ast.Constant(value=value)
-        
-        for _ in range(num_ops):
-            op_choice = random.choice(ops)
-            result = op_choice(result)
-        
-        return result
-    
-    def _make_string_decryptor(self, text: str) -> ast.AST:
-        # SAFE: chỉ XOR các ký tự ASCII, bỏ qua Unicode
-        key = random.randint(1, 255)
-        enc = bytes([(ord(c) ^ key) & 0xFF for c in text if ord(c) < 256])
-        b64 = base64.b64encode(enc).decode('ascii')
-        
-        code = f'''(lambda _s: (lambda _k: ''.join(chr((_b ^ _k) & 0xFF) for _b in __import__('base64').b64decode(_s)[::-1]))({key}))("{b64}")'''
-        
-        return ast.parse(code).body[0].value
-    
-    def _make_opaque_predicate(self, always_true=True):
-        a = random.randint(1, 10000)
-        b = random.randint(1, 10000)
-        c = random.randint(1, 10000)
-        
-        if always_true:
-            return ast.Compare(
-                left=ast.BinOp(
-                    left=ast.BinOp(
-                        left=ast.BinOp(left=ast.Constant(value=a), op=ast.Mult(), right=ast.Constant(value=b)),
-                        op=ast.Mod(),
-                        right=ast.BinOp(left=ast.Constant(value=a), op=ast.Add(), right=ast.Constant(value=b))
-                    ),
-                    op=ast.Add(),
-                    right=ast.BinOp(
-                        left=ast.BinOp(left=ast.Constant(value=b), op=ast.Mult(), right=ast.Constant(value=c)),
-                        op=ast.Mod(),
-                        right=ast.BinOp(left=ast.Constant(value=b), op=ast.Add(), right=ast.Constant(value=c))
-                    )
-                ),
-                ops=[ast.Eq()],
-                comparators=[ast.BinOp(
-                    left=ast.BinOp(
-                        left=ast.BinOp(left=ast.Constant(value=a), op=ast.Mult(), right=ast.Constant(value=b)),
-                        op=ast.Mod(),
-                        right=ast.BinOp(left=ast.Constant(value=a), op=ast.Add(), right=ast.Constant(value=b))
-                    ),
-                    op=ast.Add(),
-                    right=ast.BinOp(
-                        left=ast.BinOp(left=ast.Constant(value=b), op=ast.Mult(), right=ast.Constant(value=c)),
-                        op=ast.Mod(),
-                        right=ast.BinOp(left=ast.Constant(value=b), op=ast.Add(), right=ast.Constant(value=c))
-                    )
-                )]
-            )
-        else:
-            return ast.Compare(
-                left=ast.Constant(value=a),
-                ops=[ast.NotEq()],
-                comparators=[ast.Constant(value=a)]
-            )
-    
-    def _make_torus_flow(self):
-        if self.level != "ultimate":
-            return []
-        
-        r1, r2, r3, r4 = [random.randint(1, 9999) for _ in range(4)]
-        code = f'''
-# 2D Torus Quantum Flow v3.0
-_torus_dim = (({r1} ^ {r2}) + {r3}) % {r4}
-_torus_state = (_torus_dim * 7 + 13) % 11
-if _torus_state == 0:
-    _torus_guard = lambda x: x ^ 0xDEADBEEF
-elif _torus_state == 1:
-    _torus_guard = lambda x: x * 7 + 3
-elif _torus_state == 2:
-    _torus_guard = lambda x: (x << 3) | 7
-elif _torus_state == 3:
-    _torus_guard = lambda x: x ^ (x >> 2)
-elif _torus_state == 4:
-    _torus_guard = lambda x: x + 0x1337
-else:
-    _torus_guard = lambda x: x ^ 0xCAFEBABE
-_torus_dummy = _torus_guard(0x1337) ^ _torus_guard(0xDEAD)
-'''
-        return ast.parse(code).body
-    
-    def _make_junk_code(self):
-        self.junk_counter += 1
-        
-        vars = [f'_j{random.randint(1, 99999)}' for _ in range(random.randint(3, 6))]
-        assignments = [
-            ast.Assign(
-                targets=[ast.Name(id=v, ctx=ast.Store())],
-                value=self._make_complex_expression(random.randint(0, 99999), depth=4)
-            ) for v in vars
-        ]
-        
-        loop = ast.For(
-            target=ast.Name(id='_', ctx=ast.Store()),
-            iter=ast.Call(
-                func=ast.Name(id='range', ctx=ast.Load()),
-                args=[ast.Constant(value=1)],
-                keywords=[]
-            ),
-            body=[ast.Pass()],
-            orelse=[]
-        )
-        
-        junk_if = ast.If(
-            test=self._make_opaque_predicate(always_true=random.choice([True, False])),
-            body=[ast.Pass()],
-            orelse=[ast.Pass()]
-        )
-        
-        return assignments + [loop, junk_if]
-    
-    def visit_Constant(self, node):
-        if isinstance(node.value, int):
-            if abs(node.value) > 5:
-                return self._make_complex_expression(node.value, depth=random.randint(0, 3))
-            return node
-        elif isinstance(node.value, str):
-            if len(node.value) >= 3 and all(ord(c) < 256 for c in node.value):
-                return self._make_string_decryptor(node.value)
-            return node
-        return node
-    
-    def visit_Name(self, node):
-        if node.id in self.name_map and not node.id.startswith('__') and node.id not in ['_', 'self', 'cls']:
-            return ast.Name(id=self.name_map[node.id], ctx=node.ctx)
-        return node
-    
-    def visit_FunctionDef(self, node):
-        node.name = self._new_name(node.name)
-        
-        body = []
-        
-        if self.level == "ultimate":
-            body.append(ast.parse("""
-if hasattr(__import__('sys'), 'gettrace') and __import__('sys').gettrace() is not None:
-    raise SystemExit('Debugger detected!')
-""").body[0])
-            
-            for _ in range(random.randint(2, 4)):
-                body.append(ast.If(
-                    test=self._make_opaque_predicate(always_true=True),
-                    body=[ast.Pass()],
-                    orelse=[ast.Raise(exc=ast.Call(func=ast.Name(id='SystemExit', ctx=ast.Load()), args=[ast.Constant(value="Integrity check failed!")], keywords=[]))]
-                ))
-        
-        body.extend(self._make_junk_code())
-        body.extend(self._make_torus_flow())
-        
-        node.body = body + node.body
-        self.generic_visit(node)
-        return node
-    
-    def visit_ClassDef(self, node):
-        node.name = self._new_name(node.name)
-        body = []
-        
-        if self.level == "ultimate":
-            body.append(ast.parse("""
-if hasattr(__import__('sys'), 'gettrace') and __import__('sys').gettrace() is not None:
-    raise SystemExit('Debugger detected!')
-""").body[0])
-        
-        body.extend(self._make_junk_code())
-        node.body = body + node.body
-        self.generic_visit(node)
-        return node
-    
-    def visit_Module(self, node):
-        collector = NameCollector()
-        collector.visit(node)
-        for name in collector.names:
-            if not name.startswith('__') and name not in ['_', 'self', 'cls']:
-                self._new_name(name)
-        
-        imports = [
-            ast.Import(names=[ast.alias(name='sys', asname=None)]),
-            ast.Import(names=[ast.alias(name='time', asname=None)]),
-            ast.Import(names=[ast.alias(name='os', asname=None)]),
-        ]
-        
-        junk = self._make_junk_code()
-        
-        node.body = imports + junk + node.body
-        self.generic_visit(node)
-        return node
-
-class NameCollector(ast.NodeVisitor):
-    def __init__(self):
-        self.names = set()
-    def visit_Name(self, node):
-        if isinstance(node.ctx, (ast.Store, ast.Load)):
-            self.names.add(node.id)
-        self.generic_visit(node)
-    def visit_FunctionDef(self, node):
-        self.names.add(node.name)
-        self.generic_visit(node)
-    def visit_ClassDef(self, node):
-        self.names.add(node.name)
-        self.generic_visit(node)
-
-# ========== JS OBFUSCATOR ==========
-def obfuscate_js_ultimate(source_code: str, level: str = "ultimate") -> str:
-    var_pattern = r'\b(var|let|const)\s+([a-zA-Z_][a-zA-Z0-9_]*)\b'
-    matches = re.findall(var_pattern, source_code)
-    name_map = {}
-    for _, name in matches:
-        if name not in name_map:
-            name_map[name] = f'_0x{random.randint(0x1000, 0xFFFF):x}_{random.randint(1000, 9999)}'
-    
-    for old, new in name_map.items():
-        source_code = re.sub(rf'\b{old}\b', new, source_code)
-    
-    def encode_string(match):
-        s = match.group(1)
-        if len(s) < 3:
-            return match.group(0)
-        key = random.randint(1, 255)
-        enc = bytes([(ord(c) ^ key) & 0xFF for c in s if ord(c) < 256])
-        b64 = base64.b64encode(enc).decode('ascii')
-        return f'(function(){{var _k={key};var _s=atob("{b64}");var _r="";for(var _i=0;_i<_s.length;_i++){{_r+=String.fromCharCode(_s.charCodeAt(_i)^_k);}}return _r;}})()'
-    
-    source_code = re.sub(r'"((?:[^"\\]|\\.)*)"', encode_string, source_code)
-    source_code = re.sub(r"'((?:[^'\\]|\\.)*)'", encode_string, source_code)
-    
-    anti_debug = '''
-(function(){
-if(window.__debugger_present || 
-   (typeof navigator !== 'undefined' && navigator.webdriver) ||
-   (typeof document !== 'undefined' && document.hidden)){
-    throw new Error('Debugger detected!');
-}
-'''
-    
-    return anti_debug + source_code + '\n})();'
-
-# ========== PLUGIN SYSTEM ==========
-
-class ObfuscatorPlugin:
-    def __init__(self, name, supported_extensions):
-        self.name = name
-        self.supported_extensions = supported_extensions
-    def obfuscate(self, source_code: str, level: str = "ultimate") -> str:
-        raise NotImplementedError
-
-class PythonUltimatePlugin(ObfuscatorPlugin):
-    def __init__(self):
-        super().__init__("python", [".py"])
-    def obfuscate(self, source_code: str, level: str = "ultimate") -> str:
-        return obfuscate_python_ultimate(source_code, level)
-
-class JSUltimatePlugin(ObfuscatorPlugin):
-    def __init__(self):
-        super().__init__("javascript", [".js", ".mjs"])
-    def obfuscate(self, source_code: str, level: str = "ultimate") -> str:
-        return obfuscate_js_ultimate(source_code, level)
 
 # ========== API ENDPOINTS ==========
 
-@app.get("/", response_class=HTMLResponse)
-async def serve_index():
-    index_file = Path("index.html")
-    if index_file.exists():
-        return HTMLResponse(content=index_file.read_text(encoding="utf-8"))
-    return HTMLResponse(content="<h1>index.html not found</h1>", status_code=404)
+@app.post("/api/generate-key")
+async def generate_api_key(request: Request):
+    data = await request.json()
+    if data.get("admin_secret") != ADMIN_SECRET:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid admin secret")
+
+    key = db.generate_key(
+        valid_days=data.get("days", 30),
+        max_uses=data.get("max_uses", 100),
+        key_type=data.get("type", "premium")
+    )
+    return {"key": key, "info": db.get_info(key)}
+
+@app.post("/api/verify-key")
+async def verify_api_key(request: Request):
+    data = await request.json()
+    key = data.get("key", "")
+    valid = db.verify_and_use_key(key)
+    return {"valid": valid, "info": db.get_info(key) if valid else None}
 
 @app.post("/api/obfuscate")
 async def api_obfuscate(
-    request: Request,
     file: UploadFile = File(...),
     level: str = Form("ultimate"),
-    language: str = Form("python")
+    key: str = Form("")
 ):
-    client_ip = request.client.host if request.client else "127.0.0.1"
-    rate_limit(client_ip, limit=20, window=60)
-    
-    if API_KEY:
-        api_key = request.headers.get("X-API-Key")
-        if api_key != API_KEY:
-            raise HTTPException(status_code=401, detail="API Key không hợp lệ")
-    
+    if not db.verify_and_use_key(key):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, 
+            detail="Key không hợp lệ, đã hết hạn hoặc hết lượt sử dụng."
+        )
+
     contents = await file.read()
-    if len(contents) > MAX_FILE_SIZE:
-        raise HTTPException(status_code=413, detail=f"File vượt quá dung lượng ({MAX_FILE_SIZE//1024} KB)")
-    
-    ext = Path(file.filename).suffix
-    if ext not in ['.py', '.js', '.mjs']:
-        raise HTTPException(status_code=400, detail="Chỉ hỗ trợ .py, .js, .mjs")
-    
+    if len(contents) > 5 * 1024 * 1024:
+        raise HTTPException(status_code=413, detail="Dung lượng file tối đa là 5MB")
+
+    if not file.filename.endswith('.py'):
+        raise HTTPException(status_code=400, detail="Chỉ chấp nhận định dạng file .py")
+
     try:
         source_code = contents.decode('utf-8', errors='ignore')
-    except:
-        raise HTTPException(status_code=400, detail="Không thể đọc file, vui lòng kiểm tra định dạng")
-    
-    logger.info(f"Received: {file.filename}, size: {len(contents)} bytes, level: {level}, language: {language}")
-    
-    if language == "python":
-        plugin = PythonUltimatePlugin()
-    elif language in ["javascript", "js"]:
-        plugin = JSUltimatePlugin()
-    else:
-        raise HTTPException(status_code=400, detail=f"Ngôn ngữ '{language}' không hỗ trợ")
-    
-    try:
-        protected_code = plugin.obfuscate(source_code, level=level)
-    except HTTPException:
-        raise
+        obf = ShenronUltimateObfuscator(source_code, level=level, key=key)
+        protected_code = obf.obfuscate_and_encrypt()
     except Exception as e:
-        logger.error(f"Obfuscation failed: {e}")
-        raise HTTPException(status_code=500, detail=f"Lỗi xử lý: {str(e)}")
-    
-    metadata = f"\n# Obfuscated by ttan~OBF v8.0 on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
-    protected_code = metadata + protected_code
-    
+        raise HTTPException(status_code=500, detail=f"Lỗi xử lý Obfuscate: {str(e)}")
+
     return Response(
         content=protected_code,
         media_type="application/octet-stream",
@@ -772,11 +284,10 @@ async def api_obfuscate(
 async def health():
     return {
         "status": "ok",
-        "version": "8.0.0",
-        "plugins": ["python", "javascript"],
-        "features": ["anti-debug", "anti-vm", "anti-llm", "control-flow-flattening", "safe-encoding"]
+        "version": "5.0.0",
+        "total_registered_keys": db.total_keys(),
+        "engine": "AST Multi-layer Obfuscator + Anti-Hooking"
     }
 
 if __name__ == "__main__":
-    logger.info(f"Starting ttan~OBF Ultimate Engine v8.0 on {HOST}:{PORT}")
-    uvicorn.run("server:app", host=HOST, port=PORT, reload=False)
+    uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=False)
