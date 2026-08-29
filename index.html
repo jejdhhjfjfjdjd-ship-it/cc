@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ttan~OBF Ultimate - Bảo Vệ Mã Nguồn Tối Thượng</title>
+    <title>Shenron Ultimate Pro v4.0 - Obfuscator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
@@ -12,61 +12,47 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            bg: '#060a12',
-                            card: '#0b1329',
-                            border: '#16223b',
-                            accent: '#06b6d4',
-                            neon: '#22d3ee',
-                            danger: '#ef4444',
-                            success: '#22c55e'
-                        }
+                        brand: { bg: '#0a0a0f', card: '#12121e', border: '#1e1e3a', accent: '#f59e0b', neon: '#fbbf24', gold: '#d4a843' }
                     }
                 }
             }
         }
     </script>
     <style>
-        .glow-effect {
-            box-shadow: 0 0 40px -10px rgba(34, 211, 238, 0.3);
-        }
-        .grid-bg {
-            background-image: radial-gradient(rgba(34, 211, 238, 0.06) 1px, transparent 0);
-            background-size: 24px 24px;
-        }
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        .feature-card {
-            transition: all 0.3s ease;
-        }
-        .feature-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 40px rgba(34, 211, 238, 0.15);
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        * { font-family: 'Orbitron', sans-serif; }
+        .glow-gold { box-shadow: 0 0 60px -10px rgba(245, 158, 11, 0.3); }
+        .grid-bg { background-image: radial-gradient(rgba(245, 158, 11, 0.05) 1px, transparent 0); background-size: 32px 32px; }
+        .dragon-text { background: linear-gradient(135deg, #f59e0b, #fbbf24, #d4a843, #f59e0b); background-size: 300% 300%; animation: gradient 4s ease infinite; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .dragon-emoji { font-size: 2.5rem; animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
+        .feature-card { transition: all 0.4s ease; border: 1px solid transparent; }
+        .feature-card:hover { transform: translateY(-6px); border-color: #f59e0b; box-shadow: 0 20px 60px rgba(245, 158, 11, 0.15); }
+        .btn-gold { background: linear-gradient(135deg, #f59e0b, #d4a843); transition: all 0.3s; }
+        .btn-gold:hover { transform: scale(1.03); box-shadow: 0 0 40px rgba(245, 158, 11, 0.3); }
+        .shenron-border { border-bottom: 2px solid #f59e0b; }
+        .pulse-dot { animation: pulse-dot 1.5s ease-in-out infinite; }
+        @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+        .stats-number { font-size: 2.5rem; font-weight: 900; background: linear-gradient(135deg, #f59e0b, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
-<body class="bg-brand-bg text-slate-200 grid-bg min-h-screen font-sans antialiased">
+<body class="bg-brand-bg text-slate-200 grid-bg min-h-screen antialiased">
 
-    <!-- NAV -->
-    <header class="sticky top-0 z-50 backdrop-blur-xl bg-brand-bg/90 border-b border-brand-border">
-        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-black text-black text-base shadow-lg shadow-cyan-500/30">
-                    K
+    <!-- HEADER -->
+    <header class="shenron-border sticky top-0 z-50 backdrop-blur-2xl bg-brand-bg/95">
+        <div class="max-w-6xl mx-auto px-4 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="dragon-emoji">🐉</div>
+                <div>
+                    <h1 class="text-2xl font-black dragon-text">SHENRON</h1>
+                    <p class="text-[10px] text-yellow-500/80 font-bold tracking-widest">ULTIMATE PRO v4.0</p>
                 </div>
-                <span class="font-bold text-xl bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">ttan~OBF</span>
-                <span class="text-[10px] font-bold bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded-full border border-cyan-500/30">v6.0 ULTIMATE</span>
+                <span class="text-[8px] bg-yellow-500/20 text-yellow-400 px-3 py-0.5 rounded-full border border-yellow-500/30">30+ TECHNIQUES</span>
             </div>
-            <div class="flex items-center space-x-4 text-cyan-400">
-                <i data-lucide="shield" class="w-5 h-5 cursor-pointer hover:text-white transition"></i>
-                <i data-lucide="cpu" class="w-5 h-5 cursor-pointer hover:text-white transition"></i>
-                <i data-lucide="zap" class="w-5 h-5 cursor-pointer hover:text-white transition"></i>
-                <i data-lucide="sparkles" class="w-5 h-5 cursor-pointer hover:text-white transition"></i>
+            <div class="flex items-center space-x-4">
+                <span class="text-[10px] text-yellow-400/70 hidden sm:inline">🔥 30+ Protection</span>
+                <a href="#buy" class="btn-gold text-black font-bold text-[10px] px-4 py-2 rounded-full transition">💎 Mua Key</a>
             </div>
         </div>
     </header>
@@ -75,155 +61,226 @@
 
         <!-- HERO -->
         <section class="text-center space-y-6">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-950/40 text-cyan-300 text-xs font-semibold">
-                <i data-lucide="shield-alert" class="w-4 h-4"></i> BẢO VỆ TỐI THƯỢNG
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-yellow-500/30 bg-yellow-950/40 text-yellow-400 text-xs font-semibold">
+                🐉 SỨC MẠNH RỒNG THẦN TỐI THƯỢNG
             </div>
-            <h1 class="text-4xl sm:text-5xl font-extrabold text-white leading-tight">
-                Bảo Vệ Mã Nguồn<br/>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500">Không AI Nào Phá Được</span>
+            <h1 class="text-4xl sm:text-6xl font-black leading-tight">
+                <span class="dragon-text">SHENRON</span>
+                <br/>
+                <span class="text-white/80 text-xl sm:text-3xl">Ultimate Obfuscator v4.0</span>
             </h1>
             <p class="text-slate-400 text-sm max-w-2xl mx-auto">
-                <span class="text-cyan-400 font-bold">Anti-Debug</span> · 
-                <span class="text-cyan-400 font-bold">Anti-VM</span> · 
-                <span class="text-cyan-400 font-bold">Anti-LLM</span> · 
-                <span class="text-cyan-400 font-bold">Self-Modifying</span> · 
-                <span class="text-cyan-400 font-bold">3-Layer Encryption</span>
+                <span class="text-yellow-400 font-bold">30+ Anti-Debug</span> · 
+                <span class="text-yellow-400 font-bold">30+ Anti-VM</span> · 
+                <span class="text-yellow-400 font-bold">30+ Anti-LLM</span> · 
+                <span class="text-yellow-400 font-bold">Control Flow Flattening</span> · 
+                <span class="text-yellow-400 font-bold">5-Layer String Encryption</span>
             </p>
-            <div class="flex flex-wrap justify-center gap-3 pt-2">
-                <a href="#tool" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-cyan-500/30 flex items-center gap-2 transition">
-                    <i data-lucide="shield" class="w-4 h-4"></i> Bảo vệ ngay
-                </a>
+        </section>
+
+        <!-- STATS -->
+        <section class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            <div class="bg-brand-card border border-brand-border rounded-xl p-4 text-center">
+                <div class="stats-number">30+</div>
+                <p class="text-[10px] text-slate-400">Anti-Debug</p>
+            </div>
+            <div class="bg-brand-card border border-brand-border rounded-xl p-4 text-center">
+                <div class="stats-number">30+</div>
+                <p class="text-[10px] text-slate-400">Anti-VM</p>
+            </div>
+            <div class="bg-brand-card border border-brand-border rounded-xl p-4 text-center">
+                <div class="stats-number">30+</div>
+                <p class="text-[10px] text-slate-400">Anti-LLM</p>
+            </div>
+            <div class="bg-brand-card border border-brand-border rounded-xl p-4 text-center">
+                <div class="stats-number">5</div>
+                <p class="text-[10px] text-slate-400">Layer String Encrypt</p>
+            </div>
+            <div class="bg-brand-card border border-brand-border rounded-xl p-4 text-center">
+                <div class="stats-number">3</div>
+                <p class="text-[10px] text-slate-400">Layer XOR</p>
             </div>
         </section>
 
-        <!-- FEATURES -->
-        <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="bg-brand-card border border-brand-border rounded-xl p-4 text-center feature-card">
-                <div class="w-12 h-12 mx-auto rounded-lg bg-cyan-500/20 flex items-center justify-center mb-3">
-                    <i data-lucide="bug" class="w-6 h-6 text-cyan-400"></i>
+        <!-- KEY SECTION -->
+        <section id="buy" class="bg-brand-card border border-brand-border rounded-2xl p-6 sm:p-8 glow-gold">
+            <div class="flex items-center gap-3 border-b border-brand-border pb-4 mb-6">
+                <i data-lucide="key" class="w-6 h-6 text-yellow-400"></i>
+                <div>
+                    <h2 class="text-lg font-bold text-white">💎 Kích Hoạt Key</h2>
+                    <p class="text-[10px] text-slate-400">Nhập key để sử dụng dịch vụ obfuscate</p>
                 </div>
-                <h3 class="font-bold text-sm text-white">Anti-Debug</h3>
-                <p class="text-[11px] text-slate-400">10+ kỹ thuật phát hiện debugger, ptrace, breakpoint</p>
             </div>
-            <div class="bg-brand-card border border-brand-border rounded-xl p-4 text-center feature-card">
-                <div class="w-12 h-12 mx-auto rounded-lg bg-purple-500/20 flex items-center justify-center mb-3">
-                    <i data-lucide="server" class="w-6 h-6 text-purple-400"></i>
-                </div>
-                <h3 class="font-bold text-sm text-white">Anti-VM</h3>
-                <p class="text-[11px] text-slate-400">Phát hiện VirtualBox, VMware, QEMU, KVM, Hyper-V</p>
+
+            <div class="flex flex-col sm:flex-row gap-4">
+                <input type="text" id="keyInput" placeholder="SHENRON-XXXXXXXXXXXXXXX" class="flex-1 bg-slate-950/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-200 outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition"/>
+                <button id="verifyKeyBtn" class="btn-gold text-black font-bold px-6 py-3 rounded-xl text-sm whitespace-nowrap">🔑 Xác thực</button>
             </div>
-            <div class="bg-brand-card border border-brand-border rounded-xl p-4 text-center feature-card">
-                <div class="w-12 h-12 mx-auto rounded-lg bg-red-500/20 flex items-center justify-center mb-3">
-                    <i data-lucide="brain" class="w-6 h-6 text-red-400"></i>
-                </div>
-                <h3 class="font-bold text-sm text-white">Anti-LLM</h3>
-                <p class="text-[11px] text-slate-400">Đánh lừa AI/LLM bằng opaque predicates, code poisoning</p>
+
+            <div id="keyStatus" class="mt-4 text-sm text-center">
+                <span class="text-slate-500">💡 Nhập key để bắt đầu</span>
+            </div>
+
+            <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-center text-[10px]">
+                <div class="bg-slate-950/50 border border-brand-border rounded-lg p-3"><span class="text-yellow-400 font-bold">🔓 Trial</span><p class="text-slate-500">7 ngày · 10 lần</p></div>
+                <div class="bg-slate-950/50 border border-brand-border rounded-lg p-3"><span class="text-yellow-400 font-bold">💎 Premium</span><p class="text-slate-500">30 ngày · 100 lần</p></div>
+                <div class="bg-slate-950/50 border border-brand-border rounded-lg p-3"><span class="text-yellow-400 font-bold">👑 Elite</span><p class="text-slate-500">365 ngày · Unlimited</p></div>
             </div>
         </section>
 
         <!-- TOOL -->
-        <section id="tool" class="bg-brand-card border border-brand-border rounded-2xl p-6 sm:p-8 space-y-6 glow-effect">
+        <section id="tool" class="bg-brand-card border border-brand-border rounded-2xl p-6 sm:p-8 space-y-6 glow-gold">
             <div class="flex items-center justify-between border-b border-brand-border pb-4">
                 <div class="flex items-center gap-3">
-                    <i data-lucide="shield-check" class="w-6 h-6 text-cyan-400"></i>
+                    <i data-lucide="wand-2" class="w-6 h-6 text-yellow-400"></i>
                     <div>
-                        <h2 class="text-lg font-bold text-white">Ultimate Obfuscator</h2>
-                        <p class="text-[10px] text-slate-400">Tất cả bảo vệ trong một công cụ</p>
+                        <h2 class="text-lg font-bold text-white">🐉 Shenron Obfuscator v4.0</h2>
+                        <p class="text-[10px] text-slate-400">Gọi rồng thần để bảo vệ mã nguồn</p>
                     </div>
                 </div>
-                <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono flex items-center gap-1">
-                    <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full pulse"></span> SYSTEM READY
+                <span class="text-[10px] bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 px-2 py-0.5 rounded-full font-mono flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 bg-yellow-400 rounded-full pulse-dot"></span> READY
                 </span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div class="space-y-2">
-                    <label class="font-bold text-sm text-slate-300 flex items-center gap-2">
-                        <i data-lucide="cpu" class="w-4 h-4 text-cyan-400"></i> NGÔN NGỮ
-                    </label>
-                    <select id="languageSelect" class="w-full bg-slate-950 border border-brand-border rounded-xl p-3 text-sm text-slate-200 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none">
+                    <label class="font-bold text-sm text-slate-300 flex items-center gap-2"><i data-lucide="cpu" class="w-4 h-4 text-yellow-400"></i> NGÔN NGỮ</label>
+                    <select id="languageSelect" class="w-full bg-slate-950 border border-brand-border rounded-xl p-3 text-sm text-slate-200 focus:border-yellow-500 outline-none">
                         <option value="python">🐍 Python</option>
-                        <option value="javascript">⚡ JavaScript</option>
                     </select>
                 </div>
-
                 <div class="space-y-2">
-                    <label class="font-bold text-sm text-slate-300 flex items-center gap-2">
-                        <i data-lucide="shield" class="w-4 h-4 text-cyan-400"></i> MỨC ĐỘ BẢO VỆ
-                    </label>
+                    <label class="font-bold text-sm text-slate-300 flex items-center gap-2"><i data-lucide="shield" class="w-4 h-4 text-yellow-400"></i> MỨC ĐỘ</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <label class="border border-cyan-500 bg-cyan-950/30 rounded-xl p-3 cursor-pointer hover:border-cyan-400 transition">
-                            <div class="flex justify-between items-center font-bold text-white text-sm">
-                                Normal
-                                <input type="radio" name="level" value="normal" class="accent-cyan-400" />
-                            </div>
+                        <label class="border border-yellow-500 bg-yellow-950/30 rounded-xl p-3 cursor-pointer hover:border-yellow-400 transition">
+                            <div class="flex justify-between items-center font-bold text-white text-sm">Normal <input type="radio" name="level" value="normal" class="accent-yellow-400" /></div>
                             <div class="text-[10px] text-slate-400">Bảo vệ cơ bản</div>
                         </label>
-                        <label class="border border-brand-border bg-slate-900 rounded-xl p-3 cursor-pointer hover:border-cyan-400 transition">
-                            <div class="flex justify-between items-center font-bold text-white text-sm">
-                                Ultimate
-                                <input type="radio" name="level" value="ultimate" checked class="accent-cyan-400" />
-                            </div>
-                            <div class="text-[10px] text-slate-400">📛 Chống AI + Debug</div>
+                        <label class="border border-brand-border bg-slate-900 rounded-xl p-3 cursor-pointer hover:border-yellow-400 transition">
+                            <div class="flex justify-between items-center font-bold text-white text-sm">Ultimate <input type="radio" name="level" value="ultimate" checked class="accent-yellow-400" /></div>
+                            <div class="text-[10px] text-slate-400">🐉 30+ kỹ thuật</div>
                         </label>
                     </div>
                 </div>
             </div>
 
-            <!-- File Drop -->
-            <div id="dropZone" class="border-2 border-dashed border-slate-700 rounded-xl p-8 text-center bg-slate-950/30 cursor-pointer hover:border-cyan-500 transition group">
-                <i data-lucide="upload-cloud" class="w-12 h-12 text-cyan-400 mx-auto mb-3 group-hover:scale-110 transition"></i>
-                <p class="text-sm text-slate-300">Kéo thả file <span class="text-cyan-400 font-mono">.py</span> hoặc <span class="text-cyan-400 font-mono">.js</span> vào đây</p>
+            <div id="dropZone" class="border-2 border-dashed border-slate-700 rounded-xl p-10 text-center bg-slate-950/30 cursor-pointer hover:border-yellow-500 transition group">
+                <i data-lucide="upload-cloud" class="w-16 h-16 text-yellow-400 mx-auto mb-4 group-hover:scale-110 transition"></i>
+                <p class="text-sm text-slate-300">Kéo thả file <span class="text-yellow-400 font-mono">.py</span> vào đây</p>
                 <p id="fileName" class="text-[11px] text-slate-500 mt-2">Chưa chọn file</p>
-                <input type="file" id="fileInput" accept=".py,.js,.mjs" style="display:none" />
+                <input type="file" id="fileInput" accept=".py" style="display:none" />
             </div>
 
             <div id="statusMessage" class="text-center text-sm"></div>
 
-            <!-- Progress -->
             <div id="progressContainer" class="hidden">
                 <div class="flex justify-between text-xs text-slate-400 mb-1">
-                    <span>Đang xử lý...</span>
+                    <span>🐉 Đang gọi rồng thần...</span>
                     <span id="progressText">0%</span>
                 </div>
                 <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
-                    <div id="progressBar" class="bg-gradient-to-r from-cyan-500 to-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    <div id="progressBar" class="bg-gradient-to-r from-yellow-500 to-yellow-300 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
                 </div>
             </div>
 
-            <button id="btnRun" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold py-3.5 rounded-xl shadow-lg shadow-cyan-500/30 text-sm transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
-                <i data-lucide="play" class="w-5 h-5 fill-black"></i> Bắt Đầu Bảo Vệ Mã Nguồn
+            <button id="btnRun" class="w-full btn-gold text-black font-bold py-4 rounded-xl text-sm transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                <i data-lucide="play" class="w-5 h-5 fill-black"></i> Gọi Rồng Thần Bảo Vệ
             </button>
+        </section>
+
+        <!-- FEATURES -->
+        <section class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            <div class="bg-brand-card border border-brand-border rounded-xl p-4 text-center feature-card">
+                <div class="text-3xl mb-2">🛡️</div>
+                <h3 class="font-bold text-sm text-white">Anti-Debug</h3>
+                <p class="text-[10px] text-slate-400">30+ kỹ thuật phát hiện</p>
+            </div>
+            <div class="bg-brand-card border border-brand-border rounded-xl p-4 text-center feature-card">
+                <div class="text-3xl mb-2">💻</div>
+                <h3 class="font-bold text-sm text-white">Anti-VM</h3>
+                <p class="text-[10px] text-slate-400">30+ kỹ thuật phát hiện</p>
+            </div>
+            <div class="bg-brand-card border border-brand-border rounded-xl p-4 text-center feature-card">
+                <div class="text-3xl mb-2">🧠</div>
+                <h3 class="font-bold text-sm text-white">Anti-LLM</h3>
+                <p class="text-[10px] text-slate-400">30+ kỹ thuật đánh lừa</p>
+            </div>
+            <div class="bg-brand-card border border-brand-border rounded-xl p-4 text-center feature-card">
+                <div class="text-3xl mb-2">🌀</div>
+                <h3 class="font-bold text-sm text-white">Flattening</h3>
+                <p class="text-[10px] text-slate-400">Control Flow Flattening</p>
+            </div>
         </section>
 
         <!-- INFO -->
         <section class="bg-brand-card border border-brand-border rounded-xl p-6 text-center text-xs text-slate-500">
             <p class="flex items-center justify-center gap-2">
-                <i data-lucide="lock" class="w-4 h-4 text-cyan-400"></i>
-                <span>Mã nguồn của bạn được xử lý hoàn toàn trên server và không được lưu lại</span>
-                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+                <i data-lucide="lock" class="w-4 h-4 text-yellow-400"></i>
+                <span>Mã nguồn được xử lý trên server và không lưu lại</span>
+                <i data-lucide="check-circle" class="w-4 h-4 text-yellow-400"></i>
             </p>
         </section>
 
     </main>
 
-    <footer class="border-t border-brand-border py-6 mt-8 text-center text-[10px] text-slate-600">
-        <p>ttan~OBF Ultimate v6.0 · Built with ❤️ by Hà Trọng Tấn</p>
+    <footer class="border-t border-brand-border py-6 mt-8 text-center text-[9px] text-slate-600">
+        <p>🐉 Shenron Ultimate Pro v4.0 · 30+ Protection Techniques · Built with Dragon Power</p>
     </footer>
 
     <script>
         lucide.createIcons();
 
-        // ⚠️ ĐIỀN LINK BACKEND RAILWAY/RENDER CỦA BẠN VÀO ĐÂY NẾU CHẠY FRONTEND TRÊN VERCEL
-        const EXTERNAL_BACKEND_URL = ""; // Ví dụ: "https://ten-app-cua-ban.up.railway.app" hoặc "https://ten-app.onrender.com"
+        const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:8000'
+            : window.location.origin;
 
-        let API_URL = window.location.origin + '/api/obfuscate';
-        if (EXTERNAL_BACKEND_URL.trim() !== "") {
-            API_URL = EXTERNAL_BACKEND_URL.replace(/\/$/, "") + '/api/obfuscate';
-        } else if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            API_URL = 'http://localhost:8000/api/obfuscate';
+        let selectedFile = null;
+        let isKeyValid = false;
+
+        // KEY
+        const keyInput = document.getElementById('keyInput');
+        const verifyKeyBtn = document.getElementById('verifyKeyBtn');
+        const keyStatus = document.getElementById('keyStatus');
+
+        const savedKey = localStorage.getItem('shenron_key');
+        if (savedKey) { keyInput.value = savedKey; verifyKey(); }
+
+        async function verifyKey() {
+            const key = keyInput.value.trim();
+            if (!key) { keyStatus.innerHTML = '<span class="text-red-400">❌ Vui lòng nhập key</span>'; isKeyValid = false; return; }
+
+            keyStatus.innerHTML = '<span class="text-yellow-400">⏳ Đang xác thực...</span>';
+
+            try {
+                const response = await fetch(`${API_URL}/api/verify-key`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key })
+                });
+                const data = await response.json();
+
+                if (data.valid) {
+                    const info = data.info;
+                    const expires = new Date(info.expires);
+                    const daysLeft = Math.ceil((expires - new Date()) / (1000 * 60 * 60 * 24));
+                    keyStatus.innerHTML = `<span class="text-green-400">✅ Key hợp lệ!</span> <span class="text-slate-400 ml-2">${info.type} · ${daysLeft} ngày · ${info.max_uses - info.uses} lần</span>`;
+                    isKeyValid = true;
+                    localStorage.setItem('shenron_key', key);
+                } else {
+                    keyStatus.innerHTML = `<span class="text-red-400">❌ ${data.message || 'Key không hợp lệ'}</span>`;
+                    isKeyValid = false;
+                }
+            } catch (error) {
+                keyStatus.innerHTML = `<span class="text-red-400">❌ Lỗi: ${error.message}</span>`;
+                isKeyValid = false;
+            }
         }
 
+        verifyKeyBtn.addEventListener('click', verifyKey);
+        keyInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') verifyKey(); });
+
+        // FILE
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
         const fileNameDisplay = document.getElementById('fileName');
@@ -232,8 +289,6 @@
         const progressContainer = document.getElementById('progressContainer');
         const progressBar = document.getElementById('progressBar');
         const progressText = document.getElementById('progressText');
-
-        let selectedFile = null;
 
         dropZone.addEventListener('click', () => fileInput.click());
 
@@ -249,73 +304,76 @@
         ['dragover', 'dragenter'].forEach(ev => {
             dropZone.addEventListener(ev, (e) => {
                 e.preventDefault();
-                dropZone.classList.add('border-cyan-500', 'bg-cyan-950/20');
+                dropZone.classList.add('border-yellow-500', 'bg-yellow-950/20');
             });
         });
 
         ['dragleave', 'dragend'].forEach(ev => {
             dropZone.addEventListener(ev, () => {
-                dropZone.classList.remove('border-cyan-500', 'bg-cyan-950/20');
+                dropZone.classList.remove('border-yellow-500', 'bg-yellow-950/20');
             });
         });
 
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
-            dropZone.classList.remove('border-cyan-500', 'bg-cyan-950/20');
+            dropZone.classList.remove('border-yellow-500', 'bg-yellow-950/20');
             const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                const ext = files[0].name.split('.').pop();
-                if (['py', 'js', 'mjs'].includes(ext)) {
-                    selectedFile = files[0];
-                    fileNameDisplay.textContent = `📄 ${selectedFile.name} (${(selectedFile.size / 1024).toFixed(1)} KB)`;
-                    statusMessage.textContent = '';
-                    statusMessage.className = 'text-center text-sm';
-                    const dt = new DataTransfer();
-                    dt.items.add(selectedFile);
-                    fileInput.files = dt.files;
-                } else {
-                    statusMessage.textContent = '⚠️ Vui lòng thả file .py hoặc .js hợp lệ';
-                    statusMessage.className = 'text-center text-sm text-red-400';
-                }
+            if (files.length > 0 && files[0].name.endsWith('.py')) {
+                selectedFile = files[0];
+                fileNameDisplay.textContent = `📄 ${selectedFile.name} (${(selectedFile.size / 1024).toFixed(1)} KB)`;
+                statusMessage.textContent = '';
+                statusMessage.className = 'text-center text-sm';
+                const dt = new DataTransfer();
+                dt.items.add(selectedFile);
+                fileInput.files = dt.files;
+            } else {
+                statusMessage.textContent = '⚠️ Chỉ hỗ trợ file .py';
+                statusMessage.className = 'text-center text-sm text-red-400';
             }
         });
 
+        // OBFUSCATE
         btnRun.addEventListener('click', async () => {
+            if (!isKeyValid) {
+                statusMessage.textContent = '⚠️ Vui lòng nhập và xác thực key trước!';
+                statusMessage.className = 'text-center text-sm text-red-400';
+                return;
+            }
             if (!selectedFile) {
-                statusMessage.textContent = '⚠️ Vui lòng chọn file trước.';
+                statusMessage.textContent = '⚠️ Vui lòng chọn file .py';
                 statusMessage.className = 'text-center text-sm text-red-400';
                 return;
             }
 
             const level = document.querySelector('input[name="level"]:checked').value;
-            const language = document.getElementById('languageSelect').value;
+            const key = keyInput.value.trim();
 
             btnRun.disabled = true;
-            btnRun.innerHTML = '<i data-lucide="loader" class="w-5 h-5 animate-spin"></i> Đang xử lý...';
+            btnRun.innerHTML = '<i data-lucide="loader" class="w-5 h-5 animate-spin"></i> 🐉 Đang gọi rồng thần...';
             lucide.createIcons();
 
             progressContainer.classList.remove('hidden');
             progressBar.style.width = '0%';
             progressText.textContent = '0%';
 
-            statusMessage.textContent = '⏳ Đang obfuscate...';
+            statusMessage.textContent = '⏳ Đang obfuscate với 30+ kỹ thuật...';
             statusMessage.className = 'text-center text-sm text-yellow-400';
 
             const formData = new FormData();
             formData.append('file', selectedFile);
             formData.append('level', level);
-            formData.append('language', language);
+            formData.append('key', key);
 
             try {
                 let progress = 0;
                 const progressInterval = setInterval(() => {
-                    progress += Math.random() * 15;
+                    progress += Math.random() * 10;
                     if (progress > 90) progress = 90;
                     progressBar.style.width = progress + '%';
                     progressText.textContent = Math.floor(progress) + '%';
-                }, 200);
+                }, 300);
 
-                const response = await fetch(API_URL, {
+                const response = await fetch(`${API_URL}/api/obfuscate`, {
                     method: 'POST',
                     body: formData,
                 });
@@ -325,18 +383,16 @@
                 progressText.textContent = '100%';
 
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(errorText || 'Lỗi không xác định');
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Lỗi không xác định');
                 }
 
                 const blob = await response.blob();
                 const downloadUrl = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = downloadUrl;
-                const origName = selectedFile.name;
-                const baseName = origName.substring(0, origName.lastIndexOf('.'));
-                const ext = origName.substring(origName.lastIndexOf('.'));
-                a.download = `protected_${baseName}${ext}`;
+                const baseName = selectedFile.name.replace('.py', '');
+                a.download = `protected_${baseName}.py`;
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
@@ -351,11 +407,9 @@
                 progressContainer.classList.add('hidden');
             } finally {
                 btnRun.disabled = false;
-                btnRun.innerHTML = '<i data-lucide="play" class="w-5 h-5 fill-black"></i> Bắt Đầu Bảo Vệ Mã Nguồn';
+                btnRun.innerHTML = '<i data-lucide="play" class="w-5 h-5 fill-black"></i> Gọi Rồng Thần Bảo Vệ';
                 lucide.createIcons();
-                setTimeout(() => {
-                    progressContainer.classList.add('hidden');
-                }, 3000);
+                setTimeout(() => { progressContainer.classList.add('hidden'); }, 3000);
             }
         });
     </script>
