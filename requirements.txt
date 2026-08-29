@@ -6,7 +6,7 @@ redis==5.0.1
 slowapi==0.1.9
 aioredis==2.0.1
 aiofiles==23.2.1
-pystyle==0.1.2
 httpx==0.25.2
 pydantic==2.4.2
 python-dotenv==1.0.0
+# pystyle removed - không cần thiết cho production
