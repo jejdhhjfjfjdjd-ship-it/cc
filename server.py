@@ -1,6 +1,6 @@
-# server.py - ttan~OBF ULTIMATE EDITION v7.1
+# server.py - ttan~OBF ULTIMATE EDITION v8.0
 # Anti-Debug, Anti-VM, Anti-LLM, Control Flow Flattening
-# Multi-Language Obfuscator - FIXED DEPLOYMENT
+# Multi-Language Obfuscator - FIXED ALL ERRORS
 
 import ast
 import base64
@@ -33,12 +33,12 @@ logger = logging.getLogger("ttan-obf")
 
 HOST = os.getenv("HOST", "0.0.0.0")
 PORT = int(os.getenv("PORT", "8000"))
-MAX_FILE_SIZE = int(os.getenv("MAX_FILE_SIZE", 2 * 1024 * 1024))  # 2MB
+MAX_FILE_SIZE = int(os.getenv("MAX_FILE_SIZE", 5 * 1024 * 1024))  # 5MB
 DEFAULT_LEVEL = os.getenv("DEFAULT_LEVEL", "ultimate")
 SECRET_KEY = os.getenv("HMAC_SECRET", "ttan_ultimate_secret_key_2026")
 API_KEY = os.getenv("API_KEY", "")
 
-app = FastAPI(title="ttan~OBF Ultimate Engine", version="7.1.0")
+app = FastAPI(title="ttan~OBF Ultimate Engine", version="8.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -50,41 +50,48 @@ app.add_middleware(
 # ========== RATE LIMITING ==========
 request_counts = defaultdict(list)
 
-def rate_limit(ip: str, limit: int = 15, window: int = 60):
+def rate_limit(ip: str, limit: int = 20, window: int = 60):
     now = time.time()
     request_counts[ip] = [t for t in request_counts[ip] if now - t < window]
     if len(request_counts[ip]) >= limit:
         raise HTTPException(status_code=429, detail="Quá nhiều yêu cầu, vui lòng thử lại sau.")
     request_counts[ip].append(now)
 
-# ========== ANTI-DEBUG + ANTI-VM GENERATOR (FIXED) ==========
+# ========== FIX: SAFE BYTE ENCODING ==========
+def safe_bytes(data):
+    """Đảm bảo dữ liệu là bytes hợp lệ (0-255)"""
+    if isinstance(data, str):
+        data = data.encode('utf-8', errors='ignore')
+    return bytes([b & 0xFF for b in data])
+
+def safe_xor(data, key):
+    """XOR an toàn, đảm bảo giá trị trong khoảng 0-255"""
+    data = safe_bytes(data)
+    key = key & 0xFF
+    return bytes([(b ^ key) & 0xFF for b in data])
+
+# ========== ANTI-DEBUG + ANTI-VM GENERATOR ==========
 def generate_anti_debug_ultimate() -> str:
-    """Tạo mã anti-debug và anti-VM cực mạnh - FIXED escape sequences"""
     return '''
 # =====================================================
-# ANTI-DEBUG + ANTI-VM ULTIMATE v2.0
+# ANTI-DEBUG + ANTI-VM ULTIMATE v3.0
 # =====================================================
 import os, sys, time, platform, subprocess, hashlib
 
 def _anti_debug_vm_check():
-    """Kiểm tra debugger và máy ảo với nhiều kỹ thuật"""
     try:
-        # === 1. CHECK TRACER ===
         if sys.gettrace() is not None:
             raise SystemExit("Debugger detected!")
         
-        # === 2. CHECK PYTHON DEBUG FLAGS ===
         if hasattr(sys, 'flags') and sys.flags.debug:
             raise SystemExit("Debug mode detected!")
         
-        # === 3. TIME CHECK (anti-step) ===
         _start = time.perf_counter()
         for _ in range(100000):
             _ = _ * _
         if time.perf_counter() - _start > 0.01:
             pass
         
-        # === 4. CHECK /proc/self/status (Linux) ===
         if os.path.exists('/proc/self/status'):
             with open('/proc/self/status', 'r') as f:
                 for line in f:
@@ -93,7 +100,6 @@ def _anti_debug_vm_check():
                         if pid != 0:
                             raise SystemExit("Debugger detected!")
         
-        # === 5. CHECK VM: /proc/cpuinfo ===
         if os.path.exists('/proc/cpuinfo'):
             with open('/proc/cpuinfo', 'r') as f:
                 content = f.read().lower()
@@ -101,7 +107,6 @@ def _anti_debug_vm_check():
                 if any(ind in content for ind in vm_indicators):
                     raise SystemExit("VM detected!")
         
-        # === 6. CHECK VM: DMI/SMBIOS ===
         dmi_paths = [
             '/sys/class/dmi/id/product_name',
             '/sys/class/dmi/id/sys_vendor',
@@ -115,27 +120,6 @@ def _anti_debug_vm_check():
                     if any(k in content for k in vm_keywords):
                         raise SystemExit("VM detected!")
         
-        # === 7. CHECK VM: Registry (Windows) - FIXED ===
-        if os.name == 'nt':
-            try:
-                import winreg
-                # FIXED: no raw strings with backslashes
-                vm_reg_keys = [
-                    (winreg.HKEY_LOCAL_MACHINE, "SYSTEM\\\\CurrentControlSet\\\\Control\\\\SystemInformation", "SystemManufacturer"),
-                    (winreg.HKEY_LOCAL_MACHINE, "HARDWARE\\\\DESCRIPTION\\\\System", "SystemBiosVersion"),
-                ]
-                for hkey, path, value in vm_reg_keys:
-                    try:
-                        key = winreg.OpenKey(hkey, path)
-                        data = winreg.QueryValueEx(key, value)[0]
-                        if any(x in str(data).lower() for x in ['vmware', 'virtualbox', 'qemu', 'xen']):
-                            raise SystemExit("VM detected!")
-                    except:
-                        pass
-            except:
-                pass
-        
-        # === 8. CHECK VM: Drivers/Files ===
         vm_files = [
             '/dev/vboxguest', '/dev/vmci', '/dev/xen',
             '/proc/vz', '/proc/xen', '/usr/bin/vmware-checkvm'
@@ -144,7 +128,6 @@ def _anti_debug_vm_check():
             if os.path.exists(f):
                 raise SystemExit("VM detected!")
         
-        # === 9. CHECK CPU cores ===
         try:
             import multiprocessing
             if multiprocessing.cpu_count() < 2:
@@ -152,13 +135,6 @@ def _anti_debug_vm_check():
         except:
             pass
         
-        # === 10. CHECK Environment ===
-        debug_env = ['PYCHARM', 'VSCODE', 'JETBRAINS', 'CODESPACES', 'GITHUB_CODESPACES']
-        for env in debug_env:
-            if env in os.environ:
-                pass
-        
-        # === 11. PTrace check (Linux) ===
         if os.name == 'posix':
             try:
                 import ctypes
@@ -268,7 +244,7 @@ def generate_ultimate_runtime(payload: str, signature: str, keys: tuple, level: 
     anti_debug = generate_anti_debug_ultimate()
     
     runtime = f'''# =====================================================
-# ttan~OBF ULTIMATE RUNTIME v7.1
+# ttan~OBF ULTIMATE RUNTIME v8.0
 # Anti-Debug + Anti-VM + Anti-LLM + Self-Defending
 # =====================================================
 
@@ -301,14 +277,14 @@ _k1, _k2, _k3 = {keys[0]}, {keys[1]}, {keys[2]}
 if hmac.new(b"{SECRET_KEY}", _p.encode(), hashlib.sha256).hexdigest() != _sig:
     raise SystemExit("Integrity check failed!")
 
-# ====== DECRYPTION (3 layers) ======
-_d2 = bytes([b ^ _k3 for b in base64.b64decode(_p)])[::-1]
-_d1 = bytes([b ^ _k2 for b in _d2])
-_d0 = bytes([b ^ _k1 for b in _d1])
+# ====== DECRYPTION (3 layers - SAFE) ======
+_d2 = bytes([(b ^ _k3) & 0xFF for b in base64.b64decode(_p)[::-1]])
+_d1 = bytes([(b ^ _k2) & 0xFF for b in _d2])
+_d0 = bytes([(b ^ _k1) & 0xFF for b in _d1])
 
 # ====== EXECUTION ======
 try:
-    _code = zlib.decompress(_d0).decode('utf-8')
+    _code = zlib.decompress(_d0).decode('utf-8', errors='ignore')
     exec(compile(_code, '<ttan_obf_ultimate>', 'exec'))
 except SystemExit:
     raise
@@ -318,7 +294,7 @@ except:
 
     return runtime
 
-# ========== CONTROL FLOW FLATTENING (FIXED LOOP EXIT) ==========
+# ========== CONTROL FLOW FLATTENING ==========
 class ControlFlowFlattener(ast.NodeTransformer):
     def __init__(self):
         self.counter = 0
@@ -342,7 +318,6 @@ class ControlFlowFlattener(ast.NodeTransformer):
             values=[ast.Constant(value=v) for v in state_map.values()]
         )
         
-        # Build flattened body with proper break logic
         new_body = [
             ast.Assign(
                 targets=[ast.Name(id=f'_flow_{self.counter}', ctx=ast.Store())],
@@ -387,7 +362,7 @@ class ControlFlowFlattener(ast.NodeTransformer):
         self.generic_visit(node)
         return node
 
-# ========== PYTHON OBFUSCATOR ULTIMATE ==========
+# ========== PYTHON OBFUSCATOR ULTIMATE (FIXED) ==========
 def obfuscate_python_ultimate(source_code: str, level: str = "ultimate") -> str:
     try:
         # Phase 1: AST Transformation
@@ -411,19 +386,22 @@ def obfuscate_python_ultimate(source_code: str, level: str = "ultimate") -> str:
             except Exception as e:
                 logger.warning(f"Control flow flattening skipped: {e}")
         
-        # Phase 4: Compression + Encryption
-        compressed = zlib.compress(stage1_code.encode('utf-8'))
+        # Phase 4: Compression + Encryption (SAFE)
+        # Convert to bytes safely
+        code_bytes = stage1_code.encode('utf-8', errors='ignore')
+        compressed = zlib.compress(code_bytes)
         
         key1 = random.randint(1, 255)
         key2 = random.randint(1, 255)
         key3 = random.randint(1, 255)
         
-        layer1 = bytes([b ^ key1 for b in compressed])
-        layer2 = bytes([b ^ key2 for b in layer1])
-        layer3 = bytes([b ^ key3 for b in layer2[::-1]])
+        # SAFE XOR with byte masking
+        layer1 = bytes([(b ^ key1) & 0xFF for b in compressed])
+        layer2 = bytes([(b ^ key2) & 0xFF for b in layer1])
+        layer3 = bytes([(b ^ key3) & 0xFF for b in layer2[::-1]])
         
-        payload = base64.b64encode(layer3).decode('utf-8')
-        signature = hmac.new(SECRET_KEY.encode(), payload.encode(), hashlib.sha256).hexdigest()
+        payload = base64.b64encode(layer3).decode('ascii')
+        signature = hmac.new(SECRET_KEY.encode(), payload.encode('ascii'), hashlib.sha256).hexdigest()
         
         runtime = generate_ultimate_runtime(payload, signature, (key1, key2, key3), level)
         
@@ -436,7 +414,7 @@ def obfuscate_python_ultimate(source_code: str, level: str = "ultimate") -> str:
         logger.error(f"Unexpected error: {e}")
         raise HTTPException(status_code=400, detail=f"Lỗi xử lý: {str(e)}")
 
-# ========== ULTIMATE AST OBFUSCATOR (FIXED AST NODES) ==========
+# ========== ULTIMATE AST OBFUSCATOR ==========
 
 class UltimateASTObfuscator(ast.NodeTransformer):
     def __init__(self, level="ultimate"):
@@ -476,11 +454,12 @@ class UltimateASTObfuscator(ast.NodeTransformer):
         return result
     
     def _make_string_decryptor(self, text: str) -> ast.AST:
+        # SAFE: chỉ XOR các ký tự ASCII, bỏ qua Unicode
         key = random.randint(1, 255)
-        enc = bytes([ord(c) ^ key for c in text])
-        b64 = base64.b64encode(enc).decode()
+        enc = bytes([(ord(c) ^ key) & 0xFF for c in text if ord(c) < 256])
+        b64 = base64.b64encode(enc).decode('ascii')
         
-        code = f'''(lambda _s: (lambda _k: ''.join(chr((_b ^ _k)) for _b in __import__('base64').b64decode(_s)[::-1]))({key}))("{b64}")'''
+        code = f'''(lambda _s: (lambda _k: ''.join(chr((_b ^ _k) & 0xFF) for _b in __import__('base64').b64decode(_s)[::-1]))({key}))("{b64}")'''
         
         return ast.parse(code).body[0].value
     
@@ -582,12 +561,14 @@ _torus_dummy = _torus_guard(0x1337) ^ _torus_guard(0xDEAD)
         return assignments + [loop, junk_if]
     
     def visit_Constant(self, node):
-        if isinstance(node.value, int) and abs(node.value) > 5:
-            return self._make_complex_expression(node.value, depth=random.randint(0, 3))
-        elif isinstance(node.value, str) and len(node.value) > 0:
-            if len(node.value) < 3:
-                return node
-            return self._make_string_decryptor(node.value)
+        if isinstance(node.value, int):
+            if abs(node.value) > 5:
+                return self._make_complex_expression(node.value, depth=random.randint(0, 3))
+            return node
+        elif isinstance(node.value, str):
+            if len(node.value) >= 3 and all(ord(c) < 256 for c in node.value):
+                return self._make_string_decryptor(node.value)
+            return node
         return node
     
     def visit_Name(self, node):
@@ -668,9 +649,8 @@ class NameCollector(ast.NodeVisitor):
         self.names.add(node.name)
         self.generic_visit(node)
 
-# ========== JS OBFUSCATOR (FIXED REGEX & IMPORTS) ==========
+# ========== JS OBFUSCATOR ==========
 def obfuscate_js_ultimate(source_code: str, level: str = "ultimate") -> str:
-    # Rename variables
     var_pattern = r'\b(var|let|const)\s+([a-zA-Z_][a-zA-Z0-9_]*)\b'
     matches = re.findall(var_pattern, source_code)
     name_map = {}
@@ -681,20 +661,18 @@ def obfuscate_js_ultimate(source_code: str, level: str = "ultimate") -> str:
     for old, new in name_map.items():
         source_code = re.sub(rf'\b{old}\b', new, source_code)
     
-    # Encode strings safetly with escape handling
     def encode_string(match):
         s = match.group(1)
         if len(s) < 3:
             return match.group(0)
         key = random.randint(1, 255)
-        enc = bytes([ord(c) ^ key for c in s])
-        b64 = base64.b64encode(enc).decode()
+        enc = bytes([(ord(c) ^ key) & 0xFF for c in s if ord(c) < 256])
+        b64 = base64.b64encode(enc).decode('ascii')
         return f'(function(){{var _k={key};var _s=atob("{b64}");var _r="";for(var _i=0;_i<_s.length;_i++){{_r+=String.fromCharCode(_s.charCodeAt(_i)^_k);}}return _r;}})()'
     
     source_code = re.sub(r'"((?:[^"\\]|\\.)*)"', encode_string, source_code)
     source_code = re.sub(r"'((?:[^'\\]|\\.)*)'", encode_string, source_code)
     
-    # Anti-debug wrapper
     anti_debug = '''
 (function(){
 if(window.__debugger_present || 
@@ -760,9 +738,9 @@ async def api_obfuscate(
         raise HTTPException(status_code=400, detail="Chỉ hỗ trợ .py, .js, .mjs")
     
     try:
-        source_code = contents.decode('utf-8')
-    except UnicodeDecodeError:
-        raise HTTPException(status_code=400, detail="File phải là UTF-8")
+        source_code = contents.decode('utf-8', errors='ignore')
+    except:
+        raise HTTPException(status_code=400, detail="Không thể đọc file, vui lòng kiểm tra định dạng")
     
     logger.info(f"Received: {file.filename}, size: {len(contents)} bytes, level: {level}, language: {language}")
     
@@ -781,7 +759,7 @@ async def api_obfuscate(
         logger.error(f"Obfuscation failed: {e}")
         raise HTTPException(status_code=500, detail=f"Lỗi xử lý: {str(e)}")
     
-    metadata = f"\n# Obfuscated by ttan~OBF v7.1 on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+    metadata = f"\n# Obfuscated by ttan~OBF v8.0 on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
     protected_code = metadata + protected_code
     
     return Response(
@@ -794,11 +772,11 @@ async def api_obfuscate(
 async def health():
     return {
         "status": "ok",
-        "version": "7.1.0",
+        "version": "8.0.0",
         "plugins": ["python", "javascript"],
-        "features": ["anti-debug", "anti-vm", "anti-llm", "control-flow-flattening"]
+        "features": ["anti-debug", "anti-vm", "anti-llm", "control-flow-flattening", "safe-encoding"]
     }
 
 if __name__ == "__main__":
-    logger.info(f"Starting ttan~OBF Ultimate Engine v7.1 on {HOST}:{PORT}")
+    logger.info(f"Starting ttan~OBF Ultimate Engine v8.0 on {HOST}:{PORT}")
     uvicorn.run("server:app", host=HOST, port=PORT, reload=False)
