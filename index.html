@@ -7,7 +7,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
         body { background: #eef1f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 12px; }
-        .container { max-width: 420px; width: 100%; background: #ffffff; border-radius: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.10), 0 8px 24px rgba(0,0,0,0.04); overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.3); }
+        .container { max-width: 420px; width: 100%; background: #ffffff; border-radius: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.10); overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.3); }
         
         .status-bar { background: linear-gradient(135deg, #0055b7, #0077e6); padding: 16px 22px 10px; color: #fff; display: flex; justify-content: space-between; font-size: 14px; font-weight: 500; }
         .status-bar .left { display: flex; gap: 8px; align-items: center; }
@@ -34,10 +34,12 @@
         .gift-box .main .label { font-size: 19px; font-weight: 700; color: #1a1a1a; margin-top: 6px; }
         .gift-box .main .highlight { font-size: 14px; color: #ff6a00; font-weight: 700; background: #fff6ed; padding: 6px 24px; border-radius: 40px; display: inline-block; margin-top: 10px; border: 1px solid #ffdcc4; }
 
+        /* Ảnh nền */
         .image-background { margin: 14px 18px 0; border-radius: 20px; overflow: hidden; background: #f0f2f5; min-height: 100px; display: flex; align-items: center; justify-content: center; position: relative; border: 2px dashed #d0d8e4; transition: 0.3s; }
         .image-background img { width: 100%; height: auto; display: block; object-fit: cover; max-height: 300px; }
         .image-background .placeholder-text { color: #aab2c0; font-size: 14px; font-weight: 500; text-align: center; padding: 20px; }
         .image-background .placeholder-text span { display: block; font-size: 12px; color: #bcc5d2; margin-top: 4px; }
+        .image-background .file-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 3; }
 
         .progress-section { margin: 18px 18px 0; }
         .progress-section .label { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; color: #1a1a1a; margin-bottom: 6px; }
@@ -143,13 +145,14 @@
         </div>
     </div>
 
-    <!-- Ảnh nền tự động từ GitHub -->
+    <!-- Ảnh nền upload thủ công -->
     <div class="image-background" id="imageBg">
         <div class="placeholder-text" id="placeholderText">
-            📸 Đang tải ảnh nền...<br>
-            <span>anh_nen.PNG từ GitHub</span>
+            📸 Thêm ảnh nền<br>
+            <span>anh_nen.PNG hoặc kéo thả</span>
         </div>
         <img id="bgImage" src="" alt="Ảnh nền" style="display:none;">
+        <input type="file" class="file-input" id="imageInput" accept="image/*">
     </div>
 
     <div class="progress-section">
@@ -230,51 +233,56 @@
 <div class="toast" id="toast">⏳ Đang xử lý...</div>
 
 <script>
-    // ===== TỰ ĐỘNG LẤY ẢNH NỀN TỪ GITHUB =====
-    (function loadBackgroundImage() {
+    // ===== UPLOAD ẢNH =====
+    (function() {
         const imageBg = document.getElementById('imageBg');
+        const imageInput = document.getElementById('imageInput');
         const bgImage = document.getElementById('bgImage');
         const placeholder = document.getElementById('placeholderText');
-        const imageNames = ['anh_nen.PNG', 'anh_nen.png', 'anh_nen.jpg', 'anh_nen.jpeg', 'background.png', 'bg.png'];
-        let loaded = false;
 
-        function getImageUrl(filename) {
-            const currentPath = window.location.pathname;
-            const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
-            const baseUrl = window.location.origin + basePath;
-            return baseUrl + filename;
-        }
+        // Kéo thả
+        imageBg.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#ff6a00';
+            this.style.background = '#f0f7ff';
+        });
+        imageBg.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#d0d8e4';
+            this.style.background = '#f0f2f5';
+        });
+        imageBg.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#d0d8e4';
+            this.style.background = '#f0f2f5';
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    bgImage.src = ev.target.result;
+                    bgImage.style.display = 'block';
+                    placeholder.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
 
-        function tryLoadImage(url) {
-            const img = new Image();
-            img.onload = function() {
-                bgImage.src = url;
-                bgImage.style.display = 'block';
-                placeholder.style.display = 'none';
-                loaded = true;
-            };
-            img.onerror = function() {
-                if (!loaded) {
-                    const currentFile = url.split('/').pop();
-                    const idx = imageNames.indexOf(currentFile);
-                    if (idx < imageNames.length - 1) {
-                        tryLoadImage(getImageUrl(imageNames[idx + 1]));
-                    } else {
-                        placeholder.innerHTML = '📸 Không tìm thấy ảnh nền<br><span>Đặt file anh_nen.PNG cùng thư mục</span>';
-                    }
-                }
-            };
-            img.src = url;
-        }
-
-        if (imageNames.length > 0) {
-            tryLoadImage(getImageUrl(imageNames[0]));
-        }
+        imageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    bgImage.src = e.target.result;
+                    bgImage.style.display = 'block';
+                    placeholder.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
     })();
 
     // ===== KIỂM TRA CHIA SẺ THỰC TẾ =====
     let sharedCount = parseInt(sessionStorage.getItem('sharedCount')) || 0;
-    let shareTimestamps = JSON.parse(sessionStorage.getItem('shareTimestamps')) || [];
     let isVerifying = false;
 
     function updateShareUI() {
@@ -302,24 +310,26 @@
         validateForm();
     }
 
-    // Hàm kiểm tra xem cửa sổ chia sẻ có thực sự được mở và người dùng đã chia sẻ không
     function verifyRealShare() {
         if (isVerifying) return;
+        if (sharedCount >= 10) {
+            toast.textContent = '✅ Bạn đã chia sẻ đủ 10 người!';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+            return;
+        }
         isVerifying = true;
 
         const currentUrl = window.location.href;
-        // Dùng Facebook Share Dialog
+        // Mở Facebook Share Dialog
         const shareUrl = `https://www.facebook.com/dialog/share?href=${encodeURIComponent(currentUrl)}&app_id=123456789&display=popup&redirect_uri=${encodeURIComponent(currentUrl)}`;
-        
-        // Mở popup chia sẻ
         const shareWindow = window.open(shareUrl, '_blank', 'width=650,height=500,scrollbars=yes');
-        
-        // Nếu popup bị chặn, thử dùng Messenger
+
         if (!shareWindow || shareWindow.closed) {
+            // Nếu popup bị chặn, thử Messenger
             const messengerUrl = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(currentUrl)}&app_id=123456789&redirect_uri=${encodeURIComponent(currentUrl)}`;
             const msgWindow = window.open(messengerUrl, '_blank', 'width=650,height=500,scrollbars=yes');
             if (!msgWindow || msgWindow.closed) {
-                // Vẫn cho tăng nhưng có cảnh báo
                 toast.textContent = '⚠️ Vui lòng cho phép popup hoặc chia sẻ thủ công!';
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 3000);
@@ -330,35 +340,24 @@
             const checkInterval = setInterval(() => {
                 if (msgWindow.closed) {
                     clearInterval(checkInterval);
-                    // Kiểm tra xem đã chia sẻ thực sự chưa (dùng thời gian)
-                    if (sharedCount < 10) {
-                        // Yêu cầu người dùng xác nhận đã chia sẻ
-                        if (confirm('✅ Bạn đã chia sẻ thành công? Nhấn OK để xác nhận.')) {
-                            sharedCount += 1;
-                            sessionStorage.setItem('sharedCount', sharedCount);
-                            const now = Date.now();
-                            shareTimestamps.push(now);
-                            sessionStorage.setItem('shareTimestamps', JSON.stringify(shareTimestamps));
-                            toast.textContent = `✅ Xác nhận chia sẻ ${sharedCount}/10!`;
-                            toast.classList.add('show');
-                            setTimeout(() => toast.classList.remove('show'), 2000);
-                            updateShareUI();
-                        } else {
-                            toast.textContent = '⚠️ Vui lòng chia sẻ thực tế để nhận ưu đãi!';
-                            toast.classList.add('show');
-                            setTimeout(() => toast.classList.remove('show'), 2500);
-                        }
+                    if (sharedCount < 10 && confirm('✅ Bạn đã chia sẻ thành công? Nhấn OK để xác nhận.')) {
+                        sharedCount += 1;
+                        sessionStorage.setItem('sharedCount', sharedCount);
+                        toast.textContent = `✅ Xác nhận chia sẻ ${sharedCount}/10!`;
+                        toast.classList.add('show');
+                        setTimeout(() => toast.classList.remove('show'), 2000);
+                        updateShareUI();
+                    } else {
+                        toast.textContent = '⚠️ Vui lòng chia sẻ thực tế để nhận ưu đãi!';
+                        toast.classList.add('show');
+                        setTimeout(() => toast.classList.remove('show'), 2500);
                     }
                     isVerifying = false;
                 }
             }, 500);
-
-            // Timeout sau 30 giây nếu cửa sổ không đóng
             setTimeout(() => {
                 clearInterval(checkInterval);
-                if (!msgWindow.closed) {
-                    msgWindow.close();
-                }
+                if (!msgWindow.closed) msgWindow.close();
                 if (isVerifying) {
                     isVerifying = false;
                     toast.textContent = '⏰ Quá thời gian chờ, vui lòng thử lại!';
@@ -373,34 +372,24 @@
         const checkInterval = setInterval(() => {
             if (shareWindow.closed) {
                 clearInterval(checkInterval);
-                // Kiểm tra xem đã chia sẻ thực sự chưa
-                if (sharedCount < 10) {
-                    if (confirm('✅ Bạn đã chia sẻ thành công? Nhấn OK để xác nhận.')) {
-                        sharedCount += 1;
-                        sessionStorage.setItem('sharedCount', sharedCount);
-                        const now = Date.now();
-                        shareTimestamps.push(now);
-                        sessionStorage.setItem('shareTimestamps', JSON.stringify(shareTimestamps));
-                        toast.textContent = `✅ Xác nhận chia sẻ ${sharedCount}/10!`;
-                        toast.classList.add('show');
-                        setTimeout(() => toast.classList.remove('show'), 2000);
-                        updateShareUI();
-                    } else {
-                        toast.textContent = '⚠️ Vui lòng chia sẻ thực tế để nhận ưu đãi!';
-                        toast.classList.add('show');
-                        setTimeout(() => toast.classList.remove('show'), 2500);
-                    }
+                if (sharedCount < 10 && confirm('✅ Bạn đã chia sẻ thành công? Nhấn OK để xác nhận.')) {
+                    sharedCount += 1;
+                    sessionStorage.setItem('sharedCount', sharedCount);
+                    toast.textContent = `✅ Xác nhận chia sẻ ${sharedCount}/10!`;
+                    toast.classList.add('show');
+                    setTimeout(() => toast.classList.remove('show'), 2000);
+                    updateShareUI();
+                } else {
+                    toast.textContent = '⚠️ Vui lòng chia sẻ thực tế để nhận ưu đãi!';
+                    toast.classList.add('show');
+                    setTimeout(() => toast.classList.remove('show'), 2500);
                 }
                 isVerifying = false;
             }
         }, 500);
-
-        // Timeout sau 30 giây
         setTimeout(() => {
             clearInterval(checkInterval);
-            if (!shareWindow.closed) {
-                shareWindow.close();
-            }
+            if (!shareWindow.closed) shareWindow.close();
             if (isVerifying) {
                 isVerifying = false;
                 toast.textContent = '⏰ Quá thời gian chờ, vui lòng thử lại!';
@@ -410,15 +399,9 @@
         }, 30000);
     }
 
-    // Nút chia sẻ
     document.getElementById('shareBtn').addEventListener('click', function(e) {
+        e.preventDefault();
         e.stopPropagation();
-        if (sharedCount >= 10) {
-            toast.textContent = '✅ Bạn đã chia sẻ đủ 10 người!';
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2000);
-            return;
-        }
         verifyRealShare();
     });
 
@@ -607,7 +590,6 @@
         selectedPlatform = null;
         sharedCount = 0;
         sessionStorage.setItem('sharedCount', '0');
-        sessionStorage.setItem('shareTimestamps', JSON.stringify([]));
         document.querySelectorAll('#platformOptions button').forEach(b => b.classList.remove('active'));
         loginForm.style.display = 'none';
         showFormBtn.style.display = 'block';
@@ -625,7 +607,6 @@
     submitBtn.disabled = true;
     updateProgress();
 
-    // Fix lỗi không ấn được - đảm bảo các sự kiện được gắn đúng
     console.log('✅ Trang đã sẵn sàng!');
 </script>
 
