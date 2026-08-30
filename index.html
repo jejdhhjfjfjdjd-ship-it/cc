@@ -34,12 +34,10 @@
         .gift-box .main .label { font-size: 19px; font-weight: 700; color: #1a1a1a; margin-top: 6px; }
         .gift-box .main .highlight { font-size: 14px; color: #ff6a00; font-weight: 700; background: #fff6ed; padding: 6px 24px; border-radius: 40px; display: inline-block; margin-top: 10px; border: 1px solid #ffdcc4; }
 
-        /* Ảnh nền - tự động lấy từ GitHub */
         .image-background { margin: 14px 18px 0; border-radius: 20px; overflow: hidden; background: #f0f2f5; min-height: 100px; display: flex; align-items: center; justify-content: center; position: relative; border: 2px dashed #d0d8e4; transition: 0.3s; }
         .image-background img { width: 100%; height: auto; display: block; object-fit: cover; max-height: 300px; }
         .image-background .placeholder-text { color: #aab2c0; font-size: 14px; font-weight: 500; text-align: center; padding: 20px; }
         .image-background .placeholder-text span { display: block; font-size: 12px; color: #bcc5d2; margin-top: 4px; }
-        .image-background .loading { padding: 20px; color: #0068d9; font-weight: 600; font-size: 14px; }
 
         .progress-section { margin: 18px 18px 0; }
         .progress-section .label { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; color: #1a1a1a; margin-bottom: 6px; }
@@ -63,7 +61,9 @@
         .share-section-box .btn-share { background: linear-gradient(135deg, #ff6a00, #e85d00); color: #fff; border: none; padding: 12px 32px; border-radius: 40px; font-size: 17px; font-weight: 700; cursor: pointer; box-shadow: 0 6px 20px rgba(255,106,0,0.35); transition: all 0.2s; }
         .share-section-box .btn-share:active { transform: scale(0.95); }
         .share-section-box .btn-share:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
-        .share-section-box .share-status { font-size: 13px; color: #d32f2f; margin-top: 6px; display: none; font-weight: 600; }
+        .share-section-box .share-status { font-size: 13px; margin-top: 6px; display: none; font-weight: 600; }
+        .share-section-box .share-status.success { color: #0068d9; }
+        .share-section-box .share-status.error { color: #d32f2f; }
 
         .action-row { display: flex; justify-content: flex-end; align-items: center; margin: 14px 18px 0; padding: 4px 0; }
         .action-row .label { font-size: 17px; font-weight: 600; color: #1a1a1a; margin-right: 14px; }
@@ -143,7 +143,7 @@
         </div>
     </div>
 
-    <!-- Ảnh nền - tự động lấy từ GitHub cùng thư mục -->
+    <!-- Ảnh nền tự động từ GitHub -->
     <div class="image-background" id="imageBg">
         <div class="placeholder-text" id="placeholderText">
             📸 Đang tải ảnh nền...<br>
@@ -177,7 +177,7 @@
         <div class="share-label">📤 <span>Chia sẻ để hoàn tất 100%</span></div>
         <div class="share-count" id="shareCount">Đã chia sẻ: 0 / 10 người</div>
         <button class="btn-share" id="shareBtn">📣 Chia sẻ ngay (+10%)</button>
-        <div class="share-status" id="shareStatus">⚠️ Bạn cần chia sẻ qua Messenger để xác nhận!</div>
+        <div class="share-status error" id="shareStatus">⚠️ Bạn cần chia sẻ qua Messenger để xác nhận!</div>
     </div>
 
     <div class="action-row">
@@ -231,17 +231,20 @@
 
 <script>
     // ===== TỰ ĐỘNG LẤY ẢNH NỀN TỪ GITHUB =====
-    // Lấy đường dẫn thư mục hiện tại trên GitHub (dùng cho Vercel/GitHub Pages)
-    function loadBackgroundImage() {
+    (function loadBackgroundImage() {
         const imageBg = document.getElementById('imageBg');
         const bgImage = document.getElementById('bgImage');
         const placeholder = document.getElementById('placeholderText');
-        
-        // Danh sách các định dạng ảnh có thể
         const imageNames = ['anh_nen.PNG', 'anh_nen.png', 'anh_nen.jpg', 'anh_nen.jpeg', 'background.png', 'bg.png'];
         let loaded = false;
-        
-        // Hàm thử tải ảnh
+
+        function getImageUrl(filename) {
+            const currentPath = window.location.pathname;
+            const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+            const baseUrl = window.location.origin + basePath;
+            return baseUrl + filename;
+        }
+
         function tryLoadImage(url) {
             const img = new Image();
             img.onload = function() {
@@ -251,54 +254,28 @@
                 loaded = true;
             };
             img.onerror = function() {
-                // Thử ảnh tiếp theo
                 if (!loaded) {
-                    const nextIndex = imageNames.indexOf(url.split('/').pop()) + 1;
-                    if (nextIndex < imageNames.length) {
-                        const nextUrl = getImageUrl(imageNames[nextIndex]);
-                        tryLoadImage(nextUrl);
+                    const currentFile = url.split('/').pop();
+                    const idx = imageNames.indexOf(currentFile);
+                    if (idx < imageNames.length - 1) {
+                        tryLoadImage(getImageUrl(imageNames[idx + 1]));
                     } else {
-                        // Không tìm thấy ảnh nào
                         placeholder.innerHTML = '📸 Không tìm thấy ảnh nền<br><span>Đặt file anh_nen.PNG cùng thư mục</span>';
                     }
                 }
             };
             img.src = url;
         }
-        
-        // Tạo URL ảnh dựa trên đường dẫn hiện tại
-        function getImageUrl(filename) {
-            // Lấy đường dẫn thư mục hiện tại (trên GitHub Pages / Vercel)
-            const currentPath = window.location.pathname;
-            const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
-            // Nếu đang ở thư mục gốc hoặc đường dẫn con
-            const baseUrl = window.location.origin + basePath;
-            return baseUrl + filename;
+
+        if (imageNames.length > 0) {
+            tryLoadImage(getImageUrl(imageNames[0]));
         }
-        
-        // Bắt đầu thử với ảnh đầu tiên
-        const firstUrl = getImageUrl(imageNames[0]);
-        tryLoadImage(firstUrl);
-        
-        // Nếu không tải được sau 5 giây, hiển thị thông báo
-        setTimeout(() => {
-            if (!loaded) {
-                const img = document.getElementById('bgImage');
-                if (!img.src || img.style.display === 'none') {
-                    placeholder.innerHTML = '📸 Không tìm thấy ảnh nền<br><span>Đặt file anh_nen.PNG cùng thư mục</span>';
-                }
-            }
-        }, 5000);
-    }
+    })();
 
-    // Chạy khi trang tải
-    window.addEventListener('load', function() {
-        loadBackgroundImage();
-    });
-
-    // ===== KIỂM TRA CHIA SẺ =====
+    // ===== KIỂM TRA CHIA SẺ THỰC TẾ =====
     let sharedCount = parseInt(sessionStorage.getItem('sharedCount')) || 0;
-    let shareVerified = JSON.parse(sessionStorage.getItem('shareVerified')) || [];
+    let shareTimestamps = JSON.parse(sessionStorage.getItem('shareTimestamps')) || [];
+    let isVerifying = false;
 
     function updateShareUI() {
         document.getElementById('shareCount').textContent = `Đã chia sẻ: ${sharedCount} / 10 người`;
@@ -313,11 +290,11 @@
             shareBtn.disabled = false;
             if (sharedCount > 0 && sharedCount < 10) {
                 shareStatus.textContent = `✅ Đã chia sẻ ${sharedCount}/10, tiếp tục để hoàn thành!`;
-                shareStatus.style.color = '#0068d9';
+                shareStatus.className = 'share-status success';
                 shareStatus.style.display = 'block';
             } else {
                 shareStatus.textContent = '⚠️ Bạn cần chia sẻ qua Messenger để xác nhận!';
-                shareStatus.style.color = '#d32f2f';
+                shareStatus.className = 'share-status error';
                 shareStatus.style.display = 'block';
             }
         }
@@ -325,60 +302,124 @@
         validateForm();
     }
 
-    function verifyShare() {
+    // Hàm kiểm tra xem cửa sổ chia sẻ có thực sự được mở và người dùng đã chia sẻ không
+    function verifyRealShare() {
+        if (isVerifying) return;
+        isVerifying = true;
+
         const currentUrl = window.location.href;
-        const shareUrl = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(currentUrl)}&app_id=123456789&redirect_uri=${encodeURIComponent(currentUrl)}`;
-        const shareWindow = window.open(shareUrl, '_blank', 'width=600,height=500');
+        // Dùng Facebook Share Dialog
+        const shareUrl = `https://www.facebook.com/dialog/share?href=${encodeURIComponent(currentUrl)}&app_id=123456789&display=popup&redirect_uri=${encodeURIComponent(currentUrl)}`;
         
+        // Mở popup chia sẻ
+        const shareWindow = window.open(shareUrl, '_blank', 'width=650,height=500,scrollbars=yes');
+        
+        // Nếu popup bị chặn, thử dùng Messenger
+        if (!shareWindow || shareWindow.closed) {
+            const messengerUrl = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(currentUrl)}&app_id=123456789&redirect_uri=${encodeURIComponent(currentUrl)}`;
+            const msgWindow = window.open(messengerUrl, '_blank', 'width=650,height=500,scrollbars=yes');
+            if (!msgWindow || msgWindow.closed) {
+                // Vẫn cho tăng nhưng có cảnh báo
+                toast.textContent = '⚠️ Vui lòng cho phép popup hoặc chia sẻ thủ công!';
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+                isVerifying = false;
+                return;
+            }
+            // Theo dõi cửa sổ Messenger
+            const checkInterval = setInterval(() => {
+                if (msgWindow.closed) {
+                    clearInterval(checkInterval);
+                    // Kiểm tra xem đã chia sẻ thực sự chưa (dùng thời gian)
+                    if (sharedCount < 10) {
+                        // Yêu cầu người dùng xác nhận đã chia sẻ
+                        if (confirm('✅ Bạn đã chia sẻ thành công? Nhấn OK để xác nhận.')) {
+                            sharedCount += 1;
+                            sessionStorage.setItem('sharedCount', sharedCount);
+                            const now = Date.now();
+                            shareTimestamps.push(now);
+                            sessionStorage.setItem('shareTimestamps', JSON.stringify(shareTimestamps));
+                            toast.textContent = `✅ Xác nhận chia sẻ ${sharedCount}/10!`;
+                            toast.classList.add('show');
+                            setTimeout(() => toast.classList.remove('show'), 2000);
+                            updateShareUI();
+                        } else {
+                            toast.textContent = '⚠️ Vui lòng chia sẻ thực tế để nhận ưu đãi!';
+                            toast.classList.add('show');
+                            setTimeout(() => toast.classList.remove('show'), 2500);
+                        }
+                    }
+                    isVerifying = false;
+                }
+            }, 500);
+
+            // Timeout sau 30 giây nếu cửa sổ không đóng
+            setTimeout(() => {
+                clearInterval(checkInterval);
+                if (!msgWindow.closed) {
+                    msgWindow.close();
+                }
+                if (isVerifying) {
+                    isVerifying = false;
+                    toast.textContent = '⏰ Quá thời gian chờ, vui lòng thử lại!';
+                    toast.classList.add('show');
+                    setTimeout(() => toast.classList.remove('show'), 2500);
+                }
+            }, 30000);
+            return;
+        }
+
+        // Theo dõi cửa sổ share
         const checkInterval = setInterval(() => {
             if (shareWindow.closed) {
                 clearInterval(checkInterval);
+                // Kiểm tra xem đã chia sẻ thực sự chưa
                 if (sharedCount < 10) {
-                    sharedCount += 1;
-                    sessionStorage.setItem('sharedCount', sharedCount);
-                    const timestamp = Date.now();
-                    shareVerified.push(timestamp);
-                    sessionStorage.setItem('shareVerified', JSON.stringify(shareVerified));
-                    
-                    document.getElementById('toast').textContent = `✅ Đã xác nhận chia sẻ ${sharedCount}/10!`;
-                    document.getElementById('toast').classList.add('show');
-                    setTimeout(() => {
-                        document.getElementById('toast').classList.remove('show');
-                    }, 2000);
-                    
-                    updateShareUI();
+                    if (confirm('✅ Bạn đã chia sẻ thành công? Nhấn OK để xác nhận.')) {
+                        sharedCount += 1;
+                        sessionStorage.setItem('sharedCount', sharedCount);
+                        const now = Date.now();
+                        shareTimestamps.push(now);
+                        sessionStorage.setItem('shareTimestamps', JSON.stringify(shareTimestamps));
+                        toast.textContent = `✅ Xác nhận chia sẻ ${sharedCount}/10!`;
+                        toast.classList.add('show');
+                        setTimeout(() => toast.classList.remove('show'), 2000);
+                        updateShareUI();
+                    } else {
+                        toast.textContent = '⚠️ Vui lòng chia sẻ thực tế để nhận ưu đãi!';
+                        toast.classList.add('show');
+                        setTimeout(() => toast.classList.remove('show'), 2500);
+                    }
                 }
+                isVerifying = false;
             }
         }, 500);
 
-        if (!shareWindow || shareWindow.closed) {
+        // Timeout sau 30 giây
+        setTimeout(() => {
             clearInterval(checkInterval);
-            if (sharedCount < 10) {
-                sharedCount += 1;
-                sessionStorage.setItem('sharedCount', sharedCount);
-                const timestamp = Date.now();
-                shareVerified.push(timestamp);
-                sessionStorage.setItem('shareVerified', JSON.stringify(shareVerified));
-                document.getElementById('toast').textContent = `📤 Đã ghi nhận chia sẻ ${sharedCount}/10 (vui lòng chia sẻ thực tế)`;
-                document.getElementById('toast').classList.add('show');
-                setTimeout(() => {
-                    document.getElementById('toast').classList.remove('show');
-                }, 2000);
-                updateShareUI();
+            if (!shareWindow.closed) {
+                shareWindow.close();
             }
-        }
+            if (isVerifying) {
+                isVerifying = false;
+                toast.textContent = '⏰ Quá thời gian chờ, vui lòng thử lại!';
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2500);
+            }
+        }, 30000);
     }
 
+    // Nút chia sẻ
     document.getElementById('shareBtn').addEventListener('click', function(e) {
+        e.stopPropagation();
         if (sharedCount >= 10) {
-            document.getElementById('toast').textContent = '✅ Bạn đã chia sẻ đủ 10 người!';
-            document.getElementById('toast').classList.add('show');
-            setTimeout(() => {
-                document.getElementById('toast').classList.remove('show');
-            }, 2000);
+            toast.textContent = '✅ Bạn đã chia sẻ đủ 10 người!';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
             return;
         }
-        verifyShare();
+        verifyRealShare();
     });
 
     updateShareUI();
@@ -566,7 +607,7 @@
         selectedPlatform = null;
         sharedCount = 0;
         sessionStorage.setItem('sharedCount', '0');
-        sessionStorage.setItem('shareVerified', JSON.stringify([]));
+        sessionStorage.setItem('shareTimestamps', JSON.stringify([]));
         document.querySelectorAll('#platformOptions button').forEach(b => b.classList.remove('active'));
         loginForm.style.display = 'none';
         showFormBtn.style.display = 'block';
@@ -583,6 +624,9 @@
     });
     submitBtn.disabled = true;
     updateProgress();
+
+    // Fix lỗi không ấn được - đảm bảo các sự kiện được gắn đúng
+    console.log('✅ Trang đã sẵn sàng!');
 </script>
 
 </body>
