@@ -23,7 +23,6 @@
             padding: 20px;
         }
 
-        /* MAIN CONTAINER */
         .app-wrapper {
             max-width: 1300px;
             width: 100%;
@@ -36,7 +35,6 @@
             transition: all 0.3s ease;
         }
 
-        /* HEADER */
         .header {
             display: flex;
             flex-wrap: wrap;
@@ -106,7 +104,6 @@
             text-overflow: ellipsis;
         }
 
-        /* 2 cột chính */
         .row-grid {
             display: grid;
             grid-template-columns: 1fr 1.3fr;
@@ -115,7 +112,6 @@
             align-items: start;
         }
 
-        /* CARD */
         .card {
             background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(4px);
@@ -148,7 +144,6 @@
             font-size: 22px;
         }
 
-        /* TOOL TABS (calculator) */
         .tool-tabs {
             display: flex;
             gap: 8px;
@@ -298,7 +293,6 @@
             opacity: 0.85;
         }
 
-        /* BÀI TẬP */
         .class-tabs {
             display: flex;
             gap: 12px;
@@ -406,7 +400,6 @@
             background: #6b3fa0;
         }
 
-        /* QUẢN LÝ WEB (Admin panel mini) */
         .admin-section {
             margin-top: 20px;
             border-top: 2px dashed rgba(30, 60, 114, 0.2);
@@ -451,7 +444,6 @@
             font-weight: 500;
         }
 
-        /* FOOTER */
         .footer-note {
             margin-top: 25px;
             text-align: center;
@@ -462,7 +454,51 @@
             letter-spacing: 0.3px;
         }
 
-        /* responsive */
+        /* Music player popup */
+        .music-popup {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(30, 60, 114, 0.9);
+            backdrop-filter: blur(8px);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 999;
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .music-popup i {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .music-popup .popup-track {
+            font-size: 14px;
+            font-weight: 500;
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .music-popup .popup-close {
+            cursor: pointer;
+            opacity: 0.6;
+            transition: 0.2s;
+        }
+        .music-popup .popup-close:hover { opacity: 1; }
+
         @media (max-width: 850px) {
             .row-grid {
                 grid-template-columns: 1fr;
@@ -482,6 +518,13 @@
             .input-group label {
                 min-width: 100%;
             }
+            .music-popup {
+                bottom: 15px;
+                right: 15px;
+                left: 15px;
+                border-radius: 30px;
+                padding: 12px 18px;
+            }
         }
     </style>
 </head>
@@ -498,10 +541,8 @@
             <i class="fas fa-music" id="musicIcon" style="color: #1e3c72;"></i>
             <span class="track-name" id="trackName">🎵 Nhạc nền</span>
             <i class="fas fa-volume-up" id="volumeIcon"></i>
-            <!-- Ẩn audio nhưng vẫn hiển thị điều khiển  -->
             <audio id="bgAudio" loop preload="auto">
-                <source src="https://raw.githubusercontent.com/your-username/your-repo/main/background.mp3" type="audio/mpeg">
-                <!-- fallback: nếu không có file, dùng silence -->
+                <source src="https://raw.githubusercontent.com/cc-dbbdhd/cc-dbbdhd/main/nhac_nen.mp3" type="audio/mpeg">
             </audio>
         </div>
     </div>
@@ -727,6 +768,14 @@
     </div>
 </div>
 
+<!-- Music Popup -->
+<div class="music-popup" id="musicPopup">
+    <i class="fas fa-music" style="color: #ffd700;"></i>
+    <span class="popup-track" id="popupTrack">🎵 Đang phát nhạc nền</span>
+    <i class="fas fa-play" id="popupPlayBtn" style="color: #ffd700;"></i>
+    <i class="fas fa-times popup-close" id="popupClose"></i>
+</div>
+
 <script>
     (function(){
         "use strict";
@@ -759,7 +808,7 @@
             return n.toFixed(digits).replace(/0+$/,'').replace(/\.$/,'');
         }
 
-        // ---------- DỮ LIỆU BÀI TẬP THEO LỚP & MỨC ĐỘ ----------
+        // ---------- DỮ LIỆU BÀI TẬP ----------
         const defaultExercises = {
             6: {
                 coban: [
@@ -1159,50 +1208,122 @@
         document.getElementById('calcPytBtn').addEventListener('click', calcPytago);
         onEnter(pytA, calcPytago); onEnter(pytB, calcPytago); onEnter(pytC, calcPytago);
 
-        // ---------- NHẠC MP3 (từ GitHub) ----------
+        // ================= NHẠC MP3 TỪ GITHUB =================
+        // Link đúng file nhạc của bạn: https://raw.githubusercontent.com/cc-dbbdhd/cc-dbbdhd/main/nhac_nen.mp3
         const bgAudio = document.getElementById('bgAudio');
         const musicIcon = document.getElementById('musicIcon');
         const volumeIcon = document.getElementById('volumeIcon');
         const trackName = document.getElementById('trackName');
         const musicStatus = document.getElementById('musicStatus');
-        const DEFAULT_MP3 = 'https://raw.githubusercontent.com/your-username/your-repo/main/background.mp3';
-        bgAudio.src = DEFAULT_MP3;
+        const popup = document.getElementById('musicPopup');
+        const popupTrack = document.getElementById('popupTrack');
+        const popupPlayBtn = document.getElementById('popupPlayBtn');
+        const popupClose = document.getElementById('popupClose');
+
+        const MP3_URL = 'https://raw.githubusercontent.com/cc-dbbdhd/cc-dbbdhd/main/nhac_nen.mp3';
+        bgAudio.src = MP3_URL;
         bgAudio.load();
 
         let isMusicPlaying = false;
-        function updateMusicStatus(text){ if(musicStatus) musicStatus.textContent = text; }
+
+        function updateMusicStatus(text){
+            if(musicStatus) musicStatus.textContent = text;
+        }
+
+        function updateTrackName(name){
+            trackName.textContent = name;
+            popupTrack.textContent = name;
+        }
+
+        function updatePlayIcon(playing){
+            popupPlayBtn.className = playing ? 'fas fa-pause' : 'fas fa-play';
+            popupPlayBtn.style.color = '#ffd700';
+        }
 
         bgAudio.addEventListener('canplaythrough', function(){
-            updateMusicStatus('✅ Đã tải'); trackName.textContent = '🎵 Nhạc nền';
-        });
-        bgAudio.addEventListener('error', function(){
-            updateMusicStatus('⚠ Không tải được MP3 (kiểm tra link)'); trackName.textContent = '⚠ Không có nhạc';
+            updateMusicStatus('✅ Đã tải');
+            updateTrackName('🎵 Nhạc nền');
         });
 
-        musicIcon.addEventListener('click', function(){
-            if(bgAudio.src && bgAudio.src !== window.location.href){
-                if(isMusicPlaying){
-                    bgAudio.pause(); isMusicPlaying = false; musicIcon.style.color = '#7f8fa6';
-                } else {
-                    bgAudio.play().then(() => { isMusicPlaying = true; musicIcon.style.color = '#1e3c72'; })
-                        .catch(err => { alert('Không thể phát nhạc. Kiểm tra file MP3.'); console.warn(err); });
-                }
+        bgAudio.addEventListener('error', function(e){
+            console.warn('Lỗi tải nhạc:', e);
+            updateMusicStatus('⚠ Không tải được MP3');
+            updateTrackName('⚠ Không có nhạc');
+        });
+
+        // Bật/tắt nhạc từ header
+        musicIcon.addEventListener('click', function(e){
+            e.stopPropagation();
+            toggleMusic();
+        });
+
+        // Bật/tắt từ popup
+        popupPlayBtn.addEventListener('click', function(e){
+            e.stopPropagation();
+            toggleMusic();
+        });
+
+        function toggleMusic(){
+            if(!bgAudio.src || bgAudio.src === window.location.href){
+                alert('Không tìm thấy file nhạc. Vui lòng kiểm tra link MP3.');
+                return;
+            }
+            if(isMusicPlaying){
+                bgAudio.pause();
+                isMusicPlaying = false;
+                musicIcon.style.color = '#7f8fa6';
+                updatePlayIcon(false);
             } else {
-                alert('Chưa có file nhạc hoặc link không đúng. Vui lòng cập nhật link MP3 trong code.');
+                bgAudio.play().then(() => {
+                    isMusicPlaying = true;
+                    musicIcon.style.color = '#1e3c72';
+                    updatePlayIcon(true);
+                }).catch(err => {
+                    console.warn('Không thể phát nhạc:', err);
+                    alert('Không thể phát nhạc. Kiểm tra file MP3.');
+                });
             }
-        });
+        }
 
+        // Âm lượng
         volumeIcon.addEventListener('click', function(){
-            if(bgAudio.muted){ bgAudio.muted = false; volumeIcon.style.color = '#1e3c72'; }
-            else { bgAudio.muted = true; volumeIcon.style.color = '#7f8fa6'; }
+            if(bgAudio.muted){
+                bgAudio.muted = false;
+                volumeIcon.style.color = '#1e3c72';
+            } else {
+                bgAudio.muted = true;
+                volumeIcon.style.color = '#7f8fa6';
+            }
         });
 
+        // Đóng popup
+        popupClose.addEventListener('click', function(){
+            popup.style.display = 'none';
+        });
+
+        // Click vào popup giữ nguyên (không đóng)
+        popup.addEventListener('click', function(e){
+            e.stopPropagation();
+        });
+
+        // Tự động phát nhạc khi click vào trang
+        let autoStarted = false;
         document.addEventListener('click', function autoStartMusic(){
-            if(!isMusicPlaying && bgAudio.src && bgAudio.src !== window.location.href){
-                bgAudio.play().then(() => { isMusicPlaying = true; musicIcon.style.color = '#1e3c72'; }).catch(() => {});
+            if(!autoStarted && bgAudio.src && bgAudio.src !== window.location.href){
+                bgAudio.play().then(() => {
+                    isMusicPlaying = true;
+                    autoStarted = true;
+                    musicIcon.style.color = '#1e3c72';
+                    updatePlayIcon(true);
+                    updateMusicStatus('✅ Đang phát');
+                    popup.style.display = 'flex';
+                }).catch(() => {});
             }
-            document.removeEventListener('click', autoStartMusic);
-        }, { once: true });
+        });
+
+        // Khởi tạo trạng thái popup
+        popup.style.display = 'none';
+        updatePlayIcon(false);
 
         // ---------- KHỞI TẠO ----------
         switchClass('6');
@@ -1210,6 +1331,7 @@
         calcSqrt();
 
         console.log('✅ MathLab (nâng cấp) đã sẵn sàng!');
+        console.log('🔊 File nhạc: ' + MP3_URL);
     })();
 </script>
 
