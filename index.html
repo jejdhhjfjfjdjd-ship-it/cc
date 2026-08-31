@@ -177,12 +177,6 @@
         .tool-panel { display: none; }
         .tool-panel.active { display: flex; flex-direction: column; gap: 14px; }
 
-        .sqrt-box {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
         .input-group {
             display: flex;
             align-items: center;
@@ -454,7 +448,6 @@
             letter-spacing: 0.3px;
         }
 
-        /* Music player popup */
         .music-popup {
             position: fixed;
             bottom: 30px;
@@ -499,6 +492,17 @@
         }
         .music-popup .popup-close:hover { opacity: 1; }
 
+        /* Nút play nổi bật khi chưa phát nhạc */
+        .music-popup .popup-play-btn {
+            color: #ffd700;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
         @media (max-width: 850px) {
             .row-grid {
                 grid-template-columns: 1fr;
@@ -542,7 +546,7 @@
             <span class="track-name" id="trackName">🎵 Nhạc nền</span>
             <i class="fas fa-volume-up" id="volumeIcon"></i>
             <audio id="bgAudio" loop preload="auto">
-                <source src="https://raw.githubusercontent.com/cc-dbbdhd/cc-dbbdhd/main/nhac_nen.mp3" type="audio/mpeg">
+                <source src="nhac_nen.mp3" type="audio/mpeg">
             </audio>
         </div>
     </div>
@@ -772,7 +776,7 @@
 <div class="music-popup" id="musicPopup">
     <i class="fas fa-music" style="color: #ffd700;"></i>
     <span class="popup-track" id="popupTrack">🎵 Đang phát nhạc nền</span>
-    <i class="fas fa-play" id="popupPlayBtn" style="color: #ffd700;"></i>
+    <i class="fas fa-play popup-play-btn" id="popupPlayBtn"></i>
     <i class="fas fa-times popup-close" id="popupClose"></i>
 </div>
 
@@ -1208,8 +1212,7 @@
         document.getElementById('calcPytBtn').addEventListener('click', calcPytago);
         onEnter(pytA, calcPytago); onEnter(pytB, calcPytago); onEnter(pytC, calcPytago);
 
-        // ================= NHẠC MP3 TỪ GITHUB =================
-        // Link đúng file nhạc của bạn: https://raw.githubusercontent.com/cc-dbbdhd/cc-dbbdhd/main/nhac_nen.mp3
+        // ================= NHẠC MP3 - TỰ ĐỘNG PHÁT =================
         const bgAudio = document.getElementById('bgAudio');
         const musicIcon = document.getElementById('musicIcon');
         const volumeIcon = document.getElementById('volumeIcon');
@@ -1220,11 +1223,12 @@
         const popupPlayBtn = document.getElementById('popupPlayBtn');
         const popupClose = document.getElementById('popupClose');
 
-        const MP3_URL = 'https://raw.githubusercontent.com/cc-dbbdhd/cc-dbbdhd/main/nhac_nen.mp3';
-        bgAudio.src = MP3_URL;
+        // Dùng đường dẫn tương đối - file cùng thư mục
+        bgAudio.src = 'nhac_nen.mp3';
         bgAudio.load();
 
         let isMusicPlaying = false;
+        let autoPlayAttempted = false;
 
         function updateMusicStatus(text){
             if(musicStatus) musicStatus.textContent = text;
@@ -1236,54 +1240,60 @@
         }
 
         function updatePlayIcon(playing){
-            popupPlayBtn.className = playing ? 'fas fa-pause' : 'fas fa-play';
+            popupPlayBtn.className = playing ? 'fas fa-pause' : 'fas fa-play popup-play-btn';
             popupPlayBtn.style.color = '#ffd700';
         }
 
-        bgAudio.addEventListener('canplaythrough', function(){
-            updateMusicStatus('✅ Đã tải');
-            updateTrackName('🎵 Nhạc nền');
-        });
+        // Hàm bật nhạc
+        function playMusic(){
+            if(!bgAudio.src || bgAudio.src === window.location.href){
+                updateMusicStatus('⚠ Không tìm thấy file nhac_nen.mp3');
+                return;
+            }
+            bgAudio.play().then(() => {
+                isMusicPlaying = true;
+                musicIcon.style.color = '#1e3c72';
+                updatePlayIcon(true);
+                updateMusicStatus('✅ Đang phát');
+                popup.style.display = 'flex';
+                autoPlayAttempted = true;
+            }).catch(err => {
+                console.warn('Autoplay bị chặn:', err);
+                // Nếu autoplay bị chặn, hiện popup để người dùng bấm
+                popup.style.display = 'flex';
+                updateMusicStatus('⚠ Bấm play để phát nhạc');
+                updateTrackName('🎵 Bấm play để phát');
+            });
+        }
 
-        bgAudio.addEventListener('error', function(e){
-            console.warn('Lỗi tải nhạc:', e);
-            updateMusicStatus('⚠ Không tải được MP3');
-            updateTrackName('⚠ Không có nhạc');
-        });
+        // Hàm tắt nhạc
+        function pauseMusic(){
+            bgAudio.pause();
+            isMusicPlaying = false;
+            musicIcon.style.color = '#7f8fa6';
+            updatePlayIcon(false);
+        }
 
-        // Bật/tắt nhạc từ header
+        // Bật/tắt nhạc
+        function toggleMusic(){
+            if(isMusicPlaying){
+                pauseMusic();
+            } else {
+                playMusic();
+            }
+        }
+
+        // Sự kiện: bấm vào icon nhạc trên header
         musicIcon.addEventListener('click', function(e){
             e.stopPropagation();
             toggleMusic();
         });
 
-        // Bật/tắt từ popup
+        // Sự kiện: bấm nút play/pause trên popup
         popupPlayBtn.addEventListener('click', function(e){
             e.stopPropagation();
             toggleMusic();
         });
-
-        function toggleMusic(){
-            if(!bgAudio.src || bgAudio.src === window.location.href){
-                alert('Không tìm thấy file nhạc. Vui lòng kiểm tra link MP3.');
-                return;
-            }
-            if(isMusicPlaying){
-                bgAudio.pause();
-                isMusicPlaying = false;
-                musicIcon.style.color = '#7f8fa6';
-                updatePlayIcon(false);
-            } else {
-                bgAudio.play().then(() => {
-                    isMusicPlaying = true;
-                    musicIcon.style.color = '#1e3c72';
-                    updatePlayIcon(true);
-                }).catch(err => {
-                    console.warn('Không thể phát nhạc:', err);
-                    alert('Không thể phát nhạc. Kiểm tra file MP3.');
-                });
-            }
-        }
 
         // Âm lượng
         volumeIcon.addEventListener('click', function(){
@@ -1306,22 +1316,37 @@
             e.stopPropagation();
         });
 
-        // Tự động phát nhạc khi click vào trang
-        let autoStarted = false;
-        document.addEventListener('click', function autoStartMusic(){
-            if(!autoStarted && bgAudio.src && bgAudio.src !== window.location.href){
-                bgAudio.play().then(() => {
-                    isMusicPlaying = true;
-                    autoStarted = true;
-                    musicIcon.style.color = '#1e3c72';
-                    updatePlayIcon(true);
-                    updateMusicStatus('✅ Đang phát');
-                    popup.style.display = 'flex';
-                }).catch(() => {});
+        // 🎵 TỰ ĐỘNG PHÁT NHẠC KHI VÀO WEB
+        // Thử phát ngay khi trang load
+        document.addEventListener('DOMContentLoaded', function(){
+            setTimeout(playMusic, 500);
+        });
+
+        // Nếu DOMContentLoaded đã qua, thử phát luôn
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            setTimeout(playMusic, 500);
+        }
+
+        // Fallback: nếu autoplay bị chặn, thử lại khi người dùng click bất kỳ đâu
+        document.addEventListener('click', function autoStartFallback(){
+            if(!isMusicPlaying && !autoPlayAttempted){
+                playMusic();
             }
         });
 
-        // Khởi tạo trạng thái popup
+        // Cập nhật trạng thái khi audio load xong
+        bgAudio.addEventListener('canplaythrough', function(){
+            updateMusicStatus('✅ Đã tải');
+            updateTrackName('🎵 Nhạc nền');
+        });
+
+        bgAudio.addEventListener('error', function(e){
+            console.warn('Lỗi tải nhạc:', e);
+            updateMusicStatus('⚠ Không tìm thấy file nhac_nen.mp3');
+            updateTrackName('⚠ Không có nhạc');
+        });
+
+        // Khởi tạo trạng thái
         popup.style.display = 'none';
         updatePlayIcon(false);
 
@@ -1330,8 +1355,9 @@
         switchDiff('coban');
         calcSqrt();
 
-        console.log('✅ MathLab (nâng cấp) đã sẵn sàng!');
-        console.log('🔊 File nhạc: ' + MP3_URL);
+        console.log('✅ MathLab đã sẵn sàng!');
+        console.log('🔊 File nhạc: nhac_nen.mp3 (cùng thư mục)');
+        console.log('🎵 Tự động phát nhạc khi vào web!');
     })();
 </script>
 
