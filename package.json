@@ -1,8 +1,0 @@
-{
-  "name": "spam-sms-vercel",
-  "version": "1.0.0",
-  "description": "SPAM SMS PRO on Vercel",
-  "dependencies": {
-    "axios": "^1.6.2"
-  }
-}
