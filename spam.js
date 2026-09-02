@@ -610,5 +610,5 @@
         runSpam(phone, count);
     });
 
-    addLog('🔥 WormGPT sẵn sàng, chờ lệnh...', 'info');
+    addLog('🔥 spamsms sẵn sàng, chờ lệnh...', 'info');
 })();
