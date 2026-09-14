@@ -115,7 +115,7 @@ body{background:#03050b} .header{position:sticky;top:0;z-index:70;backdrop-filte
 </div></section>
 </main>
 
-<div class="music" id="musicBox"><div class="disc"></div><div><b>Đang phát: Miumeoshop</b><small>Music makes everything better ♡</small></div><button id="musicBtn">▶</button><audio id="audio" preload="auto" loop src="music/shop.mp3"></audio></div>
+<div class="music" id="musicBox"><div class="disc"></div><div><b>Đang phát: Miumeoshop</b><small>Music makes everything better ♡</small></div><button id="musicBtn">▶</button><audio id="audio" preload="auto" loop src="nhac_nen.mp3"></audio></div>
 
 <footer><div class="container foot">
   <div><img src="images/logo.png" alt="MIUMEOSHOP" style="height:44px;width:auto;margin-bottom:10px"><p>Website mua bán quần áo uy tín.<br>Phong cách neon hồng — xanh dành riêng cho miumeoshop.</p></div>
@@ -155,7 +155,7 @@ products.forEach(p=>{
 function goSearch(){document.getElementById('products').scrollIntoView({behavior:'smooth'})}
 document.getElementById('search').addEventListener('input',e=>{let q=e.target.value.toLowerCase().trim();document.querySelectorAll('.card').forEach(c=>c.style.display=!q||c.dataset.name.includes(q)?'':'none')});
 
-// Nhạc nền — đặt file mp3 tại music/shop.mp3 (xem README.md)
+// Nhạc nền — file đang dùng: nhac_nen.mp3 (đặt ngay gốc repo, cạnh index.html)
 // Music: browser may block autoplay; first user touch starts it.
 const audio=document.getElementById('audio'), box=document.getElementById('musicBox'), mb=document.getElementById('musicBtn');
 async function playMusic(){try{await audio.play();box.classList.add('playing');mb.textContent='Ⅱ'}catch(e){}}
