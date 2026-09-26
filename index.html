@@ -1,559 +1,249 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#08020a">
-<title>TTAN~ Warrior v3</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mã Khóa Tối Đa — Max Obfuscate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
- --bg:#08020a;--pink:#ff2fb0;--pink2:#ff6ec7;--soft:#ffb8e0;
- --red:#ef4444;--grad:linear-gradient(135deg,#ff2fb0,#c00a78)
+  --bg:#151311; --surface:#1F1C18; --ink:#F1EEE6; --muted:#A79E8C;
+  --accent:#D8542B; --accent2:#3FA9A0; --border:rgba(241,238,230,.14);
+  --ok:#6FCB8F; --err:#F08A7A; --mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+  --sans:'Manrope',system-ui,-apple-system,Segoe UI,sans-serif;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
-html,body{
- min-height:100%;background:var(--bg);color:#fff;
- font-family:-apple-system,BlinkMacSystemFont,"Be Vietnam Pro",sans-serif
+:root[data-theme="light"]{
+  --bg:#F3F0E8; --surface:#FFFFFF; --ink:#1C1B17; --muted:#726F63;
+  --accent:#B5411E; --accent2:#2E6B6E; --border:rgba(28,27,23,.14);
+  --ok:#2E6B44; --err:#A3352A;
 }
-body{
- padding:max(env(safe-area-inset-top),15px) 15px max(env(safe-area-inset-bottom),15px);
- min-height:100vh;display:flex;flex-direction:column;gap:13px;overflow-x:hidden
-}
-body:before{
- content:"";position:fixed;inset:0;z-index:-2;
- background:
- radial-gradient(650px 450px at 10% 0%,rgba(255,47,176,.30),transparent 65%),
- radial-gradient(650px 450px at 90% 100%,rgba(220,38,38,.22),transparent 65%),
- #08020a
-}
-header{text-align:center;padding-top:5px}
-.logo{
- width:84px;height:84px;border-radius:50%;object-fit:contain;
- margin:0 auto 12px;display:block;
- filter:drop-shadow(0 0 32px rgba(255,47,176,.9));
- animation:pulse 2s ease-in-out infinite
-}
-@keyframes pulse{50%{transform:scale(1.04);filter:drop-shadow(0 0 60px rgba(255,47,176,1))}}
-h1{
- font-size:31px;font-weight:950;letter-spacing:-1px;
- background:linear-gradient(135deg,#fff,#ffb8e0 35%,#ff2fb0 65%,#c00a78);
- -webkit-background-clip:text;color:transparent
-}
-.sub{
- margin-top:7px;color:#ffb8e0;font-size:9px;font-weight:900;
- letter-spacing:.28em;text-transform:uppercase
-}
-.panel{
- padding:15px;border-radius:20px;
- background:linear-gradient(160deg,rgba(29,10,34,.96),rgba(12,3,14,.98));
- border:1px solid rgba(255,47,176,.38);
- box-shadow:0 25px 70px -25px rgba(255,47,176,.55)
-}
-.title{
- color:#ffb8e0;font-size:10px;font-weight:950;
- letter-spacing:.18em;text-transform:uppercase;margin:1px 0 10px
-}
-.presets{
- display:grid;grid-template-columns:repeat(3,1fr);
- gap:7px;margin-bottom:16px
-}
-button{
- font-family:inherit;border:0;cursor:pointer
-}
-.pbtn{
- min-height:43px;padding:8px 3px;border-radius:11px;
- background:rgba(255,47,176,.06);
- border:1px solid rgba(255,120,220,.25);
- color:#d8b8d8;font-size:9px;font-weight:950;
- text-transform:uppercase;transition:.15s
-}
-.pbtn:active{transform:scale(.94)}
-.pbtn.on{
- background:var(--grad);border-color:#ff70ca;color:#fff;
- box-shadow:0 7px 25px -5px rgba(255,47,176,.8)
-}
-.pbtn.red.on{
- background:linear-gradient(135deg,#ef4444,#7f1d1d);
- border-color:#ef4444
-}
-.pbtn.dark.on{
- background:linear-gradient(135deg,#52525b,#09090b);
- border-color:#a1a1aa
-}
-.row{margin-bottom:12px}
-.lbl{
- display:flex;justify-content:space-between;margin-bottom:5px;
- color:#c8a8c8;font-size:10px;font-weight:900;
- letter-spacing:.06em;text-transform:uppercase
-}
-.lbl b{color:#ffb8e0;font-family:ui-monospace,monospace}
-input[type=range]{
- width:100%;height:25px;appearance:none;background:transparent
-}
-input[type=range]::-webkit-slider-runnable-track{
- height:7px;border-radius:99px;background:rgba(255,120,220,.18)
-}
-input[type=range]::-webkit-slider-thumb{
- appearance:none;width:27px;height:27px;border-radius:50%;
- margin-top:-10px;background:linear-gradient(135deg,#ffb8e0,#ff2fb0);
- border:2px solid #08020a;box-shadow:0 4px 15px rgba(255,47,176,.9)
-}
-.meter{
- height:14px;border-radius:99px;background:rgba(255,120,220,.10);
- overflow:hidden;margin-top:5px
-}
-.meter i{
- display:block;height:100%;width:0%;
- background:linear-gradient(90deg,#22c55e,#ffb020,#ef4444);
- transition:width .05s linear
-}
-.btns{display:flex;gap:9px;margin-top:14px}
-.btn{
- flex:1;padding:17px;border-radius:14px;
- font-size:14px;font-weight:950;letter-spacing:.08em;
- color:#fff
-}
-.start{
- background:var(--grad);
- box-shadow:0 15px 38px -10px rgba(255,47,176,.9)
-}
-.stop{background:#28101f;color:#8f7188}
-.stop.active{background:#9f075f;color:#fff}
-.btn:active{transform:scale(.96)}
-.btn:disabled{opacity:.4}
-.status{
- text-align:center;margin-top:10px;color:#8a6a8a;
- font-size:9px;font-weight:950;letter-spacing:.14em;text-transform:uppercase
-}
-.status.ok{color:#22c55e}
-.status.err{color:#ff5a5a}
-.status.warn{color:#ffb020}
-.tip{
- padding:13px 15px;border-radius:14px;
- background:rgba(255,47,176,.06);
- border:1px solid rgba(255,47,176,.25);
- color:#cdb1cb;font-size:10px;line-height:1.65
-}
-.tip b{color:#ffb8e0}
-.footer{
- margin-top:auto;text-align:center;color:#62465f;
- font-size:8px;font-weight:900;letter-spacing:.25em
-}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink)}
+body{font-family:var(--sans);line-height:1.45;padding:20px 16px 40px;max-width:920px;margin:0 auto}
+h1{font-size:1.4rem;font-weight:800;margin:4px 0 2px;letter-spacing:-.01em}
+.pill{display:inline-block;font-size:.72rem;font-weight:700;color:var(--bg);background:var(--accent);border-radius:99px;padding:2px 9px;margin-left:6px;vertical-align:middle}
+.sub{color:var(--muted);font-size:.92rem;margin:0 0 20px}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--border);margin-bottom:14px}
+.tab{font-family:var(--sans);font-weight:600;font-size:.92rem;background:none;border:none;color:var(--muted);padding:10px 4px;margin-right:14px;cursor:pointer;border-bottom:2px solid transparent}
+.tab.active{color:var(--ink);border-bottom-color:var(--accent)}
+.panel{display:none}
+.panel.active{display:block}
+.options{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:12px;font-size:.86rem;color:var(--muted)}
+.options input[type=text]{font-family:var(--mono);background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:6px;padding:6px 8px;min-width:200px}
+.options label{display:flex;align-items:center;gap:6px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:720px){.grid{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:6px}
+.field .label{font-size:.78rem;color:var(--muted)}
+textarea{width:100%;height:260px;resize:vertical;font-family:var(--mono);font-size:.82rem;background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:10px;overflow-x:auto}
+textarea:focus{outline:2px solid var(--accent2);outline-offset:1px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+button.btn{font-family:var(--sans);font-weight:600;font-size:.88rem;border-radius:7px;padding:9px 14px;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--ink)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#151311}
+button.btn:active{transform:translateY(1px)}
+.status{font-size:.84rem;min-height:1.2em;margin-top:2px}
+.status.ok{color:var(--ok)}
+.status.err{color:var(--err)}
+.note{font-size:.8rem;color:var(--muted);margin-top:22px;border-top:1px solid var(--border);padding-top:12px}
+code{font-family:var(--mono);background:var(--surface);padding:1px 5px;border-radius:4px}
 </style>
 </head>
 <body>
-<header>
-  <img class="logo" src="logo.png" alt="ttan~"
-       onerror="this.style.display='none'">
-  <h1>TTAN~ WARRIOR v3</h1>
-  <div class="sub">Voice FX · Troll Edition</div>
-</header>
-<section class="panel">
-<div class="title">⚡ Chọn hiệu ứng</div>
-<div class="presets">
-<button class="pbtn" data-p="clean">Clean</button>
-<button class="pbtn" data-p="loud">Loud</button>
-<button class="pbtn" data-p="robot">🤖 Robot</button>
-<button class="pbtn" data-p="radio">📻 Radio</button>
-<button class="pbtn" data-p="mega">📢 Mega</button>
-<button class="pbtn" data-p="demon">👹 Demon</button>
-<button class="pbtn" data-p="echo">🌀 Echo</button>
-<button class="pbtn" data-p="glitch">📡 Glitch</button>
-<button class="pbtn" data-p="crush">💥 Crush</button>
-<button class="pbtn red" data-p="nuclear">☢️ Nuclear</button>
-<button class="pbtn red" data-p="chaos">🔥 Chaos</button>
-<button class="pbtn dark" data-p="broken">☠ Broken</button>
+<h1>Mã Khóa Tối Đa <span class="pill">MAX</span></h1>
+<p class="sub">Bản riêng, luôn chạy ở mức mạnh nhất: control flow flattening, dead code injection, mã hóa chuỗi RC4, chống mở DevTools, tự vệ chống bị làm giả.</p>
+
+<div class="tabs">
+  <button class="tab active" data-tab="js">JavaScript</button>
+  <button class="tab" data-tab="css">CSS</button>
+  <button class="tab" data-tab="html">HTML</button>
 </div>
-<div class="row">
- <div class="lbl"><span>🔥 Distortion</span><b id="v-dist">65%</b></div>
- <input id="dist" type="range" min="0" max="100" value="65">
+
+<div class="panel active" id="panel-js">
+  <div class="options">
+    <label><input type="checkbox" id="js-debugprot" checked> Chống mở DevTools</label>
+    <label><input type="checkbox" id="js-selfdef" checked> Tự vệ (selfDefending)</label>
+    <label>Khóa theo domain: <input type="text" id="js-domain" placeholder="vd: miumeoshop.com (bỏ trống nếu không cần)"></label>
+  </div>
+  <div class="grid">
+    <div class="field"><span class="label">Mã gốc</span><textarea id="js-in" placeholder="Dán code .js vào đây..."></textarea></div>
+    <div class="field"><span class="label">Đã obfuscate (MAX)</span><textarea id="js-out" readonly></textarea></div>
+  </div>
+  <div class="actions">
+    <button class="btn primary" onclick="runJS()">Obfuscate mức tối đa</button>
+    <button class="btn" onclick="copyOut('js-out')">Copy kết quả</button>
+    <button class="btn" onclick="downloadOut('js-out','obfuscated-max')">Tải xuống</button>
+  </div>
+  <div class="status" id="js-status"></div>
 </div>
-<div class="row">
- <div class="lbl"><span>💥 Crush</span><b id="v-crush">35%</b></div>
- <input id="crush" type="range" min="0" max="100" value="35">
+
+<div class="panel" id="panel-css">
+  <div class="grid">
+    <div class="field"><span class="label">CSS gốc</span><textarea id="css-in" placeholder="Dán code .css vào đây..."></textarea></div>
+    <div class="field"><span class="label">Đã thu gọn tối đa</span><textarea id="css-out" readonly></textarea></div>
+  </div>
+  <div class="actions">
+    <button class="btn primary" onclick="runCSS()">Thu gọn tối đa</button>
+    <button class="btn" onclick="copyOut('css-out')">Copy kết quả</button>
+    <button class="btn" onclick="downloadOut('css-out','minified-max')">Tải xuống</button>
+  </div>
+  <div class="status" id="css-status"></div>
 </div>
-<div class="row">
- <div class="lbl"><span>🎵 Echo</span><b id="v-echo">20%</b></div>
- <input id="echo" type="range" min="0" max="100" value="20">
+
+<div class="panel" id="panel-html">
+  <div class="grid">
+    <div class="field"><span class="label">HTML gốc</span><textarea id="html-in" placeholder="Dán code .html vào đây..."></textarea></div>
+    <div class="field"><span class="label">Đã thu gọn tối đa</span><textarea id="html-out" readonly></textarea></div>
+  </div>
+  <div class="actions">
+    <button class="btn primary" onclick="runHTML()">Thu gọn tối đa</button>
+    <button class="btn" onclick="copyOut('html-out')">Copy kết quả</button>
+    <button class="btn" onclick="downloadOut('html-out','minified-max')">Tải xuống</button>
+  </div>
+  <div class="status" id="html-status"></div>
 </div>
-<div class="row">
- <div class="lbl"><span>🔊 Bass</span><b id="v-bass">35%</b></div>
- <input id="bass" type="range" min="0" max="100" value="35">
-</div>
-<div class="row">
- <div class="lbl"><span>✨ Treble</span><b id="v-treble">30%</b></div>
- <input id="treble" type="range" min="0" max="100" value="30">
-</div>
-<div class="row">
- <div class="lbl"><span>🤖 Robot</span><b id="v-robot">0%</b></div>
- <input id="robot" type="range" min="0" max="100" value="0">
-</div>
-<div class="row">
- <div class="lbl"><span>⚡ Intensity</span><b id="v-intensity">70%</b></div>
- <input id="intensity" type="range" min="0" max="100" value="70">
-</div>
-<div class="meter"><i id="meter"></i></div>
-<div class="status" id="status">Chưa bật · nhấn BẮT ĐẦU</div>
-<div class="btns">
- <button class="btn start" id="start">▶ BẮT ĐẦU</button>
- <button class="btn stop" id="stop" disabled>■ DỪNG</button>
-</div>
-</section>
-<div class="tip">
-<b>TTAN FX:</b> hiệu ứng được xử lý trực tiếp từ microphone trong trình duyệt.
-<br>
-<b>⚠️ Lưu ý:</b> Nuclear/Chaos/Broken tạo distortion rất mạnh. Giữ âm lượng thiết bị ở mức thấp khi thử.
-</div>
-<div class="footer">TTAN~ VOICE WARRIOR · V3</div>
+
+<p class="note">
+Mạnh hơn bản trước ở JS: control flow flattening 100%, dead code injection, chuỗi mã hóa RC4 + xoay vòng + chia nhỏ từng đoạn 3 ký tự + bọc unicode escape, 5 lớp string-array wrapper lồng nhau, ép số thành biểu thức, chống mở DevTools, tự vệ nếu code bị format lại. Code chạy chậm hơn 20-50% và file nặng hơn nhiều — chỉ nên dùng cho file JS thật sự quan trọng, không dùng cho thư viện bên thứ ba. "Khóa theo domain" làm code chỉ chạy đúng trên domain bạn nhập, báo lỗi nếu bị copy sang site khác — nhớ nhập đúng domain, nếu không code sẽ không chạy được ngay cả trên site của bạn. Với CSS/HTML, trình duyệt vẫn phải đọc được cấu trúc nên chỉ thu gọn được đến mức này, không giấu nội dung. Tệp tải xuống có đuôi .txt do giới hạn nền tảng — đổi lại thành .js/.css/.html sau khi tải.
+</p>
+
 <script>
-(() => {
-"use strict";
-const $ = id => document.getElementById(id);
-let ctx = null;
-let stream = null;
-let source = null;
-let inputGain = null;
-let distortion = null;
-let crush = null;
-let bass = null;
-let treble = null;
-let delay = null;
-let feedback = null;
-let echoWet = null;
-let robotOsc = null;
-let robotGain = null;
-let robotMix = null;
-let compressor = null;
-let analyser = null;
-let monitor = null;
-let running = false;
-const P = {
- dist:65,
- crush:35,
- echo:20,
- bass:35,
- treble:30,
- robot:0,
- intensity:70
-};
-const PRESETS = {
- clean:{
-  dist:0,crush:0,echo:0,bass:10,treble:10,robot:0,intensity:15
- },
- loud:{
-  dist:25,crush:8,echo:5,bass:20,treble:20,robot:0,intensity:30
- },
- robot:{
-  dist:45,crush:20,echo:15,bass:20,treble:30,robot:90,intensity:65
- },
- radio:{
-  dist:70,crush:50,echo:12,bass:0,treble:70,robot:15,intensity:75
- },
- mega:{
-  dist:55,crush:30,echo:8,bass:55,treble:20,robot:0,intensity:65
- },
- demon:{
-  dist:80,crush:35,echo:30,bass:80,treble:15,robot:70,intensity:80
- },
- echo:{
-  dist:20,crush:5,echo:90,bass:20,treble:25,robot:0,intensity:60
- },
- glitch:{
-  dist:95,crush:90,echo:35,bass:10,treble:80,robot:80,intensity:90
- },
- crush:{
-  dist:90,crush:100,echo:5,bass:35,treble:50,robot:10,intensity:90
- },
- nuclear:{
-  dist:100,crush:100,echo:55,bass:75,treble:75,robot:45,intensity:100
- },
- chaos:{
-  dist:100,crush:100,echo:100,bass:100,treble:100,robot:100,intensity:100
- },
- broken:{
-  dist:100,crush:100,echo:70,bass:5,treble:95,robot:100,intensity:100
- }
-};
-function setStatus(t,c=""){
- $("status").textContent=t;
- $("status").className="status "+c;
+const tabs = document.querySelectorAll('.tab');
+tabs.forEach(t => t.addEventListener('click', () => {
+  tabs.forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  t.classList.add('active');
+  document.getElementById('panel-' + t.dataset.tab).classList.add('active');
+}));
+
+function setStatus(id, msg, kind){
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'status' + (kind ? ' ' + kind : '');
 }
-function distortionCurve(amount){
- const n=8192;
- const curve=new Float32Array(n);
- const drive=1+(amount/100)*18;
- for(let i=0;i<n;i++){
-  const x=i*2/n-1;
-  curve[i]=Math.tanh(x*drive);
- }
- return curve;
-}
-function crushCurve(amount){
- const n=8192;
- const curve=new Float32Array(n);
- const bits=Math.max(3,16-Math.floor(amount*.13));
- const levels=Math.pow(2,bits);
- for(let i=0;i<n;i++){
-  const x=i*2/n-1;
-  curve[i]=Math.round(x*levels)/levels;
- }
- return curve;
-}
-function apply(){
- if(!ctx) return;
- const now=ctx.currentTime;
- const k=P.intensity/100;
- distortion.curve=distortionCurve(P.dist);
- crush.curve=crushCurve(P.crush);
- bass.gain.setTargetAtTime(
-   (P.bass/100)*12*k,
-   now,.025
- );
- treble.gain.setTargetAtTime(
-   (P.treble/100)*10*k,
-   now,.025
- );
- echoWet.gain.setTargetAtTime(
-   (P.echo/100)*.75,
-   now,.025
- );
- feedback.gain.setTargetAtTime(
-   Math.min(.72,(P.echo/100)*.7),
-   now,.025
- );
- robotMix.gain.setTargetAtTime(
-   (P.robot/100)*.75,
-   now,.025
- );
- updateLabels();
-}
-function updateLabels(){
- ["dist","crush","echo","bass","treble","robot","intensity"]
- .forEach(k=>{
-   $("v-"+k).textContent=P[k]+"%";
-   $(k).value=P[k];
- });
-}
-function preset(name){
- const p=PRESETS[name];
- if(!p)return;
- Object.assign(P,p);
- document.querySelectorAll(".pbtn").forEach(b=>{
-   b.classList.toggle("on",b.dataset.p===name);
- });
- apply();
- if(name==="glitch"||name==="chaos"||name==="broken"){
-   document.body.classList.add("glitch");
-   setTimeout(()=>{
-     document.body.classList.remove("glitch");
-   },180);
- }
-}
-async function start(){
- if(running)return;
- setStatus("Đang xin quyền microphone...","warn");
- try{
-  stream=await navigator.mediaDevices.getUserMedia({
-   audio:{
-    echoCancellation:false,
-    noiseSuppression:false,
-    autoGainControl:false,
-    channelCount:1
-   }
-  });
- }catch(e){
-  setStatus("Không lấy được microphone","err");
-  return;
- }
- try{
-  ctx=new(window.AudioContext||window.webkitAudioContext)();
-  if(ctx.state==="suspended"){
-   await ctx.resume();
+
+function runJS(){
+  const inp = document.getElementById('js-in').value;
+  if(!inp.trim()){ setStatus('js-status','Dán code JS vào trước đã.', 'err'); return; }
+  const domain = document.getElementById('js-domain').value.trim();
+  const debugProtection = document.getElementById('js-debugprot').checked;
+  const selfDefending = document.getElementById('js-selfdef').checked;
+  try{
+    const opts = {
+      compact: true,
+      controlFlowFlattening: true,
+      controlFlowFlatteningThreshold: 1,
+      deadCodeInjection: true,
+      deadCodeInjectionThreshold: 1,
+      debugProtection: debugProtection,
+      debugProtectionInterval: debugProtection ? 4000 : 0,
+      disableConsoleOutput: true,
+      identifierNamesGenerator: 'hexadecimal',
+      renameGlobals: false,
+      numbersToExpressions: true,
+      simplify: true,
+      splitStrings: true,
+      splitStringsChunkLength: 3,
+      stringArray: true,
+      stringArrayEncoding: ['rc4'],
+      stringArrayCallsTransform: true,
+      stringArrayIndexShift: true,
+      stringArrayRotate: true,
+      stringArrayShuffle: true,
+      stringArrayWrappersCount: 5,
+      stringArrayWrappersChainedCalls: true,
+      stringArrayWrappersParametersMaxCount: 5,
+      stringArrayWrappersType: 'function',
+      stringArrayThreshold: 1,
+      selfDefending: selfDefending,
+      transformObjectKeys: true,
+      unicodeEscapeSequence: true
+    };
+    if(domain){ opts.domainLock = [domain]; }
+    const result = JavaScriptObfuscator.obfuscate(inp, opts);
+    document.getElementById('js-out').value = result.getObfuscatedCode();
+    setStatus('js-status', 'Xong. ' + inp.length + ' → ' + result.getObfuscatedCode().length + ' ký tự.', 'ok');
+  }catch(e){
+    setStatus('js-status', 'Lỗi: code JS có thể không hợp lệ — ' + e.message, 'err');
   }
-  source=ctx.createMediaStreamSource(stream);
-  inputGain=ctx.createGain();
-  /*
-   * Gain đầu vào vừa phải.
-   * Không dùng hàng chục nghìn lần gain vì nó chỉ
-   * biến tín hiệu thành clipping cực mạnh.
-   */
-  inputGain.gain.value=.75;
-  distortion=ctx.createWaveShaper();
-  distortion.oversample="4x";
-  crush=ctx.createWaveShaper();
-  bass=ctx.createBiquadFilter();
-  bass.type="lowshelf";
-  bass.frequency.value=120;
-  treble=ctx.createBiquadFilter();
-  treble.type="highshelf";
-  treble.frequency.value=3500;
-  delay=ctx.createDelay(.8);
-  delay.delayTime.value=.16;
-  feedback=ctx.createGain();
-  feedback.gain.value=.25;
-  echoWet=ctx.createGain();
-  echoWet.gain.value=0;
-  /*
-   * Robot oscillator tạo modulation nhẹ cho voice.
-   */
-  robotOsc=ctx.createOscillator();
-  robotOsc.type="square";
-  robotOsc.frequency.value=32;
-  robotGain=ctx.createGain();
-  robotGain.gain.value=0;
-  robotMix=ctx.createGain();
-  robotMix.gain.value=0;
-  robotOsc.connect(robotGain);
-  robotGain.connect(robotMix);
-  robotOsc.start();
-  /*
-   * Compressor giữ peak trong phạm vi an toàn hơn.
-   */
-  compressor=ctx.createDynamicsCompressor();
-  compressor.threshold.value=-12;
-  compressor.knee.value=18;
-  compressor.ratio.value=8;
-  compressor.attack.value=.003;
-  compressor.release.value=.12;
-  analyser=ctx.createAnalyser();
-  analyser.fftSize=256;
-  monitor=ctx.createGain();
-  /*
-   * Không cho monitor gain vượt mức.
-   */
-  monitor.gain.value=.32;
-  /*
-   * Main chain
-   */
-  source.connect(inputGain);
-  inputGain.connect(distortion);
-  distortion.connect(crush);
-  crush.connect(bass);
-  bass.connect(treble);
-  /*
-   * Dry signal
-   */
-  treble.connect(compressor);
-  /*
-   * Echo branch
-   */
-  treble.connect(delay);
-  delay.connect(echoWet);
-  echoWet.connect(compressor);
-  delay.connect(feedback);
-  feedback.connect(delay);
-  /*
-   * Robot modulation branch
-   */
-  robotOsc.connect(robotMix);
-  robotMix.connect(compressor);
-  compressor.connect(analyser);
-  analyser.connect(monitor);
-  monitor.connect(ctx.destination);
-  running=true;
-  apply();
-  $("start").disabled=true;
-  $("stop").disabled=false;
-  $("stop").classList.add("active");
-  setStatus(
-   "Đang chạy · "+ctx.sampleRate+" Hz · TTAN FX",
-   "ok"
-  );
-  meterLoop();
- }catch(e){
-  setStatus("Lỗi audio engine: "+e.message,"err");
-  if(stream){
-   stream.getTracks().forEach(t=>t.stop());
-   stream=null;
+}
+
+function minifyCSS(css){
+  return css
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/\s*([{}:;,>~])\s*/g, '$1')
+    .replace(/;}/g, '}')
+    .replace(/([^{}]+)\{\}/g, '')
+    .trim();
+}
+
+function runCSS(){
+  const inp = document.getElementById('css-in').value;
+  if(!inp.trim()){ setStatus('css-status','Dán code CSS vào trước đã.', 'err'); return; }
+  try{
+    const out = minifyCSS(inp);
+    document.getElementById('css-out').value = out;
+    setStatus('css-status', 'Xong. ' + inp.length + ' → ' + out.length + ' ký tự.', 'ok');
+  }catch(e){
+    setStatus('css-status', 'Lỗi: ' + e.message, 'err');
   }
- }
 }
-function meterLoop(){
- if(!running)return;
- const data=new Uint8Array(analyser.frequencyBinCount);
- analyser.getByteFrequencyData(data);
- let total=0;
- for(const x of data){
-  total+=x;
- }
- const avg=total/data.length;
- $("meter").style.width=
-   Math.min(100,avg*1.7)+"%";
- requestAnimationFrame(meterLoop);
+
+function minifyHTML(html){
+  return html
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/>\s+</g, '><')
+    .replace(/[ \t]{2,}/g, ' ')
+    .replace(/\n+/g, '')
+    .trim();
 }
-function stop(){
- if(!running)return;
- running=false;
- try{
-  source.disconnect();
- }catch(e){}
- try{
-  inputGain.disconnect();
-  distortion.disconnect();
-  crush.disconnect();
-  bass.disconnect();
-  treble.disconnect();
-  delay.disconnect();
-  feedback.disconnect();
-  echoWet.disconnect();
-  robotOsc.disconnect();
-  robotMix.disconnect();
-  compressor.disconnect();
-  analyser.disconnect();
-  monitor.disconnect();
- }catch(e){}
- try{
-  if(robotOsc)robotOsc.stop();
- }catch(e){}
- try{
-  if(ctx)ctx.close();
- }catch(e){}
- if(stream){
-  stream.getTracks().forEach(t=>t.stop());
- }
- ctx=null;
- stream=null;
- $("meter").style.width="0%";
- $("start").disabled=false;
- $("stop").disabled=true;
- $("stop").classList.remove("active");
- setStatus("Đã dừng");
+
+function runHTML(){
+  const inp = document.getElementById('html-in').value;
+  if(!inp.trim()){ setStatus('html-status','Dán code HTML vào trước đã.', 'err'); return; }
+  try{
+    const out = minifyHTML(inp);
+    document.getElementById('html-out').value = out;
+    setStatus('html-status', 'Xong. ' + inp.length + ' → ' + out.length + ' ký tự.', 'ok');
+  }catch(e){
+    setStatus('html-status', 'Lỗi: ' + e.message, 'err');
+  }
 }
-/*
- * Slider controls
- */
-[
- "dist",
- "crush",
- "echo",
- "bass",
- "treble",
- "robot",
- "intensity"
-].forEach(k=>{
- $(k).addEventListener("input",()=>{
-  P[k]=Number($(k).value);
-  document.querySelectorAll(".pbtn")
-   .forEach(b=>b.classList.remove("on"));
-  apply();
- });
-});
-/*
- * Presets
- */
-document.querySelectorAll(".pbtn").forEach(b=>{
- b.addEventListener("click",()=>{
-  preset(b.dataset.p);
- });
-});
-$("start").addEventListener("click",start);
-$("stop").addEventListener("click",stop);
-/*
- * Mặc định an toàn hơn: Loud.
- */
-preset("loud");
-})();
+
+async function copyOut(id){
+  const val = document.getElementById(id).value;
+  const statusId = id.replace('-out','-status');
+  if(!val){ setStatus(statusId, 'Chưa có kết quả để copy.', 'err'); return; }
+  try{
+    await navigator.clipboard.writeText(val);
+    setStatus(statusId, 'Đã copy vào clipboard.', 'ok');
+  }catch(e){
+    const ta = document.getElementById(id);
+    ta.removeAttribute('readonly');
+    ta.select();
+    document.execCommand('copy');
+    ta.setAttribute('readonly','');
+    setStatus(statusId, 'Đã copy (chế độ dự phòng).', 'ok');
+  }
+}
+
+async function downloadOut(id, suffix){
+  const val = document.getElementById(id).value;
+  const statusId = id.replace('-out','-status');
+  if(!val){ setStatus(statusId, 'Chưa có kết quả để tải.', 'err'); return; }
+  try{
+    const downloads = await claude.use('downloads');
+    if(!downloads){ setStatus(statusId, 'Tải xuống không khả dụng ở đây — dùng nút Copy nhé.', 'err'); return; }
+    const res = await downloads.save({ filename: suffix + '.txt', data: val });
+    setStatus(statusId, res.status === 'saved' ? 'Đã tải xuống.' : 'Đã gửi đi.', 'ok');
+  }catch(e){
+    setStatus(statusId, 'Không tải được — dùng nút Copy nhé.', 'err');
+  }
+}
 </script>
 </body>
 </html>
