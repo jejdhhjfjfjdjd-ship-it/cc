@@ -60,6 +60,7 @@ code{font-family:var(--mono);background:var(--surface);padding:1px 5px;border-ra
   <button class="tab active" data-tab="js">JavaScript</button>
   <button class="tab" data-tab="css">CSS</button>
   <button class="tab" data-tab="html">HTML</button>
+  <button class="tab" data-tab="combo">Cả 3 (gộp trang)</button>
 </div>
 
 <div class="panel active" id="panel-js">
@@ -100,14 +101,32 @@ code{font-family:var(--mono);background:var(--surface);padding:1px 5px;border-ra
   </div>
   <div class="actions">
     <button class="btn primary" onclick="runHTML()">Thu gọn tối đa</button>
+    <button class="btn" onclick="runHTMLEncode()">Mã hóa qua JS (ẩn nguồn thật)</button>
     <button class="btn" onclick="copyOut('html-out')">Copy kết quả</button>
     <button class="btn" onclick="downloadOut('html-out','minified-max')">Tải xuống</button>
   </div>
   <div class="status" id="html-status"></div>
 </div>
 
+<div class="panel" id="panel-combo">
+  <div class="options">
+    <label>Khóa theo domain: <input type="text" id="combo-domain" placeholder="vd: miumeoshop.com (bỏ trống nếu không cần)"></label>
+  </div>
+  <div class="field" style="margin-bottom:10px"><span class="label">HTML (cả trang hoặc phần &lt;body&gt;)</span><textarea id="combo-html" style="height:140px" placeholder="Dán HTML vào đây..."></textarea></div>
+  <div class="field" style="margin-bottom:10px"><span class="label">CSS (tùy chọn)</span><textarea id="combo-css" style="height:100px" placeholder="Dán CSS vào đây (có thể để trống)..."></textarea></div>
+  <div class="field" style="margin-bottom:10px"><span class="label">JavaScript (tùy chọn)</span><textarea id="combo-js" style="height:100px" placeholder="Dán JS vào đây (có thể để trống)..."></textarea></div>
+  <div class="field"><span class="label">File .html cuối cùng — đã gộp & obfuscate cả 3</span><textarea id="combo-out" readonly style="height:180px"></textarea></div>
+  <div class="actions">
+    <button class="btn primary" onclick="runCombo()">Gộp & obfuscate cả 3 mức tối đa</button>
+    <button class="btn" onclick="copyOut('combo-out')">Copy kết quả</button>
+    <button class="btn" onclick="downloadOut('combo-out','page-obfuscated-max')">Tải xuống</button>
+  </div>
+  <div class="status" id="combo-status"></div>
+</div>
+
 <p class="note">
-Mạnh hơn bản trước ở JS: control flow flattening 100%, dead code injection, chuỗi mã hóa RC4 + xoay vòng + chia nhỏ từng đoạn 3 ký tự + bọc unicode escape, 5 lớp string-array wrapper lồng nhau, ép số thành biểu thức, chống mở DevTools, tự vệ nếu code bị format lại. Code chạy chậm hơn 20-50% và file nặng hơn nhiều — chỉ nên dùng cho file JS thật sự quan trọng, không dùng cho thư viện bên thứ ba. "Khóa theo domain" làm code chỉ chạy đúng trên domain bạn nhập, báo lỗi nếu bị copy sang site khác — nhớ nhập đúng domain, nếu không code sẽ không chạy được ngay cả trên site của bạn. Với CSS/HTML, trình duyệt vẫn phải đọc được cấu trúc nên chỉ thu gọn được đến mức này, không giấu nội dung. Tệp tải xuống có đuôi .txt do giới hạn nền tảng — đổi lại thành .js/.css/.html sau khi tải.
+Mạnh hơn bản trước ở JS: control flow flattening 100%, dead code injection, chuỗi mã hóa RC4 + xoay vòng + chia nhỏ từng đoạn 3 ký tự + bọc unicode escape, 5 lớp string-array wrapper lồng nhau, ép số thành biểu thức, chống mở DevTools, tự vệ nếu code bị format lại. Code chạy chậm hơn 20-50% và file nặng hơn nhiều — chỉ nên dùng cho file JS thật sự quan trọng, không dùng cho thư viện bên thứ ba. "Khóa theo domain" làm code chỉ chạy đúng trên domain bạn nhập, báo lỗi nếu bị copy sang site khác — nhớ nhập đúng domain, nếu không code sẽ không chạy được ngay cả trên site của bạn.<br><br>
+Với CSS thì trình duyệt vẫn phải đọc được cấu trúc nên chỉ thu gọn được đến mức đó. Với HTML giờ có 2 lựa chọn: <strong>"Thu gọn"</strong> (xóa comment/khoảng trắng, View Source vẫn đọc được nội dung) hoặc <strong>"Mã hóa qua JS"</strong> (HTML được mã hóa base64 rồi nhét vào 1 đoạn JS obfuscate mức tối đa — khi tải trang, JS tự giải mã và ghi ra; bấm View Source lúc này chỉ thấy 1 script rối, không còn thấy HTML thật). Tab <strong>"Cả 3 (gộp trang)"</strong> làm cả 2 lớp cùng lúc: JS bạn dán được obfuscate riêng trước (control flow flattening, mã hóa chuỗi...), CSS được thu gọn, sau đó cả trang (HTML+CSS+JS đã obfuscate) được gộp thành 1 file rồi mã hóa thêm 1 lớp qua JS decoder — ra đúng 1 file .html duy nhất, mở lên chạy y hệt trang gốc nhưng View Source chỉ thấy 1 script rối bời. Lưu ý: cách này không giấu được với tab <em>Elements</em> của DevTools (luôn hiện DOM sau khi render), và <strong>Google/công cụ tìm kiếm sẽ khó đọc nội dung trang</strong> — đừng dùng cho trang sản phẩm cần lên SEO, chỉ nên dùng cho trang phụ không cần index (vd: trang báo giá CTV nội bộ). Tệp tải xuống có đuôi .txt do giới hạn nền tảng — đổi lại thành .html sau khi tải.
 </p>
 
 <script>
@@ -125,6 +144,40 @@ function setStatus(id, msg, kind){
   el.className = 'status' + (kind ? ' ' + kind : '');
 }
 
+function getMaxOptions(overrides){
+  const base = {
+    compact: true,
+    controlFlowFlattening: true,
+    controlFlowFlatteningThreshold: 1,
+    deadCodeInjection: true,
+    deadCodeInjectionThreshold: 1,
+    debugProtection: true,
+    debugProtectionInterval: 4000,
+    disableConsoleOutput: true,
+    identifierNamesGenerator: 'hexadecimal',
+    renameGlobals: false,
+    numbersToExpressions: true,
+    simplify: true,
+    splitStrings: true,
+    splitStringsChunkLength: 3,
+    stringArray: true,
+    stringArrayEncoding: ['rc4'],
+    stringArrayCallsTransform: true,
+    stringArrayIndexShift: true,
+    stringArrayRotate: true,
+    stringArrayShuffle: true,
+    stringArrayWrappersCount: 5,
+    stringArrayWrappersChainedCalls: true,
+    stringArrayWrappersParametersMaxCount: 5,
+    stringArrayWrappersType: 'function',
+    stringArrayThreshold: 1,
+    selfDefending: true,
+    transformObjectKeys: true,
+    unicodeEscapeSequence: true
+  };
+  return Object.assign({}, base, overrides || {});
+}
+
 function runJS(){
   const inp = document.getElementById('js-in').value;
   if(!inp.trim()){ setStatus('js-status','Dán code JS vào trước đã.', 'err'); return; }
@@ -132,36 +185,11 @@ function runJS(){
   const debugProtection = document.getElementById('js-debugprot').checked;
   const selfDefending = document.getElementById('js-selfdef').checked;
   try{
-    const opts = {
-      compact: true,
-      controlFlowFlattening: true,
-      controlFlowFlatteningThreshold: 1,
-      deadCodeInjection: true,
-      deadCodeInjectionThreshold: 1,
+    const opts = getMaxOptions({
       debugProtection: debugProtection,
       debugProtectionInterval: debugProtection ? 4000 : 0,
-      disableConsoleOutput: true,
-      identifierNamesGenerator: 'hexadecimal',
-      renameGlobals: false,
-      numbersToExpressions: true,
-      simplify: true,
-      splitStrings: true,
-      splitStringsChunkLength: 3,
-      stringArray: true,
-      stringArrayEncoding: ['rc4'],
-      stringArrayCallsTransform: true,
-      stringArrayIndexShift: true,
-      stringArrayRotate: true,
-      stringArrayShuffle: true,
-      stringArrayWrappersCount: 5,
-      stringArrayWrappersChainedCalls: true,
-      stringArrayWrappersParametersMaxCount: 5,
-      stringArrayWrappersType: 'function',
-      stringArrayThreshold: 1,
-      selfDefending: selfDefending,
-      transformObjectKeys: true,
-      unicodeEscapeSequence: true
-    };
+      selfDefending: selfDefending
+    });
     if(domain){ opts.domainLock = [domain]; }
     const result = JavaScriptObfuscator.obfuscate(inp, opts);
     document.getElementById('js-out').value = result.getObfuscatedCode();
@@ -211,6 +239,66 @@ function runHTML(){
     setStatus('html-status', 'Xong. ' + inp.length + ' → ' + out.length + ' ký tự.', 'ok');
   }catch(e){
     setStatus('html-status', 'Lỗi: ' + e.message, 'err');
+  }
+}
+
+function encodeHTMLtoJS(html, domain){
+  const b64 = btoa(unescape(encodeURIComponent(html)));
+  const decoder = 'var d="' + b64 + '";document.open();document.write(decodeURIComponent(escape(window.atob(d))));document.close();';
+  const opts = getMaxOptions();
+  if(domain){ opts.domainLock = [domain]; }
+  const result = JavaScriptObfuscator.obfuscate(decoder, opts);
+  return '<!DOCTYPE html>\n<html><head><meta charset="UTF-8"></head><body>\n<script>' + result.getObfuscatedCode() + '</script>\n</body></html>';
+}
+
+function runHTMLEncode(){
+  const inp = document.getElementById('html-in').value;
+  if(!inp.trim()){ setStatus('html-status','Dán code HTML vào trước đã.', 'err'); return; }
+  try{
+    const out = encodeHTMLtoJS(inp);
+    document.getElementById('html-out').value = out;
+    setStatus('html-status', 'Đã mã hóa. ' + inp.length + ' → ' + out.length + ' ký tự. View Source giờ chỉ thấy 1 script rối.', 'ok');
+  }catch(e){
+    setStatus('html-status', 'Lỗi: ' + e.message, 'err');
+  }
+}
+
+function mergeAssets(html, css, js){
+  let doc = (html || '').trim();
+  if(!/<html[\s>]/i.test(doc)){
+    doc = '<!DOCTYPE html>\n<html><head><meta charset="UTF-8"></head><body>\n' + doc + '\n</body></html>';
+  }
+  if(css && css.trim()){
+    const styleTag = '<style>' + minifyCSS(css) + '</style>';
+    doc = /<\/head>/i.test(doc) ? doc.replace(/<\/head>/i, styleTag + '</head>') : styleTag + doc;
+  }
+  if(js && js.trim()){
+    const scriptTag = '<script>' + js + '</script>';
+    doc = /<\/body>/i.test(doc) ? doc.replace(/<\/body>/i, scriptTag + '</body>') : doc + scriptTag;
+  }
+  return doc;
+}
+
+function runCombo(){
+  const html = document.getElementById('combo-html').value;
+  const css = document.getElementById('combo-css').value;
+  const js = document.getElementById('combo-js').value;
+  const domain = document.getElementById('combo-domain').value.trim();
+  if(!html.trim() && !css.trim() && !js.trim()){ setStatus('combo-status','Dán ít nhất 1 phần (HTML/CSS/JS) vào trước đã.', 'err'); return; }
+  try{
+    let jsObfuscated = '';
+    if(js && js.trim()){
+      const jsOpts = getMaxOptions();
+      if(domain){ jsOpts.domainLock = [domain]; }
+      jsObfuscated = JavaScriptObfuscator.obfuscate(js, jsOpts).getObfuscatedCode();
+    }
+    const merged = mergeAssets(html, css, jsObfuscated);
+    const out = encodeHTMLtoJS(merged, domain);
+    document.getElementById('combo-out').value = out;
+    const total = (html||'').length + (css||'').length + (js||'').length;
+    setStatus('combo-status', 'Đã gộp & obfuscate cả 3. ' + total + ' ký tự gốc → ' + out.length + ' ký tự output. JS được obfuscate riêng trước khi gộp, sau đó cả trang được mã hóa lần nữa qua JS decoder.', 'ok');
+  }catch(e){
+    setStatus('combo-status', 'Lỗi: ' + e.message, 'err');
   }
 }
 
