@@ -5,458 +5,555 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#08020a">
-<title>ttan~ Warrior v2</title>
+<title>TTAN~ Warrior v3</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#08020a;
-  --pink:#ff2fb0;
-  --pink2:#ff6ec7;
-  --pink3:#ffb8e0;
-  --grad:linear-gradient(135deg,#ff2fb0,#c00a78);
-  --chrome:linear-gradient(135deg,#ffb8e0 0%,#ff2fb0 38%,#c00a78 62%,#ff6ec7 100%);
+ --bg:#08020a;--pink:#ff2fb0;--pink2:#ff6ec7;--soft:#ffb8e0;
+ --red:#ef4444;--grad:linear-gradient(135deg,#ff2fb0,#c00a78)
 }
-html,body{min-height:100%;background:var(--bg);color:#fff;font-family:'Be Vietnam Pro',-apple-system,system-ui,sans-serif;overflow-x:hidden}
-body{padding:max(env(safe-area-inset-top),16px) 16px max(env(safe-area-inset-bottom),16px);min-height:100vh;display:flex;flex-direction:column;gap:14px}
-body::before{content:"";position:fixed;inset:0;z-index:-1;background:
-  radial-gradient(700px 500px at 15% 5%,rgba(255,47,176,.28),transparent 60%),
-  radial-gradient(700px 500px at 85% 95%,rgba(220,38,38,.20),transparent 60%),
-  #08020a}
-
-header{text-align:center;padding-top:6px}
-.logo{width:88px;height:88px;border-radius:50%;margin:0 auto 14px;display:block;
-  filter:drop-shadow(0 0 34px rgba(255,47,176,.9)) drop-shadow(0 0 70px rgba(255,110,199,.55));
-  animation:logoPulse 2.2s ease-in-out infinite;object-fit:contain}
-@keyframes logoPulse{
-  0%,100%{filter:drop-shadow(0 0 34px rgba(255,47,176,.9)) drop-shadow(0 0 70px rgba(255,110,199,.55))}
-  50%{filter:drop-shadow(0 0 50px rgba(255,47,176,1)) drop-shadow(0 0 110px rgba(255,110,199,.85))}
+html,body{
+ min-height:100%;background:var(--bg);color:#fff;
+ font-family:-apple-system,BlinkMacSystemFont,"Be Vietnam Pro",sans-serif
 }
-h1{font:900 34px/1 'Be Vietnam Pro',sans-serif;letter-spacing:-1.2px;
-  background:var(--chrome);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 3px 16px rgba(255,47,176,.6))}
-.sub{font-size:11px;color:#ffb8e0;letter-spacing:.30em;text-transform:uppercase;font-weight:900;margin-top:8px}
-
-.panel{padding:16px;border-radius:18px;
-  background:linear-gradient(160deg,rgba(29,10,34,.94),rgba(15,4,16,.97));
-  border:1px solid rgba(255,47,176,.4);
-  box-shadow:0 24px 70px -20px rgba(255,47,176,.5),inset 0 1px 0 rgba(255,184,224,.1)}
-
-.presets{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:16px}
-.pbtn{padding:12px 4px;border-radius:11px;border:1px solid rgba(255,120,220,.25);
-  background:rgba(255,47,176,.06);color:#d8b8d8;
-  font:900 10px 'Be Vietnam Pro',sans-serif;letter-spacing:.04em;text-transform:uppercase;
-  cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent}
-.pbtn:active{transform:scale(.95)}
-.pbtn.on{background:var(--grad);border-color:var(--pink);color:#fff;box-shadow:0 6px 22px -4px rgba(255,47,176,.8)}
-.pbtn[data-p="nuke"].on{background:linear-gradient(135deg,#ef4444,#7f1d1d);border-color:#ef4444}
-.pbtn[data-p="godzilla"].on{background:linear-gradient(135deg,#dc2626,#450a0a);border-color:#dc2626;animation:gzPulse 1s ease-in-out infinite}
-@keyframes gzPulse{50%{box-shadow:0 6px 30px -4px rgba(220,38,38,1),0 0 40px -10px rgba(220,38,38,.8)}}
-
+body{
+ padding:max(env(safe-area-inset-top),15px) 15px max(env(safe-area-inset-bottom),15px);
+ min-height:100vh;display:flex;flex-direction:column;gap:13px;overflow-x:hidden
+}
+body:before{
+ content:"";position:fixed;inset:0;z-index:-2;
+ background:
+ radial-gradient(650px 450px at 10% 0%,rgba(255,47,176,.30),transparent 65%),
+ radial-gradient(650px 450px at 90% 100%,rgba(220,38,38,.22),transparent 65%),
+ #08020a
+}
+header{text-align:center;padding-top:5px}
+.logo{
+ width:84px;height:84px;border-radius:50%;object-fit:contain;
+ margin:0 auto 12px;display:block;
+ filter:drop-shadow(0 0 32px rgba(255,47,176,.9));
+ animation:pulse 2s ease-in-out infinite
+}
+@keyframes pulse{50%{transform:scale(1.04);filter:drop-shadow(0 0 60px rgba(255,47,176,1))}}
+h1{
+ font-size:31px;font-weight:950;letter-spacing:-1px;
+ background:linear-gradient(135deg,#fff,#ffb8e0 35%,#ff2fb0 65%,#c00a78);
+ -webkit-background-clip:text;color:transparent
+}
+.sub{
+ margin-top:7px;color:#ffb8e0;font-size:9px;font-weight:900;
+ letter-spacing:.28em;text-transform:uppercase
+}
+.panel{
+ padding:15px;border-radius:20px;
+ background:linear-gradient(160deg,rgba(29,10,34,.96),rgba(12,3,14,.98));
+ border:1px solid rgba(255,47,176,.38);
+ box-shadow:0 25px 70px -25px rgba(255,47,176,.55)
+}
+.title{
+ color:#ffb8e0;font-size:10px;font-weight:950;
+ letter-spacing:.18em;text-transform:uppercase;margin:1px 0 10px
+}
+.presets{
+ display:grid;grid-template-columns:repeat(3,1fr);
+ gap:7px;margin-bottom:16px
+}
+button{
+ font-family:inherit;border:0;cursor:pointer
+}
+.pbtn{
+ min-height:43px;padding:8px 3px;border-radius:11px;
+ background:rgba(255,47,176,.06);
+ border:1px solid rgba(255,120,220,.25);
+ color:#d8b8d8;font-size:9px;font-weight:950;
+ text-transform:uppercase;transition:.15s
+}
+.pbtn:active{transform:scale(.94)}
+.pbtn.on{
+ background:var(--grad);border-color:#ff70ca;color:#fff;
+ box-shadow:0 7px 25px -5px rgba(255,47,176,.8)
+}
+.pbtn.red.on{
+ background:linear-gradient(135deg,#ef4444,#7f1d1d);
+ border-color:#ef4444
+}
+.pbtn.dark.on{
+ background:linear-gradient(135deg,#52525b,#09090b);
+ border-color:#a1a1aa
+}
 .row{margin-bottom:12px}
-.row:last-of-type{margin-bottom:0}
-.lbl{display:flex;justify-content:space-between;margin-bottom:6px;
-  font:900 11px 'Be Vietnam Pro',sans-serif;color:#c8a8c8;letter-spacing:.06em;text-transform:uppercase}
-.lbl b{color:#ffb8e0;font-family:ui-monospace,monospace;font-weight:900}
-
-input[type=range]{width:100%;height:26px;-webkit-appearance:none;appearance:none;background:transparent;outline:none;cursor:pointer}
-input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:99px;background:rgba(255,120,220,.18)}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;
-  background:linear-gradient(135deg,#ffb8e0,#ff2fb0);border:2px solid #08020a;margin-top:-10px;
-  box-shadow:0 4px 16px rgba(255,47,176,.9)}
-input[type=range]::-moz-range-track{height:8px;border-radius:99px;background:rgba(255,120,220,.18)}
-input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;
-  background:linear-gradient(135deg,#ffb8e0,#ff2fb0);border:2px solid #08020a}
-
-.btns{display:flex;gap:10px;margin-top:16px}
-.btn{flex:1;padding:18px;border:0;border-radius:14px;
-  font:900 15px 'Be Vietnam Pro',sans-serif;letter-spacing:.08em;text-transform:uppercase;
-  cursor:pointer;transition:transform .15s}
+.lbl{
+ display:flex;justify-content:space-between;margin-bottom:5px;
+ color:#c8a8c8;font-size:10px;font-weight:900;
+ letter-spacing:.06em;text-transform:uppercase
+}
+.lbl b{color:#ffb8e0;font-family:ui-monospace,monospace}
+input[type=range]{
+ width:100%;height:25px;appearance:none;background:transparent
+}
+input[type=range]::-webkit-slider-runnable-track{
+ height:7px;border-radius:99px;background:rgba(255,120,220,.18)
+}
+input[type=range]::-webkit-slider-thumb{
+ appearance:none;width:27px;height:27px;border-radius:50%;
+ margin-top:-10px;background:linear-gradient(135deg,#ffb8e0,#ff2fb0);
+ border:2px solid #08020a;box-shadow:0 4px 15px rgba(255,47,176,.9)
+}
+.meter{
+ height:14px;border-radius:99px;background:rgba(255,120,220,.10);
+ overflow:hidden;margin-top:5px
+}
+.meter i{
+ display:block;height:100%;width:0%;
+ background:linear-gradient(90deg,#22c55e,#ffb020,#ef4444);
+ transition:width .05s linear
+}
+.btns{display:flex;gap:9px;margin-top:14px}
+.btn{
+ flex:1;padding:17px;border-radius:14px;
+ font-size:14px;font-weight:950;letter-spacing:.08em;
+ color:#fff
+}
+.start{
+ background:var(--grad);
+ box-shadow:0 15px 38px -10px rgba(255,47,176,.9)
+}
+.stop{background:#28101f;color:#8f7188}
+.stop.active{background:#9f075f;color:#fff}
 .btn:active{transform:scale(.96)}
-.btn-start{background:var(--grad);color:#fff;
-  box-shadow:0 16px 42px -10px rgba(255,47,176,.9),inset 0 1px 0 rgba(255,255,255,.4)}
-.btn-stop{background:linear-gradient(135deg,#3a1a2a,#1a0a15);color:#8a6a8a}
-.btn-stop:not([disabled]){background:linear-gradient(135deg,#c00a78,#7a0050);color:#fff}
-.btn:disabled{opacity:.4;cursor:not-allowed}
-
-.meter{height:14px;border-radius:99px;background:rgba(255,120,220,.12);overflow:hidden;margin-top:14px;position:relative}
-.meter i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#ff2fb0,#ffb8e0);
-  transition:width .05s linear;box-shadow:0 0 20px rgba(255,47,176,.9)}
-.meter::after{content:"LEVEL";position:absolute;top:50%;left:14px;transform:translateY(-50%);
-  font:900 9px 'Be Vietnam Pro',sans-serif;letter-spacing:.34em;color:rgba(255,255,255,.6);pointer-events:none}
-
-.status{font:900 10px 'Be Vietnam Pro',sans-serif;letter-spacing:.16em;text-transform:uppercase;
-  text-align:center;color:#8a6a8a;margin-top:12px}
+.btn:disabled{opacity:.4}
+.status{
+ text-align:center;margin-top:10px;color:#8a6a8a;
+ font-size:9px;font-weight:950;letter-spacing:.14em;text-transform:uppercase
+}
 .status.ok{color:#22c55e}
 .status.err{color:#ff5a5a}
 .status.warn{color:#ffb020}
-
-.tip{padding:14px 16px;border-radius:14px;
-  background:rgba(255,47,176,.06);border:1px solid rgba(255,47,176,.3);
-  font-size:11px;color:#d8b8d8;line-height:1.7}
-.tip b{color:#ffb8e0;font-weight:900}
-
-.footer{text-align:center;font:900 9px 'Be Vietnam Pro',sans-serif;color:#6a4a6a;
-  letter-spacing:.26em;text-transform:uppercase;margin-top:auto;padding-top:14px}
+.tip{
+ padding:13px 15px;border-radius:14px;
+ background:rgba(255,47,176,.06);
+ border:1px solid rgba(255,47,176,.25);
+ color:#cdb1cb;font-size:10px;line-height:1.65
+}
+.tip b{color:#ffb8e0}
+.footer{
+ margin-top:auto;text-align:center;color:#62465f;
+ font-size:8px;font-weight:900;letter-spacing:.25em
+}
 </style>
 </head>
 <body>
-
 <header>
-  <img class="logo" src="logo.png" alt="ttan~" onerror="this.outerHTML='<div class=&quot;logo&quot; style=&quot;display:grid;place-items:center;font-size:50px;color:#fff;font-weight:900;background:linear-gradient(135deg,#ff2fb0,#c00a78);border-radius:50%&quot;>▶</div>'">
-  <h1>TTAN~ WARRIOR v2</h1>
-  <div class="sub">Max Power · Siêu ồn</div>
+  <img class="logo" src="logo.png" alt="ttan~"
+       onerror="this.style.display='none'">
+  <h1>TTAN~ WARRIOR v3</h1>
+  <div class="sub">Voice FX · Troll Edition</div>
 </header>
-
-<div class="panel">
-  <div class="presets" id="presets">
-    <button class="pbtn" data-p="clean">Clean</button>
-    <button class="pbtn" data-p="loud">Loud</button>
-    <button class="pbtn" data-p="sieuon">Siêu Ồn</button>
-    <button class="pbtn" data-p="apokiller">APO Killer</button>
-    <button class="pbtn" data-p="echo">Echo</button>
-    <button class="pbtn" data-p="nuke">Nuke</button>
-    <button class="pbtn" data-p="godzilla">Godzilla</button>
-    <button class="pbtn" data-p="chaos">Chaos</button>
-    <button class="pbtn" data-p="nuclear">☢️ Nuclear</button>
-  </div>
-
-  <div class="row">
-    <div class="lbl"><span>⚙️ Pre Gain</span><b id="v-preGain">50000x</b></div>
-    <input type="range" id="s-preGain" min="1" max="50000" value="50000">
-  </div>
-  <div class="row">
-    <div class="lbl"><span>🔥 Drive</span><b id="v-drive">150%</b></div>
-    <input type="range" id="s-drive" min="0" max="300" value="150">
-  </div>
-  <div class="row">
-    <div class="lbl"><span>💥 Crush</span><b id="v-crush">150%</b></div>
-    <input type="range" id="s-crush" min="0" max="300" value="150">
-  </div>
-  <div class="row">
-    <div class="lbl"><span>🌐 Width</span><b id="v-width">100%</b></div>
-    <input type="range" id="s-width" min="0" max="100" value="100">
-  </div>
-  <div class="row">
-    <div class="lbl"><span>🎵 Reverb</span><b id="v-reverb">150%</b></div>
-    <input type="range" id="s-reverb" min="0" max="200" value="150">
-  </div>
-  <div class="row">
-    <div class="lbl"><span>🔊 Sub Bass</span><b id="v-subbass">100%</b></div>
-    <input type="range" id="s-subbass" min="0" max="200" value="100">
-  </div>
-  <div class="row">
-    <div class="lbl"><span>✨ Exciter</span><b id="v-exciter">100%</b></div>
-    <input type="range" id="s-exciter" min="0" max="200" value="100">
-  </div>
-  <div class="row">
-    <div class="lbl"><span>⚡ Post Gain</span><b id="v-postGain">50x</b></div>
-    <input type="range" id="s-postGain" min="1" max="500" value="50">
-  </div>
-
-  <div class="meter"><i id="meterFill"></i></div>
-  <div class="status" id="status">Chưa bật · nhấn BẮT ĐẦU</div>
-
-  <div class="btns">
-    <button class="btn btn-start" id="startBtn">▶ BẮT ĐẦU</button>
-    <button class="btn btn-stop" id="stopBtn" disabled>■ DỪNG</button>
-  </div>
+<section class="panel">
+<div class="title">⚡ Chọn hiệu ứng</div>
+<div class="presets">
+<button class="pbtn" data-p="clean">Clean</button>
+<button class="pbtn" data-p="loud">Loud</button>
+<button class="pbtn" data-p="robot">🤖 Robot</button>
+<button class="pbtn" data-p="radio">📻 Radio</button>
+<button class="pbtn" data-p="mega">📢 Mega</button>
+<button class="pbtn" data-p="demon">👹 Demon</button>
+<button class="pbtn" data-p="echo">🌀 Echo</button>
+<button class="pbtn" data-p="glitch">📡 Glitch</button>
+<button class="pbtn" data-p="crush">💥 Crush</button>
+<button class="pbtn red" data-p="nuclear">☢️ Nuclear</button>
+<button class="pbtn red" data-p="chaos">🔥 Chaos</button>
+<button class="pbtn dark" data-p="broken">☠ Broken</button>
 </div>
-
+<div class="row">
+ <div class="lbl"><span>🔥 Distortion</span><b id="v-dist">65%</b></div>
+ <input id="dist" type="range" min="0" max="100" value="65">
+</div>
+<div class="row">
+ <div class="lbl"><span>💥 Crush</span><b id="v-crush">35%</b></div>
+ <input id="crush" type="range" min="0" max="100" value="35">
+</div>
+<div class="row">
+ <div class="lbl"><span>🎵 Echo</span><b id="v-echo">20%</b></div>
+ <input id="echo" type="range" min="0" max="100" value="20">
+</div>
+<div class="row">
+ <div class="lbl"><span>🔊 Bass</span><b id="v-bass">35%</b></div>
+ <input id="bass" type="range" min="0" max="100" value="35">
+</div>
+<div class="row">
+ <div class="lbl"><span>✨ Treble</span><b id="v-treble">30%</b></div>
+ <input id="treble" type="range" min="0" max="100" value="30">
+</div>
+<div class="row">
+ <div class="lbl"><span>🤖 Robot</span><b id="v-robot">0%</b></div>
+ <input id="robot" type="range" min="0" max="100" value="0">
+</div>
+<div class="row">
+ <div class="lbl"><span>⚡ Intensity</span><b id="v-intensity">70%</b></div>
+ <input id="intensity" type="range" min="0" max="100" value="70">
+</div>
+<div class="meter"><i id="meter"></i></div>
+<div class="status" id="status">Chưa bật · nhấn BẮT ĐẦU</div>
+<div class="btns">
+ <button class="btn start" id="start">▶ BẮT ĐẦU</button>
+ <button class="btn stop" id="stop" disabled>■ DỪNG</button>
+</div>
+</section>
 <div class="tip">
-  <b>PC:</b> VB-Cable → output vào CABLE Input → Discord/Zalo/Messenger chọn CABLE Output.<br>
-  <b>⚠️ Nuclear / Godzilla:</b> cực mạnh — test volume thấp trước.
+<b>TTAN FX:</b> hiệu ứng được xử lý trực tiếp từ microphone trong trình duyệt.
+<br>
+<b>⚠️ Lưu ý:</b> Nuclear/Chaos/Broken tạo distortion rất mạnh. Giữ âm lượng thiết bị ở mức thấp khi thử.
 </div>
-
-<div class="footer">ttan~ Voice Warrior · v2</div>
-
+<div class="footer">TTAN~ VOICE WARRIOR · V3</div>
 <script>
-(function(){
-  'use strict';
-
-  const PARAMS = {
-    preGain: 50000, drive: 150, crush: 150,
-    width: 100, reverb: 150, subbass: 100, exciter: 100, postGain: 50
-  };
-
-  const PRESETS = {
-    clean:    { preGain: 100,   drive: 0,   crush: 0,   width: 0,   reverb: 0,   subbass: 0,   exciter: 0,   postGain: 5 },
-    loud:     { preGain: 3000,  drive: 50,  crush: 30,  width: 50,  reverb: 20,  subbass: 30,  exciter: 30,  postGain: 25 },
-    sieuon:   { preGain: 10000, drive: 100, crush: 80,  width: 80,  reverb: 60,  subbass: 60,  exciter: 60,  postGain: 40 },
-    apokiller:{ preGain: 20000, drive: 120, crush: 100, width: 85,  reverb: 80,  subbass: 80,  exciter: 80,  postGain: 45 },
-    echo:     { preGain: 5000,  drive: 40,  crush: 30,  width: 60,  reverb: 150, subbass: 30,  exciter: 40,  postGain: 30 },
-    nuke:     { preGain: 30000, drive: 200, crush: 200, width: 95,  reverb: 120, subbass: 100, exciter: 100, postGain: 60 },
-    godzilla: { preGain: 40000, drive: 250, crush: 250, width: 100, reverb: 150, subbass: 150, exciter: 150, postGain: 80 },
-    chaos:    { preGain: 45000, drive: 280, crush: 280, width: 100, reverb: 180, subbass: 180, exciter: 180, postGain: 100 },
-    nuclear:  { preGain: 50000, drive: 300, crush: 300, width: 100, reverb: 200, subbass: 200, exciter: 200, postGain: 150 }
-  };
-
-  let ctx = null, stream = null, src = null;
-  let preG = null, driveWS = null, crushWS = null;
-  let splitter = null, dL = null, dR = null, merger = null;
-  let rvConv = null, rvWet = null;
-  let subBassFilter = null, subBassGain = null;
-  let exciterHP = null, exciterGain = null;
-  let postG = null, limiter = null, dest = null, analyser = null;
-  let running = false;
-
-  const $ = id => document.getElementById(id);
-  const startBtn = $('startBtn'), stopBtn = $('stopBtn'), statusEl = $('status'), meterFill = $('meterFill');
-
-  function setStatus(text, cls) {
-    statusEl.textContent = text;
-    statusEl.className = 'status' + (cls ? ' ' + cls : '');
-  }
-
-  function buildImpulse(audioCtx, decay, size) {
-    const len = Math.max(100, Math.floor(audioCtx.sampleRate * Math.min(decay, 10)));
-    const buf = audioCtx.createBuffer(2, len, audioCtx.sampleRate);
-    for (let c = 0; c < 2; c++) {
-      const d = buf.getChannelData(c);
-      for (let i = 0; i < len; i++) {
-        d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, Math.max(0.1, size));
-      }
-    }
-    return buf;
-  }
-
-  function makeDriveCurve(amount) {
-    const n = 8192, curve = new Float32Array(n);
-    const k = Math.max(0.01, amount / 30);
-    for (let i = 0; i < n; i++) {
-      const x = (i * 2) / n - 1;
-      curve[i] = Math.tanh(x * (1 + k * 8));
-    }
-    return curve;
-  }
-
-  function makeCrushCurve(amount) {
-    const n = 8192, curve = new Float32Array(n);
-    const bits = Math.max(2, 16 - Math.floor(amount / 10));
-    const levels = Math.pow(2, bits);
-    for (let i = 0; i < n; i++) {
-      const x = (i * 2) / n - 1;
-      curve[i] = Math.round(x * levels) / levels;
-    }
-    return curve;
-  }
-
-  function makeLimiterCurve() {
-    const n = 8192, curve = new Float32Array(n);
-    for (let i = 0; i < n; i++) {
-      const x = (i * 2) / n - 1;
-      const a = Math.abs(x);
-      if (a <= 0.9) curve[i] = x;
-      else curve[i] = Math.sign(x) * (0.9 + Math.tanh((a - 0.9) * 12) * 0.099);
-    }
-    return curve;
-  }
-
-  async function start() {
-    if (running) return;
-    setStatus('Đang xin quyền mic...', 'warn');
-
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          echoCancellation: false,
-          noiseSuppression: false,
-          autoGainControl: false,
-          channelCount: 1
-        }
-      });
-    } catch (e) {
-      setStatus('Không lấy được mic: ' + e.message, 'err');
-      return;
-    }
-
-    try {
-      ctx = new (window.AudioContext || window.webkitAudioContext)();
-      if (ctx.state === 'suspended') await ctx.resume();
-
-      src = ctx.createMediaStreamSource(stream);
-
-      preG = ctx.createGain();
-      preG.gain.value = 1;
-
-      driveWS = ctx.createWaveShaper();
-      driveWS.curve = makeDriveCurve(PARAMS.drive);
-      driveWS.oversample = '4x';
-
-      crushWS = ctx.createWaveShaper();
-      crushWS.curve = makeCrushCurve(PARAMS.crush);
-      crushWS.oversample = 'none';
-
-      splitter = ctx.createChannelSplitter(2);
-      dL = ctx.createDelay(0.05);
-      dR = ctx.createDelay(0.05);
-      merger = ctx.createChannelMerger(2);
-
-      rvConv = ctx.createConvolver();
-      rvConv.buffer = buildImpulse(ctx, 3.0, 0.7);
-      rvWet = ctx.createGain();
-      rvWet.gain.value = 0;
-
-      // sub bass
-      subBassFilter = ctx.createBiquadFilter();
-      subBassFilter.type = 'lowshelf';
-      subBassFilter.frequency.value = 120;
-      subBassFilter.gain.value = 0;
-      subBassGain = ctx.createGain();
-      subBassGain.gain.value = 1;
-
-      // exciter
-      exciterHP = ctx.createBiquadFilter();
-      exciterHP.type = 'highshelf';
-      exciterHP.frequency.value = 4000;
-      exciterHP.gain.value = 0;
-      exciterGain = ctx.createGain();
-      exciterGain.gain.value = 1;
-
-      postG = ctx.createGain();
-      postG.gain.value = 1;
-
-      limiter = ctx.createWaveShaper();
-      limiter.curve = makeLimiterCurve();
-      limiter.oversample = '4x';
-
-      analyser = ctx.createAnalyser();
-      analyser.fftSize = 256;
-
-      // chain
-      src.connect(preG);
-      preG.connect(driveWS);
-      driveWS.connect(crushWS);
-      crushWS.connect(splitter);
-      splitter.connect(dL, 0);
-      splitter.connect(dR, 1);
-      dL.connect(merger, 0, 0);
-      dR.connect(merger, 0, 1);
-
-      merger.connect(subBassFilter);
-      subBassFilter.connect(subBassGain);
-      subBassGain.connect(exciterHP);
-      exciterHP.connect(exciterGain);
-
-      exciterGain.connect(rvConv);
-      exciterGain.connect(postG);
-      rvConv.connect(rvWet);
-      rvWet.connect(postG);
-
-      postG.connect(limiter);
-      limiter.connect(analyser);
-
-      if (ctx.createMediaStreamDestination) {
-        dest = ctx.createMediaStreamDestination();
-        limiter.connect(dest);
-      }
-      const monitor = ctx.createGain();
-      monitor.gain.value = 0.1;
-      limiter.connect(monitor);
-      monitor.connect(ctx.destination);
-
-      running = true;
-      applyParams();
-      startBtn.disabled = true;
-      stopBtn.disabled = false;
-      setStatus('Đang chạy · ' + ctx.sampleRate + ' Hz · MAX POWER', 'ok');
-
-      const buf = new Uint8Array(analyser.frequencyBinCount);
-      function tick() {
-        if (!running) return;
-        analyser.getByteFrequencyData(buf);
-        let sum = 0;
-        for (let i = 0; i < buf.length; i++) sum += buf[i];
-        meterFill.style.width = Math.min(100, (sum / buf.length) * 1.8) + '%';
-        requestAnimationFrame(tick);
-      }
-      tick();
-
-    } catch (e) {
-      setStatus('Lỗi engine: ' + e.message, 'err');
-      if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-    }
-  }
-
-  function stop() {
-    if (!running) return;
-    running = false;
-    try { if (src) src.disconnect(); } catch(e){}
-    try { if (limiter) limiter.disconnect(); } catch(e){}
-    try { if (dest) dest.disconnect(); } catch(e){}
-    try { if (analyser) analyser.disconnect(); } catch(e){}
-    try { if (ctx) ctx.close(); } catch(e){}
-    if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-    ctx = null; src = null; limiter = null; dest = null; analyser = null;
-    meterFill.style.width = '0%';
-    startBtn.disabled = false;
-    stopBtn.disabled = true;
-    setStatus('Đã dừng', '');
-  }
-
-  function applyParams() {
-    if (!ctx) return;
-    const now = ctx.currentTime;
-
-    // preGain 5-stage — lên tới 50000x
-    const pre = Math.max(1, PARAMS.preGain);
-    const s1 = Math.min(pre, 100);
-    const s2 = Math.max(1, Math.min(pre / 100, 100));
-    const s3 = Math.max(1, Math.min(pre / 10000, 100));
-    const s4 = Math.max(1, Math.min(pre / 1000000, 100));
-    preG.gain.setTargetAtTime(s1 * s2 * s3 * s4, now, 0.05);
-
-    driveWS.curve = makeDriveCurve(PARAMS.drive);
-    crushWS.curve = makeCrushCurve(PARAMS.crush);
-
-    const w = PARAMS.width / 100;
-    dL.delayTime.setTargetAtTime(0.0001 * w, now, 0.05);
-    dR.delayTime.setTargetAtTime(0.0189 * w, now, 0.05);
-
-    rvWet.gain.setTargetAtTime(PARAMS.reverb / 100, now, 0.05);
-
-    subBassFilter.gain.setTargetAtTime((PARAMS.subbass / 100) * 12, now, 0.05);
-    exciterHP.gain.setTargetAtTime((PARAMS.exciter / 100) * 10, now, 0.05);
-
-    const post = Math.max(1, PARAMS.postGain);
-    postG.gain.setTargetAtTime(Math.min(post, 200), now, 0.05);
-  }
-
-  function applyPreset(name) {
-    const p = PRESETS[name];
-    if (!p) return;
-    Object.assign(PARAMS, p);
-    document.querySelectorAll('.pbtn').forEach(b => b.classList.toggle('on', b.dataset.p === name));
-    ['preGain','drive','crush','width','reverb','subbass','exciter','postGain'].forEach(k => {
-      const s = $('s-' + k), v = $('v-' + k);
-      if (s) s.value = PARAMS[k];
-      if (v) v.textContent = (k === 'preGain' || k === 'postGain') ? PARAMS[k] + 'x' : PARAMS[k] + '%';
-    });
-    applyParams();
-  }
-
-  ['preGain','drive','crush','width','reverb','subbass','exciter','postGain'].forEach(k => {
-    const s = $('s-' + k), v = $('v-' + k);
-    if (!s) return;
-    const fmt = x => (k === 'preGain' || k === 'postGain') ? x + 'x' : x + '%';
-    s.addEventListener('input', () => {
-      PARAMS[k] = parseFloat(s.value);
-      if (v) v.textContent = fmt(PARAMS[k]);
-      applyParams();
-    });
-    s.value = PARAMS[k];
-    if (v) v.textContent = fmt(PARAMS[k]);
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+let ctx = null;
+let stream = null;
+let source = null;
+let inputGain = null;
+let distortion = null;
+let crush = null;
+let bass = null;
+let treble = null;
+let delay = null;
+let feedback = null;
+let echoWet = null;
+let robotOsc = null;
+let robotGain = null;
+let robotMix = null;
+let compressor = null;
+let analyser = null;
+let monitor = null;
+let running = false;
+const P = {
+ dist:65,
+ crush:35,
+ echo:20,
+ bass:35,
+ treble:30,
+ robot:0,
+ intensity:70
+};
+const PRESETS = {
+ clean:{
+  dist:0,crush:0,echo:0,bass:10,treble:10,robot:0,intensity:15
+ },
+ loud:{
+  dist:25,crush:8,echo:5,bass:20,treble:20,robot:0,intensity:30
+ },
+ robot:{
+  dist:45,crush:20,echo:15,bass:20,treble:30,robot:90,intensity:65
+ },
+ radio:{
+  dist:70,crush:50,echo:12,bass:0,treble:70,robot:15,intensity:75
+ },
+ mega:{
+  dist:55,crush:30,echo:8,bass:55,treble:20,robot:0,intensity:65
+ },
+ demon:{
+  dist:80,crush:35,echo:30,bass:80,treble:15,robot:70,intensity:80
+ },
+ echo:{
+  dist:20,crush:5,echo:90,bass:20,treble:25,robot:0,intensity:60
+ },
+ glitch:{
+  dist:95,crush:90,echo:35,bass:10,treble:80,robot:80,intensity:90
+ },
+ crush:{
+  dist:90,crush:100,echo:5,bass:35,treble:50,robot:10,intensity:90
+ },
+ nuclear:{
+  dist:100,crush:100,echo:55,bass:75,treble:75,robot:45,intensity:100
+ },
+ chaos:{
+  dist:100,crush:100,echo:100,bass:100,treble:100,robot:100,intensity:100
+ },
+ broken:{
+  dist:100,crush:100,echo:70,bass:5,treble:95,robot:100,intensity:100
+ }
+};
+function setStatus(t,c=""){
+ $("status").textContent=t;
+ $("status").className="status "+c;
+}
+function distortionCurve(amount){
+ const n=8192;
+ const curve=new Float32Array(n);
+ const drive=1+(amount/100)*18;
+ for(let i=0;i<n;i++){
+  const x=i*2/n-1;
+  curve[i]=Math.tanh(x*drive);
+ }
+ return curve;
+}
+function crushCurve(amount){
+ const n=8192;
+ const curve=new Float32Array(n);
+ const bits=Math.max(3,16-Math.floor(amount*.13));
+ const levels=Math.pow(2,bits);
+ for(let i=0;i<n;i++){
+  const x=i*2/n-1;
+  curve[i]=Math.round(x*levels)/levels;
+ }
+ return curve;
+}
+function apply(){
+ if(!ctx) return;
+ const now=ctx.currentTime;
+ const k=P.intensity/100;
+ distortion.curve=distortionCurve(P.dist);
+ crush.curve=crushCurve(P.crush);
+ bass.gain.setTargetAtTime(
+   (P.bass/100)*12*k,
+   now,.025
+ );
+ treble.gain.setTargetAtTime(
+   (P.treble/100)*10*k,
+   now,.025
+ );
+ echoWet.gain.setTargetAtTime(
+   (P.echo/100)*.75,
+   now,.025
+ );
+ feedback.gain.setTargetAtTime(
+   Math.min(.72,(P.echo/100)*.7),
+   now,.025
+ );
+ robotMix.gain.setTargetAtTime(
+   (P.robot/100)*.75,
+   now,.025
+ );
+ updateLabels();
+}
+function updateLabels(){
+ ["dist","crush","echo","bass","treble","robot","intensity"]
+ .forEach(k=>{
+   $("v-"+k).textContent=P[k]+"%";
+   $(k).value=P[k];
+ });
+}
+function preset(name){
+ const p=PRESETS[name];
+ if(!p)return;
+ Object.assign(P,p);
+ document.querySelectorAll(".pbtn").forEach(b=>{
+   b.classList.toggle("on",b.dataset.p===name);
+ });
+ apply();
+ if(name==="glitch"||name==="chaos"||name==="broken"){
+   document.body.classList.add("glitch");
+   setTimeout(()=>{
+     document.body.classList.remove("glitch");
+   },180);
+ }
+}
+async function start(){
+ if(running)return;
+ setStatus("Đang xin quyền microphone...","warn");
+ try{
+  stream=await navigator.mediaDevices.getUserMedia({
+   audio:{
+    echoCancellation:false,
+    noiseSuppression:false,
+    autoGainControl:false,
+    channelCount:1
+   }
   });
-
-  document.querySelectorAll('.pbtn').forEach(b => {
-    b.addEventListener('click', () => applyPreset(b.dataset.p));
-  });
-
-  startBtn.addEventListener('click', start);
-  stopBtn.addEventListener('click', stop);
-
-  applyPreset('nuke');
+ }catch(e){
+  setStatus("Không lấy được microphone","err");
+  return;
+ }
+ try{
+  ctx=new(window.AudioContext||window.webkitAudioContext)();
+  if(ctx.state==="suspended"){
+   await ctx.resume();
+  }
+  source=ctx.createMediaStreamSource(stream);
+  inputGain=ctx.createGain();
+  /*
+   * Gain đầu vào vừa phải.
+   * Không dùng hàng chục nghìn lần gain vì nó chỉ
+   * biến tín hiệu thành clipping cực mạnh.
+   */
+  inputGain.gain.value=.75;
+  distortion=ctx.createWaveShaper();
+  distortion.oversample="4x";
+  crush=ctx.createWaveShaper();
+  bass=ctx.createBiquadFilter();
+  bass.type="lowshelf";
+  bass.frequency.value=120;
+  treble=ctx.createBiquadFilter();
+  treble.type="highshelf";
+  treble.frequency.value=3500;
+  delay=ctx.createDelay(.8);
+  delay.delayTime.value=.16;
+  feedback=ctx.createGain();
+  feedback.gain.value=.25;
+  echoWet=ctx.createGain();
+  echoWet.gain.value=0;
+  /*
+   * Robot oscillator tạo modulation nhẹ cho voice.
+   */
+  robotOsc=ctx.createOscillator();
+  robotOsc.type="square";
+  robotOsc.frequency.value=32;
+  robotGain=ctx.createGain();
+  robotGain.gain.value=0;
+  robotMix=ctx.createGain();
+  robotMix.gain.value=0;
+  robotOsc.connect(robotGain);
+  robotGain.connect(robotMix);
+  robotOsc.start();
+  /*
+   * Compressor giữ peak trong phạm vi an toàn hơn.
+   */
+  compressor=ctx.createDynamicsCompressor();
+  compressor.threshold.value=-12;
+  compressor.knee.value=18;
+  compressor.ratio.value=8;
+  compressor.attack.value=.003;
+  compressor.release.value=.12;
+  analyser=ctx.createAnalyser();
+  analyser.fftSize=256;
+  monitor=ctx.createGain();
+  /*
+   * Không cho monitor gain vượt mức.
+   */
+  monitor.gain.value=.32;
+  /*
+   * Main chain
+   */
+  source.connect(inputGain);
+  inputGain.connect(distortion);
+  distortion.connect(crush);
+  crush.connect(bass);
+  bass.connect(treble);
+  /*
+   * Dry signal
+   */
+  treble.connect(compressor);
+  /*
+   * Echo branch
+   */
+  treble.connect(delay);
+  delay.connect(echoWet);
+  echoWet.connect(compressor);
+  delay.connect(feedback);
+  feedback.connect(delay);
+  /*
+   * Robot modulation branch
+   */
+  robotOsc.connect(robotMix);
+  robotMix.connect(compressor);
+  compressor.connect(analyser);
+  analyser.connect(monitor);
+  monitor.connect(ctx.destination);
+  running=true;
+  apply();
+  $("start").disabled=true;
+  $("stop").disabled=false;
+  $("stop").classList.add("active");
+  setStatus(
+   "Đang chạy · "+ctx.sampleRate+" Hz · TTAN FX",
+   "ok"
+  );
+  meterLoop();
+ }catch(e){
+  setStatus("Lỗi audio engine: "+e.message,"err");
+  if(stream){
+   stream.getTracks().forEach(t=>t.stop());
+   stream=null;
+  }
+ }
+}
+function meterLoop(){
+ if(!running)return;
+ const data=new Uint8Array(analyser.frequencyBinCount);
+ analyser.getByteFrequencyData(data);
+ let total=0;
+ for(const x of data){
+  total+=x;
+ }
+ const avg=total/data.length;
+ $("meter").style.width=
+   Math.min(100,avg*1.7)+"%";
+ requestAnimationFrame(meterLoop);
+}
+function stop(){
+ if(!running)return;
+ running=false;
+ try{
+  source.disconnect();
+ }catch(e){}
+ try{
+  inputGain.disconnect();
+  distortion.disconnect();
+  crush.disconnect();
+  bass.disconnect();
+  treble.disconnect();
+  delay.disconnect();
+  feedback.disconnect();
+  echoWet.disconnect();
+  robotOsc.disconnect();
+  robotMix.disconnect();
+  compressor.disconnect();
+  analyser.disconnect();
+  monitor.disconnect();
+ }catch(e){}
+ try{
+  if(robotOsc)robotOsc.stop();
+ }catch(e){}
+ try{
+  if(ctx)ctx.close();
+ }catch(e){}
+ if(stream){
+  stream.getTracks().forEach(t=>t.stop());
+ }
+ ctx=null;
+ stream=null;
+ $("meter").style.width="0%";
+ $("start").disabled=false;
+ $("stop").disabled=true;
+ $("stop").classList.remove("active");
+ setStatus("Đã dừng");
+}
+/*
+ * Slider controls
+ */
+[
+ "dist",
+ "crush",
+ "echo",
+ "bass",
+ "treble",
+ "robot",
+ "intensity"
+].forEach(k=>{
+ $(k).addEventListener("input",()=>{
+  P[k]=Number($(k).value);
+  document.querySelectorAll(".pbtn")
+   .forEach(b=>b.classList.remove("on"));
+  apply();
+ });
+});
+/*
+ * Presets
+ */
+document.querySelectorAll(".pbtn").forEach(b=>{
+ b.addEventListener("click",()=>{
+  preset(b.dataset.p);
+ });
+});
+$("start").addEventListener("click",start);
+$("stop").addEventListener("click",stop);
+/*
+ * Mặc định an toàn hơn: Loud.
+ */
+preset("loud");
 })();
 </script>
-
 </body>
 </html>
