@@ -692,6 +692,31 @@ mark{background:rgba(251,191,36,.4);color:inherit;border-radius:3px;padding:0 2p
 [data-theme=light] .item.active{color:#0f172a}
 [data-theme=light] .item.active .count,[data-theme=light] .stat:hover .num{color:#fff}
 [data-theme=light] .note{background:#f8fafc}
+/* ===== MOBILE: chữ to, rõ; sửa lỗi sidebar bị phủ tối ===== */
+@media(max-width:860px){
+  body{font-size:17px}
+  .app{z-index:auto}
+  .sidebar{width:min(86vw,360px)}
+  .brand{padding-left:78px}
+  .brand h1{font-size:26px}
+  .brand p{font-size:12.5px}
+  .search{font-size:17px;padding-top:14px;padding-bottom:14px}
+  .tbtn{font-size:14px;padding:9px 14px}
+  .chip{font-size:14px;padding:8px 13px}
+  .item{font-size:17px;padding:15px 14px}
+  .item .title{white-space:normal}
+  .item .count{font-size:12.5px}
+  .article h2{font-size:30px}
+  .article .meta{font-size:14px}
+  .section-head .label{font-size:14px}
+  .qa .q{font-size:calc(19px*var(--fs,1))}
+  .qa .a{font-size:calc(17px*var(--fs,1));line-height:1.8}
+  .note{font-size:16px}
+  .welcome p.sub{font-size:17px}
+  .stat .lbl{font-size:12.5px}
+  .qa,.qa:hover{background:rgba(10,15,28,.82)}
+  .bgimg::after{background:rgba(10,15,28,.65)}
+}
 </style>
 </head>
 <body>
