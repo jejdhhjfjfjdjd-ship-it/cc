@@ -1,8 +1,6 @@
-// language: JavaScript, file: app/api/keys/route.js
 import { Redis } from '@upstash/redis';
 import { NextResponse } from 'next/server';
 
-// Khởi tạo kết nối Upstash (Dùng biến môi trường mày đã set trên Vercel)
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
   token: process.env.UPSTASH_REDIS_REST_TOKEN,
@@ -10,7 +8,6 @@ const redis = new Redis({
 
 export async function GET() {
   try {
-    // Lấy toàn bộ key được lưu dưới dạng Hash "u3_keys"
     const data = await redis.hgetall("u3_keys") || {};
     return NextResponse.json(data);
   } catch (err) {
