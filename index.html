@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>U3 License Admin</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: rgba(20, 25, 40, 0.85);
+    --border: rgba(255, 255, 255, 0.1);
+    --text: #c9d1d9;
+    --accent: #4facfe;
+    --danger: #ff6b6b;
+    --success: #43e97b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  body {
+    background-color: var(--bg);
+    background-image: radial-gradient(circle at 15% 50%, rgba(79, 172, 254, 0.15), transparent 25%),
+                      radial-gradient(circle at 85% 30%, rgba(67, 233, 123, 0.15), transparent 25%);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+  .container {
+    width: 100%;
+    max-width: 900px;
+    background: var(--panel);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+    animation: fadeIn 0.6s ease-out;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  h1 {
+    font-size: 24px;
+    font-weight: 800;
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+  }
+  .controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+  .controls input, .controls select {
+    flex: 1;
+    min-width: 200px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(0,0,0,0.2);
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+  }
+  .controls input:focus, .controls select:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(79, 172, 254, 0.2); }
+  .controls select option { background: var(--bg); color: #fff; }
+  .btn {
+    padding: 14px 24px;
+    border-radius: 12px;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(0,242,254,0.3);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,242,254,0.4); }
+  .btn-danger {
+    background: rgba(255, 107, 107, 0.1);
+    color: var(--danger);
+    border: 1px solid rgba(255, 107, 107, 0.2);
+  }
+  .btn-danger:hover { background: rgba(255, 107, 107, 0.2); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.5);
+  }
+  td { font-size: 14px; }
+  .key-code {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    color: var(--accent);
+    background: rgba(79, 172, 254, 0.1);
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .key-code:hover { background: rgba(79, 172, 254, 0.2); }
+  .status {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: inline-block;
+  }
+  .status.active { background: rgba(67, 233, 123, 0.15); color: var(--success); }
+  .status.expired { background: rgba(255, 107, 107, 0.15); color: var(--danger); }
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: rgba(255,255,255,0.3);
+    font-style: italic;
+  }
+  .toast {
+    position: fixed; bottom: 20px; right: 20px; background: rgba(67, 233, 123, 0.9); color: #fff;
+    padding: 12px 24px; border-radius: 10px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transform: translateY(100px); opacity: 0; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+</style>
+</head>
+<body>
+
+<canvas id="snowCanvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0"></canvas>
+
+<div class="container">
+  <h1>❄️ U3 LICENSE MANAGER</h1>
+  
+  <div class="controls">
+    <input type="text" id="customKey" placeholder="Nhập key tự chọn (hoặc để trống)...">
+    <select id="duration">
+      <option value="3600000">1 Giờ</option>
+      <option value="86400000">1 Ngày</option>
+      <option value="604800000">1 Tuần</option>
+      <option value="2592000000">1 Tháng</option>
+    </select>
+    <button class="btn btn-primary" onclick="generateKey()">+ Tạo Key</button>
+    <button class="btn btn-danger" onclick="exportKeys()">Xuất JSON</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Hết hạn</th>
+        <th>Trạng thái</th>
+        <th>Hành động</th>
+      </tr>
+    </thead>
+    <tbody id="keyList">
+      <!-- Rows rendered here -->
+    </tbody>
+  </table>
+</div>
+
+<div class="toast" id="toast">Đã copy!</div>
+
+<script>
+  let keys = JSON.parse(localStorage.getItem('u3_keys') || '{}');
+
+  function saveAndRender() {
+    localStorage.setItem('u3_keys', JSON.stringify(keys));
+    renderTable();
+  }
+
+  function generateKey() {
+    let customKey = document.getElementById('customKey').value.trim().toUpperCase();
+    let duration = parseInt(document.getElementById('duration').value);
+    let key = customKey || 'U3-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    
+    if (keys[key]) return showToast('Key này đã tồn tại!', '#ff6b6b');
+
+    keys[key] = Date.now() + duration;
+    document.getElementById('customKey').value = '';
+    saveAndRender();
+    showToast('Đã tạo key: ' + key, '#43e97b');
+  }
+
+  function deleteKey(key) {
+    if (confirm('Xóa key ' + key + '?')) {
+      delete keys[key];
+      saveAndRender();
+      showToast('Đã xóa key', '#ff6b6b');
+    }
+  }
+
+  function copyKey(key) {
+    navigator.clipboard.writeText(key);
+    showToast('Đã copy: ' + key, '#43e97b');
+  }
+
+  function exportKeys() {
+    let active = {};
+    for (let k in keys) {
+      if (Date.now() < keys[k]) active[k] = keys[k];
+    }
+    let data = JSON.stringify({ active_keys: active }, null, 2);
+    
+    let blob = new Blob([data], {type: 'application/json'});
+    let url = URL.createObjectURL(blob);
+    let a = document.createElement('a');
+    a.href = url; a.download = 'keys.json'; a.click();
+    URL.revokeObjectURL(url);
+    showToast('Đã xuất file keys.json', '#4facfe');
+  }
+
+  function renderTable() {
+    let tbody = document.getElementById('keyList');
+    let html = '';
+    let sortedKeys = Object.keys(keys).sort((a,b) => keys[b] - keys[a]);
+    
+    if (sortedKeys.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" class="empty-state">Chưa có key nào. Bấm "Tạo Key" để bắt đầu!</td></tr>';
+      return;
+    }
+
+    for (let k of sortedKeys) {
+      let exp = keys[k];
+      let isExpired = Date.now() > exp;
+      let dateStr = new Date(exp).toLocaleString('vi-VN');
+      let statusHtml = isExpired ? '<span class="status expired">Hết hạn</span>' : '<span class="status active">Hoạt động</span>';
+      let actionHtml = `<button class="btn btn-danger" style="padding:6px 12px; font-size:12px;" onclick="deleteKey('${k}')">Xóa</button>`;
+
+      html += `
+        <tr>
+          <td><span class="key-code" onclick="copyKey('${k}')" title="Click để copy">${k}</span></td>
+          <td>${dateStr}</td>
+          <td>${statusHtml}</td>
+          <td>${actionHtml}</td>
+        </tr>
+      `;
+    }
+    tbody.innerHTML = html;
+  }
+
+  function showToast(msg, color) {
+    let t = document.getElementById('toast');
+    t.textContent = msg; t.style.background = color;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // Hiệu ứng tuyết rơi
+  const canvas = document.getElementById('snowCanvas');
+  const ctx = canvas.getContext('2d');
+  let width = window.innerWidth, height = window.innerHeight;
+  canvas.width = width; canvas.height = height;
+  const particles = Array.from({length: 50}).map(() => ({ x: Math.random() * width, y: Math.random() * height, r: Math.random() * 4 + 2, speedY: Math.random() * 1 + 0.5, speedX: Math.random() * 1 - 0.5, opacity: Math.random() * 0.5 + 0.4 }));
+  function drawSnow() {
+    ctx.clearRect(0, 0, width, height);
+    particles.forEach(p => {
+        ctx.beginPath(); ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+        p.y += p.speedY; p.x += p.speedX + Math.sin(p.y / 50) * 0.5;
+        if (p.y > height + 10 || p.x > width + 10 || p.x < -10) { p.x = Math.random() * width; p.y = -10; }
+    });
+    requestAnimationFrame(drawSnow);
+  }
+  drawSnow();
+  window.addEventListener('resize', () => { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; });
+
+  renderTable();
+</script>
+
+</body>
+</html>
