@@ -1,0 +1,15 @@
+{
+  "name": "Việt Nam Chill Journey",
+  "short_name": "Chill Journey",
+  "description": "Chuyến du lịch phiêu lưu xuyên Việt bằng xe máy.",
+  "lang": "vi",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#07121d",
+  "theme_color": "#07121d",
+  "icons": [
+    {"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}

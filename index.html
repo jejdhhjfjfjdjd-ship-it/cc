@@ -1,294 +1,574 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>U3 License Admin</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#07121d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Chill Journey">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon.svg">
+<title>VIỆT NAM · CHILL JOURNEY — FINAL FRIENDS BUILD · FINAL FRIENDS BUILD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0d1117;
-    --panel: rgba(20, 25, 40, 0.85);
-    --border: rgba(255, 255, 255, 0.1);
-    --text: #c9d1d9;
-    --accent: #4facfe;
-    --danger: #ff6b6b;
-    --success: #43e97b;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-  body {
-    background-color: var(--bg);
-    background-image: radial-gradient(circle at 15% 50%, rgba(79, 172, 254, 0.15), transparent 25%),
-                      radial-gradient(circle at 85% 30%, rgba(67, 233, 123, 0.15), transparent 25%);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    overflow-x: hidden;
-  }
-  .container {
-    width: 100%;
-    max-width: 900px;
-    background: var(--panel);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 30px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
-    animation: fadeIn 0.6s ease-out;
-  }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-  h1 {
-    font-size: 24px;
-    font-weight: 800;
-    background: linear-gradient(to right, #4facfe, #00f2fe);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-align: center;
-    margin-bottom: 30px;
-    letter-spacing: 1px;
-  }
-  .controls {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
-  }
-  .controls input, .controls select {
-    flex: 1;
-    min-width: 200px;
-    padding: 14px 20px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: rgba(0,0,0,0.2);
-    color: #fff;
-    font-size: 14px;
-    outline: none;
-    transition: 0.3s;
-  }
-  .controls input:focus, .controls select:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(79, 172, 254, 0.2); }
-  .controls select option { background: var(--bg); color: #fff; }
-  .btn {
-    padding: 14px 24px;
-    border-radius: 12px;
-    border: none;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  .btn-primary {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(0,242,254,0.3);
-  }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,242,254,0.4); }
-  .btn-danger {
-    background: rgba(255, 107, 107, 0.1);
-    color: var(--danger);
-    border: 1px solid rgba(255, 107, 107, 0.2);
-  }
-  .btn-danger:hover { background: rgba(255, 107, 107, 0.2); }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-  }
-  th, td {
-    padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-  }
-  th {
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: rgba(255,255,255,0.5);
-  }
-  td { font-size: 14px; }
-  .key-code {
-    font-family: 'Courier New', monospace;
-    font-weight: bold;
-    color: var(--accent);
-    background: rgba(79, 172, 254, 0.1);
-    padding: 4px 8px;
-    border-radius: 6px;
-    display: inline-block;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  .key-code:hover { background: rgba(79, 172, 254, 0.2); }
-  .status {
-    font-size: 12px;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 20px;
-    display: inline-block;
-  }
-  .status.active { background: rgba(67, 233, 123, 0.15); color: var(--success); }
-  .status.expired { background: rgba(255, 107, 107, 0.15); color: var(--danger); }
-  .empty-state {
-    text-align: center;
-    padding: 40px;
-    color: rgba(255,255,255,0.3);
-    font-style: italic;
-  }
-  .toast {
-    position: fixed; bottom: 20px; right: 20px; background: rgba(67, 233, 123, 0.9); color: #fff;
-    padding: 12px 24px; border-radius: 10px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    transform: translateY(100px); opacity: 0; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999;
-  }
-  .toast.show { transform: translateY(0); opacity: 1; }
+:root{--bg:#07121d;--glass:rgba(8,22,33,.68);--line:rgba(225,245,240,.17);--white:#f4f8f4;--muted:#b3c6c3;--mint:#8ce6c4;--gold:#ffd18a;--pink:#ff9eac}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--white);font-family:'Be Vietnam Pro',sans-serif}
+body{touch-action:none;user-select:none}
+#world{position:fixed;inset:0;width:100%;height:100%;display:block}
+#vignette{position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(3,12,21,.48),transparent 28%,transparent 60%,rgba(3,12,21,.52)),radial-gradient(ellipse at center,transparent 45%,rgba(2,8,14,.34))}
+#ui{position:fixed;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 12px) max(14px,env(safe-area-inset-right)) calc(env(safe-area-inset-bottom) + 14px) max(14px,env(safe-area-inset-left));pointer-events:none}
+button,input{font:inherit}
+button{cursor:pointer}
+.top{display:flex;flex-direction:column;gap:10px}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.logo{font-weight:900;letter-spacing:.12em;font-size:.83rem;color:#fff;text-shadow:0 2px 18px #5dbca9}
+.logo span{color:var(--mint)}
+.actions{display:flex;gap:7px;pointer-events:auto}
+.glass{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 10px 35px #0002}
+.pill{border-radius:999px;color:var(--white);padding:9px 13px;font-size:.73rem;font-weight:700}
+.hud{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}
+.hudbox{border-radius:13px;padding:8px 12px;min-width:85px}
+.hudbox small{display:block;color:var(--muted);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase}
+.hudbox b{display:block;font-size:.84rem;margin-top:2px}
+.progress{height:4px;background:#ffffff22;border-radius:8px;margin-top:6px;overflow:hidden;width:100px}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mint),var(--gold));border-radius:8px}
+.location-tag{align-self:flex-start;border-radius:999px;padding:8px 13px;font-size:.7rem;color:#eaf8ef}
+.location-tag b{color:var(--gold)}
+.bottom{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+#joystick{width:126px;height:126px;border-radius:50%;border:1px solid #ffffff44;background:rgba(10,25,35,.38);backdrop-filter:blur(8px);position:relative;pointer-events:auto;touch-action:none;box-shadow:inset 0 0 25px #fff1}
+#knob{position:absolute;left:50%;top:50%;width:52px;height:52px;margin:-26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e2fff4,#72cdb0 70%);box-shadow:0 4px 20px #68d6b388;pointer-events:none}
+.controlBtns{display:flex;flex-direction:column;gap:9px;align-items:flex-end;pointer-events:auto}
+.control{width:70px;height:70px;border-radius:22px;color:white;border:1px solid #ffffff35;background:var(--glass);backdrop-filter:blur(12px);font-size:.7rem;font-weight:800}
+.control.primary{background:linear-gradient(145deg,#ffd99d,#f1a85f);color:#17221f;border:0;box-shadow:0 8px 28px #e7a35b55}
+.control.active{background:#8ce6c4;color:#10231e}
+#speedValue{font-variant-numeric:tabular-nums;color:var(--gold)}
+.control:disabled{opacity:.5}
+#toast{position:absolute;top:28%;left:50%;transform:translate(-50%,10px);opacity:0;transition:.3s;background:rgba(7,20,29,.84);border:1px solid var(--line);padding:11px 16px;border-radius:14px;text-align:center;font-size:.78rem;max-width:85%;pointer-events:none}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.overlay{position:fixed;inset:0;z-index:10;background:linear-gradient(145deg,rgba(3,12,20,.82),rgba(4,16,25,.94));display:flex;align-items:center;justify-content:center;padding:18px}
+.overlay[hidden]{display:none}
+.panel{width:min(540px,100%);max-height:90dvh;overflow:auto;border:1px solid #ffffff25;border-radius:26px;padding:24px;background:linear-gradient(145deg,rgba(19,43,53,.94),rgba(7,19,30,.96));box-shadow:0 25px 90px #0008}
+.eyebrow{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mint);font-weight:800}
+h1,h2,h3,p{margin-top:0}
+h1{font:800 clamp(2.1rem,8vw,3.8rem)/1.03 'Playfair Display',serif;margin:10px 0 12px;letter-spacing:-.04em}
+h1 em{font-style:normal;color:var(--gold)}
+.panel p{color:#d2e1dd;line-height:1.7;font-size:.86rem}
+.panel .muted{color:var(--muted);font-size:.73rem}
+.primaryBtn{width:100%;border:0;border-radius:14px;padding:15px 18px;background:linear-gradient(100deg,#b9f0d8,#f5cf91);color:#14241f;font-weight:900;margin-top:8px}
+.secondaryBtn{border:1px solid #ffffff30;border-radius:12px;padding:11px 14px;color:white;background:#ffffff0b;font-weight:700}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dest{border:1px solid #ffffff20;background:#ffffff09;border-radius:16px;padding:12px;text-align:left;color:white;min-height:105px}
+.dest strong{display:block;margin:7px 0 3px;font-size:.82rem}
+.dest small{color:#b9cbc6;font-size:.68rem;line-height:1.4}
+.dest .emoji{font-size:1.35rem}
+.storyArt{height:120px;border-radius:17px;margin:12px 0;background:linear-gradient(135deg,#407c77,#172f44 60%,#d4a46c);display:flex;align-items:flex-end;padding:14px;font:700 1.4rem 'Playfair Display',serif;color:#fff;text-shadow:0 2px 12px #000}
+#chat{position:fixed;z-index:8;right:14px;top:82px;width:min(330px,calc(100vw - 28px));height:min(420px,62dvh);border-radius:20px;display:flex;flex-direction:column;overflow:hidden;transform:translateX(115%);transition:transform .25s;pointer-events:auto}
+#chat.open{transform:none}
+.chatHead{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);font-size:.78rem}
+#messages{padding:12px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:8px;touch-action:pan-y;user-select:text}
+.msg{font-size:.73rem;line-height:1.45;overflow-wrap:anywhere}
+.msg b{color:var(--mint)}
+.msg.system{color:#9db6b1;font-style:italic}
+.chatForm{display:flex;gap:7px;padding:9px;border-top:1px solid var(--line)}
+.chatForm input{min-width:0;flex:1;background:#ffffff10;border:1px solid #ffffff25;border-radius:11px;padding:10px;color:white;font-size:16px}
+.chatForm button{border:0;border-radius:11px;padding:0 13px;background:var(--gold);font-weight:900;color:#1b2724}
+#roster{position:fixed;z-index:4;left:14px;top:126px;max-width:150px;padding:9px 11px;border-radius:13px;font-size:.65rem;color:#dcece6;pointer-events:none}
+#roster b{color:var(--mint)}
+#mapPanel .dest{min-height:88px}
+#storyPanel .panel{width:min(560px,100%)}
+.storyActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.storyActions button{flex:1}
+@media(max-width:430px){.logo{font-size:.7rem}.pill{padding:8px 10px;font-size:.66rem}.hudbox{padding:7px 9px;min-width:74px}.hudbox b{font-size:.75rem}#joystick{width:112px;height:112px}.control{width:62px;height:62px}.panel{padding:20px}.hud{gap:6px}}
+@media(min-width:800px){#joystick{width:140px;height:140px}.control{width:76px;height:76px}}
+
+#weatherLabel{margin-left:8px;color:#ffe0a5;font-size:.65rem}
+#landscapeHint{display:none;position:fixed;inset:0;z-index:30;background:#07121d;color:white;align-items:center;justify-content:center;text-align:center;padding:28px}
+#landscapeHint>div{max-width:330px}#landscapeHint p{color:#b3c6c3;line-height:1.6;font-size:.85rem}#landscapeHint button{background:#b9f0d8;border:0;border-radius:12px;padding:12px 20px;font-weight:900}
+.featureGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.featureCard{border:1px solid #ffffff25;background:#ffffff0b;border-radius:15px;padding:12px;color:white;text-align:left}.featureCard b{display:block;margin:5px 0}.featureCard small{color:#bfd0cb;line-height:1.5}.albumGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.albumGrid img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px}.albumItem button{width:100%;margin-top:4px}.photoShot{border-radius:12px;border:1px solid #ffffff25;padding:9px;background:#ffffff0b;margin-bottom:10px}
+@media(orientation:portrait) and (max-width:900px){#landscapeHint{display:flex}#ui{padding-top:calc(env(safe-area-inset-top) + 7px)}.top{gap:5px}.hudbox{min-width:65px;padding:5px 7px}.hudbox small{font-size:.5rem}.hudbox b{font-size:.67rem}.location-tag{padding:5px 9px}}
+@media(orientation:landscape){#ui{padding:8px 14px 10px}.top{gap:6px}.hud{gap:6px}.hudbox{padding:6px 10px}.bottom{align-items:flex-end}#joystick{width:105px;height:105px}#knob{width:44px;height:44px;margin:-22px}.controlBtns{flex-direction:row;align-items:flex-end}.control{width:62px;height:62px;border-radius:18px}.location-tag{padding:6px 12px}}
+
 </style>
 </head>
 <body>
-
-<canvas id="snowCanvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0"></canvas>
-
-<div class="container">
-  <h1>❄️ U3 LICENSE MANAGER</h1>
-  
-  <div class="controls">
-    <input type="text" id="customKey" placeholder="Nhập key tự chọn (hoặc để trống)...">
-    <select id="duration">
-      <option value="3600000">1 Giờ</option>
-      <option value="86400000">1 Ngày</option>
-      <option value="604800000">1 Tuần</option>
-      <option value="2592000000">1 Tháng</option>
-    </select>
-    <button class="btn btn-primary" onclick="generateKey()">+ Tạo Key</button>
-    <button class="btn btn-danger" onclick="exportKeys()">Xuất JSON</button>
+<canvas id="world"></canvas><div id="vignette"></div>
+<div id="ui">
+ <div class="top">
+  <div class="topline">
+   <div class="logo">VIỆT NAM <span>✦</span> CHILL JOURNEY</div>
+   <div class="actions">
+    <button class="pill glass" id="mapBtn">🗺 Hành trình</button>
+    <button class="pill glass" id="photoBtn">📸 Album</button>
+    <button class="pill glass" id="restBtn">☕ Dừng chân</button>
+    <button class="pill glass" id="weatherBtn">🌦 Thời tiết</button>
+    <button class="pill glass" id="teamBtn">🧭 Lập đội</button>
+    <button class="pill glass" id="chatBtn">💬 Chat <span id="onlineCount">1</span></button>
+   </div>
   </div>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Key</th>
-        <th>Hết hạn</th>
-        <th>Trạng thái</th>
-        <th>Hành động</th>
-      </tr>
-    </thead>
-    <tbody id="keyList">
-      <!-- Rows rendered here -->
-    </tbody>
-  </table>
+  <div class="hud">
+   <div class="hudbox glass"><small>Địa danh</small><b id="placeName">Hội An</b></div>
+   <div class="hudbox glass"><small>Kỷ niệm</small><b id="memory">0 / 3</b></div>
+   <div class="hudbox glass"><small>Tốc độ</small><b><span id="speedValue">0</span> km/h</b></div>
+   <div class="hudbox glass"><small>Người chơi</small><b id="players">1 online</b></div>
+   <div class="hudbox glass"><small>Hành trình</small><b id="chapter">01 / 09</b><div class="progress"><i id="progressFill"></i></div></div>
+  </div>
+  <div class="location-tag glass">ĐANG KHÁM PHÁ · <b id="placeSub">PHỐ CỔ DI SẢN</b> <span id="weatherLabel">☀️ NẮNG NHẸ · 07:00</span></div>
+ </div>
+ <div id="toast"></div>
+ <div class="bottom">
+  <div id="joystick"><div id="knob"></div></div>
+  <div class="controlBtns">
+   <button class="control primary" id="runBtn">VẶN GA<br>»</button>
+   <button class="control" id="brakeBtn">PHANH<br>■</button>
+   <button class="control" id="storyBtn">📖<br>TRUYỆN</button>
+  </div>
+ </div>
 </div>
+<div id="roster" class="glass">🌐 <b>Thế giới mở</b><br><span id="rosterText">Đang kết nối...</span></div>
 
-<div class="toast" id="toast">Đã copy!</div>
+<section class="overlay" id="welcome">
+ <div class="panel">
+  <div class="eyebrow">A slow travel adventure · Vietnam</div>
+  <h1>Một chuyến đi<br><em>thật chill.</em></h1>
+  <p>Ông ngoại để lại cho Minh một cuốn sổ đã sờn mép, bên trong là chín trang giấy trắng và một lời nhắn: “Đi thật xa, nhưng đừng quên lắng nghe người mình gặp trên đường.” Minh lên xe, mang theo cuốn sổ ấy để tìm chín câu chuyện đời thường dọc Việt Nam — từ người chèo đò, bác tài, người giữ rừng đến những gia đình sống bên chân núi.</p>
+  <div class="storyArt">Từ phố Hội đến tận trời Nam</div>
+  <p class="muted">Cốt truyện: tìm 9 câu chuyện để hoàn thành cuốn sổ của ông ngoại. Điều khiển bằng cần trái · Giữ VẶN GA để tăng tốc · PHANH để giảm tốc · Dừng chân, làm việc và chụp ảnh trên đường.</p>
+  <button class="primaryBtn" id="startBtn">TIẾP TỤC HÀNH TRÌNH ✦</button>
+  <p class="muted" style="margin:8px 0 0">Tiến trình sẽ tự lưu trên thiết bị này để bạn quay lại sau.</p>
+  <p class="muted" style="margin:12px 0 0">Multiplayer cần cấu hình Supabase; nếu chưa cấu hình, bạn vẫn chơi được chế độ khám phá đơn. Nếu chưa cấu hình, bạn vẫn chơi được chế độ khám phá đơn.</p>
+ </div>
+</section>
 
+<section class="overlay" id="storyPanel" hidden>
+ <div class="panel">
+  <div class="eyebrow" id="storyEyebrow">CHƯƠNG 01 · QUẢNG NAM</div>
+  <h1 id="storyTitle">Hội An – nơi thời gian dịu lại</h1>
+  <div class="storyArt" id="storyArt">Phố Hội lên đèn</div>
+  <p id="storyText"></p>
+  <p class="muted" id="storyQuest"></p>
+  <div class="storyActions">
+   <button class="secondaryBtn" id="closeStory">Để sau</button>
+   <button class="primaryBtn" id="nextPlace">Tiếp tục chuyến đi →</button>
+  </div>
+ </div>
+</section>
+
+<section class="overlay" id="mapPanel" hidden>
+ <div class="panel">
+  <div class="eyebrow">BẢN ĐỒ XUYÊN VIỆT</div>
+  <h2 style="font:700 1.8rem 'Playfair Display';margin:8px 0">Chọn điểm dừng chân</h2>
+  <p class="muted">Mở khóa từng chặng bằng cách hoàn thành câu chuyện tại địa danh hiện tại.</p>
+  <div class="grid2" id="destGrid"></div>
+  <button class="secondaryBtn" id="closeMap" style="width:100%;margin-top:12px">Đóng bản đồ</button>
+ </div>
+</section>
+
+<section class="overlay" id="namePanel" hidden>
+ <div class="panel">
+  <div class="eyebrow">WELCOME TRAVELER</div><h2 style="font:700 1.8rem 'Playfair Display'">Bạn muốn được gọi là gì?</h2>
+  <p>Chọn biệt danh để bạn bè nhận ra bạn trong chuyến đi.</p>
+  <input id="nickname" maxlength="18" placeholder="Ví dụ: Minh đi chill..." style="width:100%;padding:14px;border-radius:12px;background:#ffffff10;border:1px solid #ffffff30;color:white;font-size:16px">
+  <button class="primaryBtn" id="saveName">VÀO THẾ GIỚI</button>
+ </div>
+</section>
+
+<section class="overlay" id="featurePanel" hidden><div class="panel"><div class="eyebrow" id="featureEyebrow">NHẬT KÝ HÀNH TRÌNH</div><h2 id="featureTitle" style="font:700 1.8rem Playfair Display;margin:8px 0">Album của tôi</h2><div id="featureBody"></div><button class="secondaryBtn" id="featureClose" style="width:100%;margin-top:14px">Đóng</button></div></section>
+<div id="landscapeHint"><div><div style="font-size:2.5rem">📱 ↻</div><b>Hãy xoay ngang điện thoại</b><p>Game ưu tiên màn hình ngang. Nếu máy không tự xoay, hãy bật khóa xoay màn hình trong Trung tâm điều khiển rồi thử lại.</p><button id="landscapeContinue">TIẾP TỤC</button></div></div>
+<aside id="chat" class="glass">
+ <div class="chatHead"><b>💬 CHAT TOÀN THẾ GIỚI</b><button class="secondaryBtn" id="closeChat" style="padding:5px 9px">✕</button></div>
+ <div id="messages"></div>
+ <form class="chatForm" id="chatForm"><input id="chatInput" maxlength="180" placeholder="Gửi lời chào mọi người..." autocomplete="off"><button>GỬI</button></form>
+</aside>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  let keys = JSON.parse(localStorage.getItem('u3_keys') || '{}');
+'use strict';
+/* =========================================================
+   ONLINE SETUP:
+   Điền Project URL + anon key của Supabase ở hai dòng dưới.
+   Supabase Dashboard > Project Settings > API.
+   Realtime cần bật cho project. Không đưa service_role key vào đây.
+========================================================= */
+const SUPABASE_URL = 'PASTE_SUPABASE_PROJECT_URL_HERE';
+const SUPABASE_ANON_KEY = 'PASTE_SUPABASE_ANON_KEY_HERE';
+// Credentials entered in the in-game Online panel are stored only on this device.
+try{const roomFromLink=new URLSearchParams(location.search).get('room');if(roomFromLink)localStorage.setItem('vn_chill_room',roomFromLink.replace(/[^a-z0-9-]/gi,'').slice(0,24)||'public')}catch(e){}
 
-  function saveAndRender() {
-    localStorage.setItem('u3_keys', JSON.stringify(keys));
-    renderTable();
+const places = [
+ {name:'Hội An',sub:'PHỐ CỔ DI SẢN',province:'QUẢNG NAM',emoji:'🏮',sky:0x172b49,ground:0x80644c,accent:0xffb66f,water:0x17445a,kind:'town',art:'Phố Hội lên đèn',title:'Hội An – nơi thời gian dịu lại',story:'Khi nắng cuối ngày rơi xuống mái ngói rêu phong, Hội An bắt đầu khoác lên mình chiếc áo lung linh của đèn lồng. Từng con hẻm nhỏ, mái nhà vàng và dòng Hoài Giang lưu giữ dấu chân của thương nhân từ nhiều thế kỷ trước. Đây là nơi ta học cách đi chậm, ngắm thật lâu và giữ những điều bình dị trong tim.',quest:'Nhiệm vụ: Tìm 3 đốm sáng ký ức quanh phố cổ.',fact:'Phố cổ Hội An được UNESCO ghi danh Di sản Văn hóa Thế giới năm 1999.'},
+ {name:'Huế',sub:'CỐ ĐÔ MỘNG MƠ',province:'THỪA THIÊN HUẾ',emoji:'🏯',sky:0x293b61,ground:0x77705b,accent:0xf0c77c,water:0x315b70,kind:'citadel',art:'Hoàng hôn bên sông Hương',title:'Huế – bản tình ca bên dòng Hương',story:'Có những thành phố không cần ồn ào để khiến người ta nhớ. Huế là tiếng chuông chùa xa, nhịp mái chèo trên sông Hương và sắc tím dịu dàng trong chiều muộn. Qua cổng thành rêu phong, mỗi bước chân như chạm vào một lớp ký ức của triều Nguyễn, của thi ca và những khu vườn yên tĩnh.',quest:'Nhiệm vụ: Gom 3 mảnh ký ức cố đô.',fact:'Quần thể di tích Cố đô Huế được UNESCO công nhận năm 1993.'},
+ {name:'Phong Nha',sub:'MIỀN DI SẢN HANG ĐỘNG',province:'QUẢNG BÌNH',emoji:'🛶',sky:0x183c4a,ground:0x456b50,accent:0x8ee0c2,water:0x1d6570,kind:'cave',art:'Sông xanh dưới chân núi đá vôi',title:'Phong Nha – bí mật trong lòng núi',story:'Con thuyền nhỏ lướt trên dòng Son xanh biếc, hai bên là núi đá vôi phủ màu thời gian. Phía sau cửa hang tối là một thế giới kỳ ảo của thạch nhũ, dòng nước ngầm và những căn phòng khổng lồ do thiên nhiên kiến tạo. Ở đây, con người bỗng thấy mình bé nhỏ trước sự kỳ diệu của đất trời.',quest:'Nhiệm vụ: Tìm 3 tinh thể phát sáng bên bờ sông.',fact:'Vườn quốc gia Phong Nha – Kẻ Bàng là Di sản thiên nhiên thế giới.'},
+ {name:'Ninh Bình',sub:'NON NƯỚC HỮU TÌNH',province:'NINH BÌNH',emoji:'⛰️',sky:0x83aeb0,ground:0x4e7653,accent:0xe8d18b,water:0x438b83,kind:'karst',art:'Thuyền trôi giữa núi đá',title:'Ninh Bình – bức tranh thủy mặc',story:'Sáng sớm, sương mỏng phủ lên những dãy núi đá vôi dựng đứng. Con thuyền nan len qua dòng nước phẳng lặng, xuyên dưới những mái hang tự nhiên. Tiếng mái chèo khua nhẹ làm tan đi sự tĩnh lặng. Tràng An, Tam Cốc và những cánh đồng xanh khiến nơi này giống như một bức tranh được vẽ bằng nước và mây.',quest:'Nhiệm vụ: Thu thập 3 giọt sương ký ức.',fact:'Quần thể danh thắng Tràng An được UNESCO ghi danh Di sản thế giới hỗn hợp năm 2014.'},
+ {name:'Vịnh Hạ Long',sub:'KỲ QUAN BIỂN ĐẢO',province:'QUẢNG NINH',emoji:'⛵',sky:0x779ca8,ground:0x3b655e,accent:0xf4d69c,water:0x22677a,kind:'bay',art:'Bình minh trên vịnh',title:'Hạ Long – nơi rồng đáp xuống biển',story:'Mặt trời vừa nhô lên, hàng nghìn đảo đá hiện ra giữa làn sương mỏng. Truyền thuyết kể rằng rồng mẹ và đàn rồng con đã hạ xuống vùng biển này, tạo nên những đảo đá để bảo vệ bờ cõi. Dù câu chuyện thuộc về huyền thoại, vẻ đẹp của vịnh vẫn khiến bất kỳ ai cũng muốn ngồi thật lâu trên boong tàu.',quest:'Nhiệm vụ: Tìm 3 ánh ngọc giữa vịnh xanh.',fact:'Vịnh Hạ Long là Di sản thiên nhiên thế giới của UNESCO.'},
+ {name:'Sa Pa',sub:'SĂN MÂY TRÊN ĐỈNH NÚI',province:'LÀO CAI',emoji:'🌄',sky:0x8299ae,ground:0x52705d,accent:0xffd69b,water:0x416d72,kind:'mountain',art:'Biển mây ôm ruộng bậc thang',title:'Sa Pa – chạm tay vào biển mây',story:'Đường đèo uốn quanh triền núi, ruộng bậc thang xếp lớp như những nấc thang lên trời. Buổi sớm, mây tràn qua thung lũng và những mái nhà nhỏ nép bên sườn núi. Sa Pa là nơi gặp gỡ của nhiều cộng đồng dân tộc, của sắc thổ cẩm và những phiên chợ vùng cao đầy sức sống.',quest:'Nhiệm vụ: Nhặt 3 hạt sương trên đường săn mây.',fact:'Sa Pa nổi tiếng với cảnh quan núi cao, ruộng bậc thang và văn hóa các dân tộc vùng Tây Bắc.'},
+ {name:'Hà Nội',sub:'NHỊP SỐNG NGÀN NĂM',province:'HÀ NỘI',emoji:'🚲',sky:0x34475a,ground:0x6b6254,accent:0xffc78e,water:0x345c68,kind:'city',art:'Phố nhỏ trong nắng vàng',title:'Hà Nội – đi qua từng mùa thương nhớ',story:'Hà Nội thức dậy bằng tiếng rao đầu ngõ, mùi cà phê rang và những vòng xe chầm chậm quanh hồ Gươm. Phố cổ đông vui nhưng chỉ cần rẽ vào một con ngõ nhỏ, ta lại tìm thấy khoảng sân yên tĩnh và ban công đầy hoa. Thành phố này có nhịp riêng: vừa vội vã, vừa dịu dàng.',quest:'Nhiệm vụ: Tìm 3 dấu ấn phố xưa.',fact:'Khu trung tâm Hoàng thành Thăng Long là Di sản văn hóa thế giới.'},
+ {name:'Đà Lạt',sub:'THÀNH PHỐ NGÀN HOA',province:'LÂM ĐỒNG',emoji:'🌲',sky:0x627d91,ground:0x41654f,accent:0xffc4ba,water:0x4c7d83,kind:'pine',art:'Hồ lặng giữa rừng thông',title:'Đà Lạt – một ngày trốn khỏi ồn ào',story:'Sương đọng trên cửa kính, rừng thông reo trong gió và mặt hồ phẳng như gương. Đà Lạt mang cảm giác của một buổi sáng không cần báo thức, một tách cacao nóng và con dốc quanh co dẫn đến quán nhỏ. Đi một vòng thành phố, ta nhận ra đôi khi chuyến đi đẹp nhất là chuyến đi chẳng cần vội.',quest:'Nhiệm vụ: Gom 3 chiếc lá thông kỷ niệm.',fact:'Đà Lạt được biết đến với khí hậu cao nguyên mát mẻ, rừng thông và kiến trúc nghỉ dưỡng.'},
+ {name:'Phú Quốc',sub:'HOÀNG HÔN CUỐI HÀNH TRÌNH',province:'KIÊN GIANG',emoji:'🌅',sky:0x8e6870,ground:0xc5a77c,accent:0xffd18a,water:0x1d7180,kind:'beach',art:'Hoàng hôn rơi trên biển',title:'Phú Quốc – nơi mặt trời khép lại chuyến đi',story:'Sau những cung đường dài, biển Phú Quốc mở ra như một lời chào dịu dàng. Sóng vỗ lên bờ cát, thuyền câu xa xa trở về và bầu trời chuyển dần sang màu cam mật. Ta nhìn lại những miền đất đã đi qua, những người bạn đã gặp và những câu chuyện sẽ còn kể mãi sau chuyến đi.',quest:'Nhiệm vụ cuối: Thu thập 3 mảnh hoàng hôn và hoàn thành hành trình.',fact:'Phú Quốc là đảo lớn nhất Việt Nam, nổi tiếng với biển, rừng và các làng chài.'}
+];
+let savedJourney={};try{savedJourney=JSON.parse(localStorage.getItem('vn_chill_progress')||'{}')}catch(e){}
+let current=Math.max(0,Math.min(8,Number(savedJourney.current)||0)), collected=Math.max(0,Math.min(3,Number(savedJourney.collected)||0)), started=false, nickname=savedJourney.nickname||'Du khách', channel=null, supa=null, online=false;
+const $=s=>document.querySelector(s);
+const ui={place:$('#placeName'),sub:$('#placeSub'),chapter:$('#chapter'),memory:$('#memory'),progress:$('#progressFill'),toast:$('#toast'),chat:$('#chat'),messages:$('#messages')};
+function toast(s){ui.toast.textContent=s;ui.toast.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>ui.toast.classList.remove('show'),2500)}
+function addMessage(name,text,system=false){const p=document.createElement('div');p.className='msg'+(system?' system':'');if(system)p.textContent=text;else{const b=document.createElement('b');b.textContent=name+': ';p.append(b,document.createTextNode(text))}ui.messages.append(p);while(ui.messages.children.length>80)ui.messages.firstChild.remove();ui.messages.scrollTop=ui.messages.scrollHeight}
+function setHUD(){const p=places[current];ui.place.textContent=p.name;ui.sub.textContent=p.sub;ui.chapter.textContent=String(current+1).padStart(2,'0')+' / 09';ui.memory.textContent=collected+' / 3';ui.progress.style.width=((current+collected/3)/places.length*100)+'%';try{localStorage.setItem('vn_chill_progress',JSON.stringify({current,collected,nickname}))}catch(e){}}
+function showStory(){const p=places[current];const people=[['Bà Lành – người làm đèn lồng','Bà kể rằng mỗi chiếc đèn được thắp lên là một lời chúc bình an gửi theo dòng Hoài.'],['Chú Phúc – người chèo đò sông Hương','Chú đã chèo đò qua bao mùa mưa lũ và nhớ từng khúc sông đổi màu theo trời.'],['Anh Tư – người dẫn đường bản địa','Anh nhắc Minh rằng vẻ đẹp của hang động không đáng để đánh đổi bằng một chuyến đi liều lĩnh.'],['Cô Hảo – người chèo thuyền Tràng An','Cô thuộc lòng từng vòm hang và kể chuyện những mùa nước lên xuống.'],['Bác Năm – ngư dân vịnh','Bác nhìn mây và hướng gió trước khi quyết định có đưa thuyền ra khơi hay không.'],['Chị May – người dệt thổ cẩm','Chị dạy Minh đọc những hoa văn được truyền lại qua nhiều thế hệ.'],['Bác Thành – người bán trà đầu phố','Bác bảo Hà Nội đẹp nhất khi người ta chịu đi bộ chậm qua một con ngõ nhỏ.'],['Cô Hương – người trồng hoa','Cô kể về những mùa sương và công việc bắt đầu từ khi thành phố còn ngủ.'],['Chú Bảy – người giữ thuyền','Chú nói biển không hứa điều gì, nên người đi biển phải biết tôn trọng từng con sóng.']][current];$('#storyEyebrow').textContent='CHƯƠNG '+String(current+1).padStart(2,'0')+' · '+p.province;$('#storyTitle').textContent=p.title;$('#storyArt').textContent=p.art;$('#storyText').textContent=p.story+' '+p.fact+'\n\n'+people[0]+': “'+people[1]+'”\n\nTrang '+(current+1)+'/9 trong cuốn sổ của ông ngoại.';$('#storyQuest').textContent=p.quest;$('#nextPlace').textContent=current===places.length-1?'HOÀN THÀNH HÀNH TRÌNH ✦':'ĐI TIẾP ĐẾN '+places[current+1].name.toUpperCase()+' →';$('#storyPanel').hidden=false;gamePaused=true}
+function buildMap(){const g=$('#destGrid');g.innerHTML='';places.forEach((p,i)=>{const b=document.createElement('button');b.className='dest';const unlocked=i<=current;b.disabled=!unlocked;b.style.opacity=unlocked?'1':'.4';b.innerHTML='<span class="emoji">'+p.emoji+'</span><strong>'+String(i+1).padStart(2,'0')+'. '+p.name+'</strong><small>'+(unlocked?'Đã mở khóa · '+p.sub:'🔒 Hoàn thành chặng trước')+'</small>';b.addEventListener('click',()=>{if(i===current){$('#mapPanel').hidden=true;gamePaused=false;showStory()}});g.append(b)})}
+$('#startBtn').onclick=()=>{$('#welcome').hidden=true;$('#namePanel').hidden=false};
+$('#saveName').onclick=()=>{nickname=$('#nickname').value.trim().slice(0,18)||'Du khách';$('#namePanel').hidden=true;started=true;gamePaused=false;$('#nickname').value=nickname;startEngineSound();connectOnline();addMessage('Hệ thống','Chào '+nickname+'! Chúc bạn có chuyến đi thật chill.',true);toast('Chuyến đi bắt đầu! Hãy khám phá quanh bạn. Mở Lập đội để kết nối cùng anh em.');};
+$('#storyBtn').onclick=showStory;$('#closeStory').onclick=()=>{$('#storyPanel').hidden=true;gamePaused=false};
+$('#nextPlace').onclick=()=>{if(current<places.length-1){current++;collected=0;loadPlace();$('#storyPanel').hidden=true;gamePaused=false;showStory();toast('Đã đến '+places[current].name+'!')}else{$('#storyTitle').textContent='Bạn đã đi hết Việt Nam!';$('#storyArt').textContent='Hành trình của những kỷ niệm';$('#storyText').textContent='Chín miền cảm xúc, vô vàn khung cảnh và những người bạn mới. Cảm ơn bạn đã cùng Minh đi qua hành trình này. Mỗi chuyến đi khép lại cũng là lúc một hành trình mới bắt đầu.';$('#storyQuest').textContent='Bạn có thể chơi lại hoặc tiếp tục ngắm cảnh tại Phú Quốc.';$('#nextPlace').textContent='CHƠI LẠI TỪ ĐẦU';$('#nextPlace').onclick=()=>{current=0;collected=0;loadPlace();$('#storyPanel').hidden=true;gamePaused=false;$('#nextPlace').onclick=advanceStory};}};
+function advanceStory(){if(current<places.length-1){current++;collected=0;loadPlace();$('#storyPanel').hidden=true;gamePaused=false;showStory()}else showStory()}
+$('#mapBtn').onclick=()=>{buildMap();$('#mapPanel').hidden=false;gamePaused=true};$('#closeMap').onclick=()=>{$('#mapPanel').hidden=true;gamePaused=false};
+$('#chatBtn').onclick=()=>{$('#chat').classList.toggle('open');$('#chatInput').focus()};
+$('#closeChat').onclick=()=>$('#chat').classList.remove('open');
+$('#chatForm').addEventListener('submit',async e=>{e.preventDefault();const input=$('#chatInput'),text=input.value.trim();if(!text)return;input.value='';addMessage(nickname,text);if(channel)await channel.send({type:'broadcast',event:'chat',payload:{name:nickname,text:text.slice(0,180),at:Date.now()}})});
+/* ---------- Three.js scenic world ---------- */
+const canvas=$('#world'),renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,preserveDrawingBuffer:true,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.8));renderer.setSize(innerWidth,innerHeight);renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.12;
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x172b49);scene.fog=new THREE.FogExp2(0x172b49,.012);
+const camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,500);
+const hemi=new THREE.HemisphereLight(0xc8e5ff,0x344b3e,1.0);scene.add(hemi);
+const sun=new THREE.DirectionalLight(0xffdfb1,1.5);sun.position.set(-35,55,25);scene.add(sun);
+const fill=new THREE.DirectionalLight(0x7ab9ce,.55);fill.position.set(35,20,-40);scene.add(fill);
+const world=new THREE.Group();scene.add(world);
+const player=new THREE.Group();scene.add(player);
+const mat=(c,r=.8,m=0)=>new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m});
+const mats={skin:mat(0xe8bd9b),hair:mat(0x211c1b),shirt:mat(0x68cbb0),pants:mat(0x26394a),shoe:mat(0xf3e8d2),wood:mat(0x73513b),roof:mat(0x633e36),leaf:mat(0x47795b),sand:mat(0xc9ae7d)};
+function makePerson(color=0x68cbb0){const g=new THREE.Group(),body=new THREE.Mesh(new THREE.CapsuleGeometry(.28,.65,5,8),mat(color));body.position.y=1.05;g.add(body);const head=new THREE.Mesh(new THREE.SphereGeometry(.23,16,12),mats.skin);head.position.y=1.68;g.add(head);const hair=new THREE.Mesh(new THREE.SphereGeometry(.24,14,10,0,Math.PI*2,0,Math.PI*.55),mats.hair);hair.position.y=1.76;g.add(hair);for(const x of[-.13,.13]){const leg=new THREE.Mesh(new THREE.CapsuleGeometry(.09,.55,4,6),mats.pants);leg.position.set(x,.38,0);g.add(leg)}const pack=new THREE.Mesh(new THREE.BoxGeometry(.4,.48,.2),mat(0xe2a46e));pack.position.set(0,1.05,-.32);g.add(pack);return g}
+const rider=makePerson();rider.position.y=.62;player.add(rider);
+// Xe máy du lịch mini: nhân vật luôn ngồi trên xe trong suốt hành trình.
+const bikeMat=mat(0x2e8f83,.42,.25),rubber=mat(0x172126);
+for(const z of [-.78,.78]){const wheel=new THREE.Mesh(new THREE.TorusGeometry(.34,.085,10,20),rubber);wheel.rotation.y=Math.PI/2;wheel.position.set(0,.34,z);player.add(wheel)}
+const chassis=new THREE.Mesh(new THREE.BoxGeometry(.34,.22,1.15),bikeMat);chassis.position.set(0,.55,0);player.add(chassis);
+const front=new THREE.Mesh(new THREE.BoxGeometry(.48,.62,.25),bikeMat);front.position.set(0,.82,.56);player.add(front);
+const seat=new THREE.Mesh(new THREE.BoxGeometry(.55,.13,.48),mat(0x27343b));seat.position.set(0,.86,-.1);player.add(seat);
+const lamp=new THREE.Mesh(new THREE.SphereGeometry(.13,12,10),new THREE.MeshBasicMaterial({color:0xffe5ad}));lamp.position.set(0,.92,.72);player.add(lamp);
+const lampGlow=new THREE.PointLight(0xffd89a,.55,9);lampGlow.position.set(0,1,.9);player.add(lampGlow);
+// Fuel tank, front fork, handlebars, mirrors, exhaust and rear carrier.
+const tank=new THREE.Mesh(new THREE.SphereGeometry(.34,18,12),mat(0x3d9d91,.38,.28));tank.scale.set(.78,.58,1.05);tank.position.set(0,.78,.2);player.add(tank);
+const forkMat=mat(0x9ba7a7,.28,.75);for(const x of [-.18,.18]){const fork=new THREE.Mesh(new THREE.CylinderGeometry(.045,.055,.72,10),forkMat);fork.position.set(x,.62,.65);fork.rotation.x=-.18;player.add(fork);const mirrorStem=new THREE.Mesh(new THREE.CylinderGeometry(.018,.025,.38,8),forkMat);mirrorStem.position.set(x*1.5,1.18,.55);mirrorStem.rotation.x=-.45;player.add(mirrorStem);const mirror=new THREE.Mesh(new THREE.SphereGeometry(.11,12,8),mat(0x26383c,.18,.7));mirror.scale.set(1,.68,.28);mirror.position.set(x*1.5,1.35,.48);player.add(mirror)}
+const handle=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,.92,10),mat(0x20292b));handle.rotation.z=Math.PI/2;handle.position.set(0,1.03,.55);player.add(handle);
+const exhaust=new THREE.Mesh(new THREE.CylinderGeometry(.07,.09,.72,10),mat(0x7b8585,.25,.82));exhaust.rotation.x=Math.PI/2;exhaust.position.set(-.28,.42,-.48);player.add(exhaust);
+const carrier=new THREE.Mesh(new THREE.BoxGeometry(.55,.09,.42),mat(0x394a4b,.5,.5));carrier.position.set(0,1.02,-.55);player.add(carrier);
+// Rider arms reach toward the handlebars; legs sit astride the bike.
+for(const side of [-1,1]){const arm=new THREE.Mesh(new THREE.CapsuleGeometry(.085,.48,4,7),mats.shirt);arm.position.set(side*.29,1.28,.32);arm.rotation.x=-.72;arm.rotation.z=side*.18;rider.add(arm)}
+const remotes=new Map();
+function addRemote(id,name,color){const g=new THREE.Group();const rider=makePerson(color||0xffa5b4);rider.position.y=.52;g.add(rider);const bikeColor=mat(color||0xffa5b4,.45,.2);const frame=new THREE.Mesh(new THREE.BoxGeometry(.34,.22,1.05),bikeColor);frame.position.set(0,.48,0);g.add(frame);for(const z of[-.66,.66]){const w=new THREE.Mesh(new THREE.TorusGeometry(.29,.07,8,16),rubber);w.rotation.y=Math.PI/2;w.position.set(0,.29,z);g.add(w)}g.userData.name=name;g.userData.place=current;scene.add(g);remotes.set(id,g);return g}
+let move={x:0,y:0},run=false,gamePaused=true,vy=0,jumpY=0,clock=new THREE.Clock(),worldItems=[],collectibles=[],remoteThrottle=0;
+function clearWorld(){for(const o of worldItems)world.remove(o);worldItems=[];collectibles=[]}
+function addMesh(geo,material,x,y,z,group=world){const m=new THREE.Mesh(geo,material);m.position.set(x,y,z);group.add(m);worldItems.push(m);return m}
+function addTree(x,z,scale=1){const g=new THREE.Group();const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.16*scale,.23*scale,1.7*scale,8),mats.wood);trunk.position.y=.85*scale;g.add(trunk);for(let i=0;i<3;i++){const crown=new THREE.Mesh(new THREE.SphereGeometry((.8-i*.12)*scale,10,8),mat([0x3f7859,0x558b63,0x477d5d][i]));crown.position.set(0,(1.55+i*.48)*scale,0);g.add(crown)}g.position.set(x,0,z);world.add(g);worldItems.push(g)}
+function addLantern(x,y,z,color){const g=new THREE.Group();const bulb=new THREE.Mesh(new THREE.SphereGeometry(.24,12,10),new THREE.MeshBasicMaterial({color}));bulb.scale.y=1.25;g.add(bulb);const glow=new THREE.PointLight(color,1.1,7);glow.position.y=0;g.add(glow);g.position.set(x,y,z);world.add(g);worldItems.push(g)}
+function buildScenery(p){
+ clearWorld();scene.background.setHex(p.sky);scene.fog.color.setHex(p.sky);scene.fog.density=p.kind==='cave'?.018:.009;
+ const groundColor=p.kind==='beach'?0xc6a77b:p.ground;
+ addMesh(new THREE.PlaneGeometry(180,240),mat(groundColor),0,-.16,-75).rotation.x=-Math.PI/2;
+ // road / path
+ // Asphalt with subtle procedural grain; road bends through the landscape.
+ const asphalt=document.createElement('canvas');asphalt.width=asphalt.height=256;const ax=asphalt.getContext('2d');ax.fillStyle=p.kind==='beach'?'#8d897c':'#454b4c';ax.fillRect(0,0,256,256);for(let n=0;n<4200;n++){const v=70+Math.random()*75;ax.fillStyle=`rgba(${v},${v+2},${v+4},${Math.random()*.22})`;ax.fillRect(Math.random()*256,Math.random()*256,1+Math.random()*2,1+Math.random()*2)}const asphaltTex=new THREE.CanvasTexture(asphalt);asphaltTex.wrapS=asphaltTex.wrapT=THREE.RepeatWrapping;asphaltTex.repeat.set(2,24);asphaltTex.anisotropy=renderer.capabilities.getMaxAnisotropy();
+ const pathMat=new THREE.MeshStandardMaterial({map:asphaltTex,color:p.kind==='beach'?0xd9c69c:0xffffff,roughness:.96});
+ const roadGeo=new THREE.BufferGeometry();const roadVerts=[],roadIdx=[];for(let i=0;i<=260;i++){const z=12-i*.72;const cx=Math.sin((z-7)*.035)*4.2;roadVerts.push(cx-6,-.08,z,cx+6,-.08,z);if(i<260){const a=i*2;roadIdx.push(a,a+1,a+2,a+1,a+3,a+2)}}roadGeo.setAttribute('position',new THREE.Float32BufferAttribute(roadVerts,3));roadGeo.setIndex(roadIdx);roadGeo.computeVertexNormals();addMesh(roadGeo,pathMat,0,0,0);
+ // Dashed centre line and roadside guard rails make the mountain road legible.
+ for(let z=7;z>-174;z-=8){const cx=Math.sin((z-7)*.035)*4.2;const dash=addMesh(new THREE.BoxGeometry(.12,.025,3.2),new THREE.MeshStandardMaterial({color:0xe5dfc7,roughness:.8}),cx,-.025,z);dash.position.x=cx;for(const side of [-1,1]){const post=addMesh(new THREE.BoxGeometry(.12,.72,.12),mat(0x777d78),cx+side*6.15,.28,z);const rail=addMesh(new THREE.BoxGeometry(.13,.12,7.8),mat(0xb4b9b4,.65,.35),cx+side*6.15,.66,z-3.5);}}
+ // water ribbon
+ const waterMat=new THREE.MeshStandardMaterial({color:p.water,roughness:.22,metalness:.12,transparent:true,opacity:.94});
+ const water=addMesh(new THREE.PlaneGeometry(p.kind==='bay'||p.kind==='beach'?100:32,220,24,50),waterMat,p.kind==='bay'||p.kind==='beach'?0:25,-.12,-78);water.rotation.x=-Math.PI/2;water.userData.waveBase=water.geometry.attributes.position.array.slice();water.userData.wave=true;
+ // distant mountains / islands
+ for(let i=0;i<18;i++){const x=(i%2?1:-1)*(14+(i%5)*9),z=-15-Math.floor(i/2)*19;let geo;if(p.kind==='pine'||p.kind==='mountain')geo=new THREE.ConeGeometry(8+(i%4)*2,18+(i%5)*5,7);else geo=new THREE.ConeGeometry(7+(i%3)*2,13+(i%4)*4,6);const m=addMesh(geo,mat(p.kind==='beach'?0x526e68:p.kind==='bay'?0x43666a:p.kind==='mountain'?0x4d6c67:0x4e6c60),x,6,z);m.scale.y=1.2}
+ // location-specific landmarks
+ if(p.kind==='town'||p.kind==='city'||p.kind==='citadel'){
+  for(let z=4;z>-130;z-=13){for(const side of[-1,1]){const x=side*9;const h=5+(Math.sin(z*2+side)*1.3);const building=addMesh(new THREE.BoxGeometry(5,h,8),mat(p.kind==='town'?[0xe5b96f,0xdba65e,0xe8c27c][Math.abs(Math.floor(z))%3]:0xc7b78c),x,h/2,z);const roof=addMesh(new THREE.ConeGeometry(4,1.8,4),mat(0x65433a),x,h+.6,z);roof.rotation.y=Math.PI/4;
+   for(let k=0;k<3;k++)addMesh(new THREE.PlaneGeometry(.65,1),new THREE.MeshBasicMaterial({color:0xffd18a}),x-side*2.51,2+k*.1,z-1+k*2).rotation.y=side*Math.PI/2;
+  }}
+  if(p.kind==='town'){for(let z=0;z>-115;z-=9)for(let x=-5;x<=5;x+=2.5)addLantern(x,5+Math.sin(x)*.5,z, [0xffad62,0xffcf7b,0xff8e83][Math.abs(Math.floor(z+x))%3])}
+  if(p.kind==='citadel'){for(let x of[-4,4]){addMesh(new THREE.BoxGeometry(1,5,1),mat(0x9b784f),x,2.5,-70);addMesh(new THREE.ConeGeometry(2,2,4),mat(0x69483d),x,6,-70)}}
+  if(p.kind==='city'){for(let z=-10;z>-120;z-=24)addTree(-14,z,.9)}
+ }
+ if(p.kind==='karst'||p.kind==='bay'||p.kind==='mountain'||p.kind==='cave'){
+  for(let i=0;i<24;i++){const x=(i%2?1:-1)*(13+(i%4)*4),z=-8-Math.floor(i/2)*11;const geo=new THREE.ConeGeometry(5+(i%3)*2,15+(i%5)*4,7);const m=addMesh(geo,mat(p.kind==='mountain'?0x547563:p.kind==='bay'?0x52736e:0x577768),x,5,z);m.rotation.z=(i%2?.08:-.08)}
+ }
+ if(p.kind==='cave'){const caveRock=mat(0x293b37,.98),wetRock=mat(0x405c56,.32);for(let z=-8;z>-100;z-=9){const arch=new THREE.Mesh(new THREE.TorusGeometry(7.2,.95,8,24,Math.PI),caveRock);arch.position.set(0,4.8,z);arch.rotation.z=Math.PI;world.add(arch);worldItems.push(arch);for(const side of[-1,1]){const stal=new THREE.Mesh(new THREE.ConeGeometry(.45,2.2,7),wetRock);stal.position.set(side*(3.2+Math.random()*2),1.2,z-2);stal.rotation.z=Math.PI;world.add(stal);worldItems.push(stal)}}const caveFloor=addMesh(new THREE.PlaneGeometry(12,105),mat(0x253a36),0,-.03,-54);caveFloor.rotation.x=-Math.PI/2;const caveGlow=new THREE.PointLight(0x8dd9c8,1.3,35);caveGlow.position.set(0,3,-42);world.add(caveGlow);worldItems.push(caveGlow)}
+ if(p.kind==='pine'||p.kind==='mountain'){for(let z=5;z>-140;z-=8){addTree(-9-(Math.sin(z)*2),z,1.1);addTree(10+Math.cos(z)*2,z,.95)}}
+ if(p.kind==='beach'){for(let z=5;z>-140;z-=12){addTree(-10,z,1.1);addTree(11,z+5,.95)}}
+ // glowing story fragments
+ for(let i=0;i<3;i++){const x=[-3.4,3.2,0][i],z=-18-i*31;const gem=new THREE.Mesh(new THREE.OctahedronGeometry(.48),new THREE.MeshStandardMaterial({color:p.accent,emissive:p.accent,emissiveIntensity:1.4,metalness:.3,roughness:.25}));gem.position.set(x,1.35,z);world.add(gem);worldItems.push(gem);collectibles.push({mesh:gem,x,z,got:false})}
+ // decorative foreground rocks / grass
+ for(let i=0;i<55;i++){const x=(Math.random()-.5)*40,z=5-Math.random()*150;if(Math.abs(x)<7)continue;if(p.kind==='beach'){const shell=addMesh(new THREE.DodecahedronGeometry(.18+Math.random()*.2),mat(0xe6d3aa),x,.08,z);shell.rotation.set(Math.random(),Math.random(),Math.random())}else if(i%2===0)addTree(x,z,.25+Math.random()*.35)}
+ // sun disc and clouds
+ const sunDisc=new THREE.Mesh(new THREE.SphereGeometry(5,24,16),new THREE.MeshBasicMaterial({color:p.kind==='beach'?0xffbd80:0xffe0ad}));sunDisc.position.set(-38,43,-130);world.add(sunDisc);worldItems.push(sunDisc);
+ // stars / fireflies
+ const pts=[];for(let i=0;i<180;i++)pts.push((Math.random()-.5)*100,5+Math.random()*55,-Math.random()*190);
+ const pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));const stars=new THREE.Points(pg,new THREE.PointsMaterial({color:0xe7f8e9,size:.32,transparent:true,opacity:.8}));world.add(stars);worldItems.push(stars);
+ player.position.set(0,0,7);camera.position.set(0,5,15);camera.lookAt(0,1,-5);
+ setHUD();
+}
+function loadPlace(){buildScenery(places[current]);setHUD();addMessage('Hệ thống','Bạn vừa đặt chân đến '+places[current].name+'. Hãy tìm 3 ký ức phát sáng.',true);if(channel&&online)channel.track({name:nickname,online_at:new Date().toISOString(),color:0xffa5b4,place:current});broadcastPosition(true)}
+loadPlace();
+function resize(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.8))}
+addEventListener('resize',resize);
+let bikeSpeed=0,braking=false,engineAudio=null,engineOsc=null,engineGain=null;
+function startEngineSound(){try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC||engineAudio)return;engineAudio=new AC();engineOsc=engineAudio.createOscillator();const filter=engineAudio.createBiquadFilter();engineGain=engineAudio.createGain();engineOsc.type='sawtooth';filter.type='lowpass';filter.frequency.value=240;engineGain.gain.value=.0001;engineOsc.connect(filter);filter.connect(engineGain);engineGain.connect(engineAudio.destination);engineOsc.start();}catch(e){}}
+function updateMovement(dt){if(gamePaused){bikeSpeed=Math.max(0,bikeSpeed-dt*5);return;}const steering=THREE.MathUtils.clamp(move.x,-1,1);const forward=move.y<-.12;const reverse=move.y>.55;const maxSpeed=run?25:15;
+ if(braking){bikeSpeed=Math.max(0,bikeSpeed-dt*24)}else if(forward){bikeSpeed=Math.min(maxSpeed,bikeSpeed+dt*(run?13:8))}else if(reverse){bikeSpeed=Math.max(-4,bikeSpeed-dt*5)}else{bikeSpeed=THREE.MathUtils.damp(bikeSpeed,0,0.34,dt)}
+ const speedRatio=Math.min(1,Math.abs(bikeSpeed)/25);const curve=Math.sin((player.position.z-7)*.035)*4.2;player.position.x=THREE.MathUtils.clamp(player.position.x+steering*(2.6+speedRatio*2.4)*dt,curve-5.1,curve+5.1);
+ player.position.z=THREE.MathUtils.clamp(player.position.z-bikeSpeed*dt,-174,9);const slope=Math.cos((player.position.z-7)*.035)*.147;player.rotation.y=THREE.MathUtils.lerp(player.rotation.y,Math.atan2(-slope,1)+steering*speedRatio*.22,Math.min(1,dt*4));
+ const lean=-steering*speedRatio*.28;player.rotation.z=THREE.MathUtils.lerp(player.rotation.z,lean,Math.min(1,dt*5));rider.rotation.x=THREE.MathUtils.lerp(rider.rotation.x,forward?-.035:0,Math.min(1,dt*3));wheelMeshes.forEach(w=>{w.rotation.x+=dt*bikeSpeed*2.1});$('#speedValue').textContent=Math.round(Math.abs(bikeSpeed)*3.2);
+ if(engineAudio&&engineAudio.state==='suspended')engineAudio.resume();if(engineOsc&&engineGain){engineOsc.frequency.setTargetAtTime(48+Math.abs(bikeSpeed)*5,engineAudio.currentTime,.08);engineGain.gain.setTargetAtTime(.012+speedRatio*.025,engineAudio.currentTime,.12)}
+ collectibles.forEach(c=>{c.mesh.rotation.y+=dt*1.5;c.mesh.position.y=1.35+Math.sin(performance.now()*.002+c.z)*.16;if(!c.got&&Math.hypot(player.position.x-c.x,player.position.z-c.z)<1.5){c.got=true;c.mesh.visible=false;collected++;setHUD();toast('✨ Đã tìm thấy ký ức '+collected+'/3');if(collected===3){toast('Đã hoàn thành câu chuyện tại '+places[current].name+'!');setTimeout(showStory,900)}}});
+}
+function frame(){requestAnimationFrame(frame);const dt=Math.min(clock.getDelta(),.05);updateMovement(dt);worldItems.forEach(o=>{if(o.userData&&o.userData.waveBase){const a=o.geometry.attributes.position,b=o.userData.waveBase,t=performance.now()*.001;for(let i=0;i<a.count;i++){const x=b[i*3],y=b[i*3+1];a.setZ(i,b[i*3+2]+Math.sin(x*.42+t*1.8)*.055+Math.cos(y*.22+t*1.2)*.035)}a.needsUpdate=true}});const speedZoom=Math.min(1,Math.abs(bikeSpeed)/25);const target=new THREE.Vector3(player.position.x*.72,4.1+speedZoom*.65,player.position.z+9.5+speedZoom*2.2);camera.position.lerp(target,1-Math.exp(-dt*(3.2+speedZoom)));camera.fov=THREE.MathUtils.damp(camera.fov,60+speedZoom*5,2.5,dt);camera.updateProjectionMatrix();camera.lookAt(player.position.x*.55,1.15,player.position.z-6.5);worldItems.forEach(o=>{if(o.userData&&o.userData.name)o.rotation.y+=dt*.3});renderer.render(scene,camera);remoteThrottle+=dt;if(remoteThrottle>.18){remoteThrottle=0;broadcastPosition(false)}}
+requestAnimationFrame(frame);
+$('#runBtn').onpointerdown=e=>{run=true;startEngineSound();if(engineAudio&&engineAudio.state==='suspended')engineAudio.resume();$('#runBtn').classList.add('active');$('#runBtn').setPointerCapture(e.pointerId);e.preventDefault()};$('#runBtn').onpointerup=()=>{run=false;$('#runBtn').classList.remove('active')};$('#runBtn').onpointercancel=()=>{run=false;$('#runBtn').classList.remove('active')};
+$('#brakeBtn').onpointerdown=e=>{braking=true;$('#brakeBtn').classList.add('active');$('#brakeBtn').setPointerCapture(e.pointerId);e.preventDefault()};$('#brakeBtn').onpointerup=()=>{braking=false;$('#brakeBtn').classList.remove('active')};$('#brakeBtn').onpointercancel=()=>{braking=false;$('#brakeBtn').classList.remove('active')};
+const joy=$('#joystick'),knob=$('#knob');let joyId=null;function joyMove(e){const r=joy.getBoundingClientRect(),R=r.width*.34;let x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2),l=Math.hypot(x,y);if(l>R){x=x/l*R;y=y/l*R}move.x=x/R;move.y=y/R;knob.style.transform=`translate(${x}px,${y}px)`}function joyEnd(e){if(e.pointerId!==joyId)return;joyId=null;move={x:0,y:0};knob.style.transform='translate(0,0)'}joy.onpointerdown=e=>{joyId=e.pointerId;joy.setPointerCapture(joyId);joyMove(e)};joy.onpointermove=e=>{if(e.pointerId===joyId)joyMove(e)};joy.onpointerup=joyEnd;joy.onpointercancel=joyEnd;
+addEventListener('keydown',e=>{if(e.code==='ArrowUp'||e.code==='KeyW')move.y=-1;if(e.code==='ArrowDown'||e.code==='KeyS')move.y=1;if(e.code==='ArrowLeft'||e.code==='KeyA')move.x=-1;if(e.code==='ArrowRight'||e.code==='KeyD')move.x=1;if(e.code==='ShiftLeft')run=true;});addEventListener('keyup',e=>{if(['ArrowUp','KeyW','ArrowDown','KeyS'].includes(e.code))move.y=0;if(['ArrowLeft','KeyA','ArrowRight','KeyD'].includes(e.code))move.x=0;if(e.code==='ShiftLeft')run=false});
+
+/* ---------- realtime multiplayer + global chat via Supabase Broadcast/Presence ---------- */
+const myId=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2));
+async function connectOnline(){
+ let cfg={};try{cfg=JSON.parse(localStorage.getItem('vn_chill_online')||'{}')}catch(e){}
+ const projectUrl=cfg.url||SUPABASE_URL,publicKey=cfg.key||SUPABASE_ANON_KEY,room=(localStorage.getItem('vn_chill_room')||'public').toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,24)||'public';
+ if(!window.supabase||projectUrl.includes('PASTE_')||publicKey.includes('PASTE_')){$('#rosterText').textContent='Chơi đơn · chưa cấu hình phòng online';addMessage('Hệ thống','Bạn vẫn chơi được bình thường. Muốn gặp bạn bè online, mở Lập đội → Cấu hình máy chủ và nhập Supabase URL + anon key.',true);return}
+ try{
+  if(channel){try{await channel.unsubscribe()}catch(e){}channel=null;online=false}
+  supa=window.supabase.createClient(projectUrl,publicKey);
+  channel=supa.channel('vietnam-chill-'+room,{config:{broadcast:{self:false},presence:{key:myId}}});
+  channel.on('broadcast',{event:'chat'},({payload})=>{if(payload&&payload.name&&payload.text)addMessage(payload.name,payload.text)});
+  channel.on('broadcast',{event:'move'},({payload})=>{if(!payload||payload.id===myId)return;let r=remotes.get(payload.id);if(!r)r=addRemote(payload.id,payload.name,payload.color);r.position.set(payload.x,payload.y,payload.z);r.rotation.y=payload.rot||0;r.userData.last=Date.now();r.userData.place=payload.place;r.visible=payload.place===current});
+  channel.on('presence',{event:'sync'},()=>{const state=channel.presenceState();const ids=new Set();Object.entries(state).forEach(([id,arr])=>{if(id===myId)return;ids.add(id);const v=arr[0]||{};if(!remotes.has(id))addRemote(id,v.name||'Bạn đồng hành',v.color||0xffa5b4);const r=remotes.get(id);if(r)r.visible=(v.place===undefined||v.place===current)});for(const [id,obj] of remotes){if(!ids.has(id)){scene.remove(obj);remotes.delete(id)}}updateOnline()});
+  channel.subscribe(async status=>{if(status==='SUBSCRIBED'){online=true;await channel.track({name:nickname,online_at:new Date().toISOString(),color:0xffa5b4,place:current});$('#rosterText').textContent='Đang ở cùng mọi người';addMessage('Hệ thống','Đã kết nối thế giới online. Chào mừng bạn!',true);updateOnline()}else if(status==='CHANNEL_ERROR'||status==='TIMED_OUT'){$('#rosterText').textContent='Không kết nối được · chơi đơn';addMessage('Hệ thống','Không kết nối được máy chủ realtime. Kiểm tra cấu hình Supabase.',true)}});
+ }catch(err){console.error(err);$('#rosterText').textContent='Lỗi kết nối online'}
+}
+function updateOnline(){const n=1+remotes.size;$('#onlineCount').textContent=n;$('#players').textContent=n+' online';$('#rosterText').textContent=n===1?'Bạn đang khám phá một mình':(n+' người đang cùng vi vu')}
+async function broadcastPosition(force){if(!channel||!online)return;await channel.send({type:'broadcast',event:'move',payload:{id:myId,name:nickname,x:player.position.x,y:player.position.y,z:player.position.z,rot:player.rotation.y,color:0xffa5b4,place:current}})}
+// Prune stale avatars so abandoned tabs do not remain visible.
+setInterval(()=>{for(const [id,obj] of remotes){if(obj.userData.last&&Date.now()-obj.userData.last>12000){scene.remove(obj);remotes.delete(id);updateOnline()}}},5000);
+
+/* ===== TRAVEL EXPANSION: bike animation, weather, time, café, photo album, jobs & cave teams ===== */
+const wheelMeshes=player.children.filter(o=>o.geometry&&o.geometry.type==='TorusGeometry');
+let weatherMode='sun',worldClock=7,weatherParticles=null,photoAlbum=JSON.parse(localStorage.getItem('vn_chill_album')||'[]'),teamMembers=[nickname],activeJob=null;
+function featureOpen(title,eyebrow,html){$('#featureTitle').textContent=title;$('#featureEyebrow').textContent=eyebrow;$('#featureBody').innerHTML=html;$('#featurePanel').hidden=false;gamePaused=true}
+function featureClose(){$('#featurePanel').hidden=true;gamePaused=false}
+$('#featureClose').onclick=featureClose;
+function updateSky(dt){worldClock=(worldClock+dt*.035)%24;const daylight=Math.max(0,Math.sin((worldClock-6)/12*Math.PI));const dawn=Math.max(0,1-Math.abs(worldClock-6.2)/2);const dusk=Math.max(0,1-Math.abs(worldClock-18.1)/2);const night=1-daylight;sun.intensity=.12+daylight*1.65;hemi.intensity=.22+daylight*.9;fill.intensity=.12+daylight*.45;sun.color.setRGB(1,.65+daylight*.25,.42+daylight*.48);const sky=weatherMode==='rain'?0x354957:(dusk>.1?0xb97862:(dawn>.1?0xb9a18c:(night>.7?0x101d35:0x7da9bf)));scene.background.setHex(sky);scene.fog.color.setHex(sky);$('#weatherLabel').textContent=(weatherMode==='rain'?'🌧 MƯA':weatherMode==='cloud'?'☁️ NHIỀU MÂY':'☀️ NẮNG')+' · '+String(Math.floor(worldClock)).padStart(2,'0')+':'+String(Math.floor((worldClock%1)*60)).padStart(2,'0');}
+function makeRain(){if(weatherParticles){scene.remove(weatherParticles);weatherParticles.geometry.dispose();weatherParticles.material.dispose();weatherParticles=null}if(weatherMode!=='rain')return;const count=850,arr=new Float32Array(count*3);for(let i=0;i<count;i++){arr[i*3]=(Math.random()-.5)*55;arr[i*3+1]=Math.random()*28;arr[i*3+2]=player.position.z-Math.random()*65}const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(arr,3));weatherParticles=new THREE.Points(geo,new THREE.PointsMaterial({color:0xb9d9eb,size:.12,transparent:true,opacity:.62}));scene.add(weatherParticles)}
+$('#weatherBtn').onclick=()=>{weatherMode=weatherMode==='sun'?'rain':weatherMode==='rain'?'cloud':'sun';makeRain();toast(weatherMode==='rain'?'Mưa bắt đầu rơi. Hãy chạy chậm và cẩn thận!':weatherMode==='cloud'?'Trời nhiều mây, không khí dịu hơn.':'Mây tan, nắng trở lại.');};
+$('#restBtn').onclick=()=>featureOpen('Một quán nhỏ ven đường','ĐIỂM DỪNG CHÂN · CÀ PHÊ',`<div class="storyArt">☕ Một góc bình yên</div><p>Chiếc xe dựng bên hiên. Mùi cà phê rang, tiếng muỗng chạm thành ly và câu chuyện của cô chủ quán khiến chuyến đi bỗng chậm lại.</p><p><b>Chọn trải nghiệm:</b></p><div class="featureGrid"><button class="featureCard" data-rest="coffee">☕ <b>Cà phê sữa đá</b><small>Ngồi nghe chuyện địa phương, hồi 15 năng lượng.</small></button><button class="featureCard" data-rest="food">🍜 <b>Ăn món bản địa</b><small>Thử món đặc sản, ghi thêm một trang nhật ký.</small></button><button class="featureCard" data-rest="talk">🧑‍🌾 <b>Trò chuyện với người dân</b><small>Nghe một câu chuyện đời thường tại vùng đất này.</small></button><button class="featureCard" data-rest="sleep">🌄 <b>Nghỉ ngơi ngắm cảnh</b><small>Chuyển thời gian sang bình minh hôm sau.</small></button></div>`);
+$('#featureBody').addEventListener('click',e=>{const b=e.target.closest('[data-rest]');if(!b)return;const k=b.dataset.rest;featureClose();if(k==='sleep')worldClock=5.8;const lines={coffee:'Bạn nhấp một ngụm cà phê, nghe tiếng xe qua con dốc.',food:'Món ăn địa phương làm chuyến đi thêm đáng nhớ.',talk:'Người dân kể bạn nghe một câu chuyện mà bản đồ không thể ghi lại.',sleep:'Bạn nghỉ ngơi. Bình minh mới đang chờ phía trước.'};toast(lines[k]);addMessage('Nhật ký',lines[k],true);});
+function renderAlbum(){const imgs=photoAlbum.map((x,i)=>`<div class="albumItem"><img src="${x.data}" alt="Ảnh hành trình"><small>${x.place} · ${x.date}</small><button class="secondaryBtn" data-delphoto="${i}">Xóa ảnh</button></div>`).join('');featureOpen('Album hành trình','NHỮNG KHOẢNH KHẮC ĐÃ LƯU',`<p>Bạn đã lưu ${photoAlbum.length} bức ảnh. Ảnh được lưu trên thiết bị này.</p><div class="albumGrid">${imgs||'<p class="muted">Chưa có ảnh. Hãy bấm 📸 Chụp ảnh để lưu khoảnh khắc đầu tiên.</p>'}</div><button class="primaryBtn" id="takePhoto">📸 CHỤP ẢNH NGAY</button>`);$('#takePhoto').onclick=takePhoto;$('#featureBody').onclick=e=>{const b=e.target.closest('[data-delphoto]');if(!b)return;photoAlbum.splice(+b.dataset.delphoto,1);localStorage.setItem('vn_chill_album',JSON.stringify(photoAlbum));renderAlbum()}}
+function takePhoto(){try{renderer.render(scene,camera);const data=canvas.toDataURL('image/jpeg',.68);photoAlbum.unshift({data,place:places[current].name,date:new Date().toLocaleString('vi-VN')});photoAlbum=photoAlbum.slice(0,8);localStorage.setItem('vn_chill_album',JSON.stringify(photoAlbum));toast('📸 Đã lưu ảnh vào album!');addMessage('Nhật ký','Một bức ảnh mới tại '+places[current].name+'.',true);renderAlbum()}catch(e){toast('Không thể lưu ảnh. Hãy thử giảm chất lượng đồ họa.')}}
+$('#photoBtn').onclick=renderAlbum;
+$('#teamBtn').onclick=()=>featureOpen('Đội thám hiểm','HANG ĐỘNG & THỬ THÁCH',`<p>Những cung hang sâu không dành cho người đi một mình. Hãy tập hợp đồng đội, chuẩn bị đèn pin, nước uống và đồ bảo hộ. Trong phiên bản này, đội được lưu theo phiên chơi; ghép đội trực tuyến cần máy chủ multiplayer mở rộng.</p><div class="featureGrid"><button class="featureCard" data-team="create">🧭 <b>Tạo đội</b><small>Đặt tên đội và trở thành trưởng đoàn.</small></button><button class="featureCard" data-team="join">🤝 <b>Tham gia đội</b><small>Gửi lời mời qua chat toàn cầu.</small></button></div><p><b>Đồng đội hiện tại:</b> ${teamMembers.join(', ')}</p><div class="storyArt">🔦 Tiếng nước vọng trong lòng núi</div><p><b>Nguyên tắc an toàn:</b> Không tự ý vào hang chưa được cấp phép; các chuyến thám hiểm thực tế phải có hướng dẫn viên, thiết bị và đơn vị cứu hộ chuyên nghiệp.</p>`);
+$('#featureBody').addEventListener('click',e=>{const b=e.target.closest('[data-team]');if(!b)return;if(b.dataset.team==='create'){const n=prompt('Tên đội thám hiểm?','Dấu Chân Việt');if(n){teamMembers=[nickname];toast('Đã lập đội '+n);addMessage('Đội thám hiểm',nickname+' đã lập đội '+n+'. Hãy nhắn để tham gia!',true)}}else{addMessage('Đội thám hiểm',nickname+' đang tìm đồng đội khám phá hang động!',true);if(channel)channel.send({type:'broadcast',event:'chat',payload:{name:'Đội thám hiểm',text:nickname+' đang tìm đồng đội khám phá hang động!',at:Date.now()}});toast('Đã gửi lời tìm đồng đội vào chat.')}});
+const jobs=[['🚚','Chở nhu yếu phẩm','Đưa gạo, nước uống và thuốc men tới một bản vùng cao. Đường đất trơn, xe nặng và trời có thể đổ mưa.','Bạn học được rằng một chuyến hàng đến đúng lúc có thể giúp cả bản làng.'],['🧹','Dọn lối mòn','Cùng người dân thu gom rác, phát quang lối đi và giữ sạch con đường vào điểm du lịch.','Du lịch đẹp không chỉ là ngắm cảnh, mà còn là biết giữ gìn nơi mình đến.'],['🐟','Theo thuyền ra khơi','Phụ ngư dân kéo lưới lúc tờ mờ sáng, phân loại cá và trở về trước khi biển động.','Đôi bàn tay chai sạn kể câu chuyện về những ngày mưu sinh trên biển.'],['🌾','Một ngày làm nông','Thử cấy lúa, gùi nông sản hoặc thu hoạch cùng người dân địa phương.','Bạn hiểu thêm giá trị của từng bữa cơm và công sức phía sau nó.']];
+$('#storyBtn').addEventListener('contextmenu',e=>e.preventDefault());
+// Add a job board shortcut to the location story panel.
+const originalShowStory=showStory;showStory=function(){originalShowStory();const box=$('#storyPanel .panel');if(!$('#jobBoard')){const b=document.createElement('button');b.id='jobBoard';b.className='secondaryBtn';b.style.width='100%';b.style.marginTop='8px';b.textContent='🧤 BẢNG CÔNG VIỆC ĐỊA PHƯƠNG';b.onclick=()=>{const html=jobs.map((j,i)=>`<button class="featureCard" data-job="${i}">${j[0]} <b>${j[1]}</b><small>${j[2]}</small></button>`).join('');featureOpen('Những việc không tên','TRẢI NGHIỆM MƯU SINH',`<p>Chọn một công việc để hiểu hơn cuộc sống nơi bạn ghé qua. Đây là nhiệm vụ mô phỏng trong game.</p><div class="featureGrid">${html}</div>`);$('#featureBody').onclick=e=>{const x=e.target.closest('[data-job]');if(!x)return;const j=jobs[+x.dataset.job];activeJob=j;featureClose();toast('Đã nhận việc: '+j[1]);addMessage('Nhật ký','Nhiệm vụ: '+j[1]+'. '+j[3],true)}};box.append(b)}};$('#storyBtn').onclick=showStory;
+// Bike/rider animation and a gentle leaning effect tied to steering.
+const riderBaseY=rider.position.y;const originalUpdateMovement=updateMovement;updateMovement=function(dt){originalUpdateMovement(dt);const moving=Math.hypot(move.x,move.y)>.05;const speedFactor=run?1.65:1;player.rotation.z=THREE.MathUtils.lerp(player.rotation.z,-move.x*.16,Math.min(1,dt*5));rider.position.y=riderBaseY+(moving?Math.sin(performance.now()*.018*speedFactor)*.025:0);wheelMeshes.forEach(w=>{w.rotation.x+=dt*(moving?8*speedFactor:0)});};
+const originalFrame=frame;let skyLast=performance.now();frame=function(){const now=performance.now(),dt=Math.min((now-skyLast)/1000,.05);skyLast=now;updateSky(dt);if(weatherParticles){const a=weatherParticles.geometry.attributes.position;for(let i=0;i<a.count;i++){let y=a.getY(i)-dt*22;if(y<0)y=24;a.setY(i,y);a.setX(i,a.getX(i)-dt*1.4)}a.needsUpdate=true;}originalFrame();}
+$('#landscapeContinue').onclick=()=>$('#landscapeHint').style.display='none';
+try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(()=>{});}catch(e){}
+
+
+/* ===== IMMERSIVE WEB BUILD v2: scenery, camera, field journal, jobs ===== */
+(function(){
+  const style=document.createElement('style');
+  style.textContent=`
+  #extraControls{position:fixed;right:14px;top:calc(env(safe-area-inset-top) + 126px);z-index:5;display:flex;gap:7px;pointer-events:auto}
+  #extraControls button{border:1px solid #ffffff35;background:rgba(8,22,33,.72);backdrop-filter:blur(12px);color:#fff;border-radius:12px;padding:9px 11px;font-size:.68rem;font-weight:800}
+  #extraControls button:active{background:#8ce6c4;color:#10231e}
+  .realBadge{display:inline-flex;gap:6px;align-items:center;border:1px solid #ffffff25;border-radius:999px;padding:6px 10px;color:#d7eee5;font-size:.65rem}
+  .journalLine{padding:10px 0;border-bottom:1px solid #ffffff18;line-height:1.55;font-size:.8rem;color:#d6e5df}
+  .journalLine b{color:#ffd18a}
+  @media(orientation:portrait) and (max-width:900px){#extraControls{top:auto;right:10px;bottom:calc(env(safe-area-inset-bottom) + 126px);flex-direction:column}#extraControls button{padding:8px 9px}}
+  @media(orientation:landscape){#extraControls{top:88px;right:14px}}
+  `;
+  document.head.appendChild(style);
+  const controls=document.createElement('div');controls.id='extraControls';
+  controls.innerHTML='<button id="cameraToggle">🎥 GÓC NHÌN</button><button id="qualityToggle">⚙️ ĐỒ HỌA: AUTO</button><button id="journalToggle">📓 NHẬT KÝ</button>';
+  document.body.appendChild(controls);
+
+  // Better mobile rendering defaults. Keep the scene adaptive rather than forcing max settings.
+  let quality='auto';
+  function applyQuality(){
+    const dpr=devicePixelRatio||1;
+    const ratio=quality==='high'?Math.min(dpr,1.65):quality==='low'?Math.min(dpr,.85):Math.min(dpr,1.25);
+    renderer.setPixelRatio(ratio);renderer.setSize(innerWidth,innerHeight);
+    $('#qualityToggle').textContent='⚙️ ĐỒ HỌA: '+quality.toUpperCase();
+    toast(quality==='high'?'Đồ họa cao · máy có thể nóng hơn':quality==='low'?'Đồ họa nhẹ · ưu tiên mượt':'Đồ họa tự động · cân bằng hiệu năng');
   }
+  $('#qualityToggle').onclick=()=>{quality=quality==='auto'?'high':quality==='high'?'low':'auto';applyQuality()};
 
-  function generateKey() {
-    let customKey = document.getElementById('customKey').value.trim().toUpperCase();
-    let duration = parseInt(document.getElementById('duration').value);
-    let key = customKey || 'U3-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-    
-    if (keys[key]) return showToast('Key này đã tồn tại!', '#ff6b6b');
+  // Bike contact shadow, suspension, handlebar movement and subtle road vibration.
+  const bikeShadow=new THREE.Mesh(new THREE.CircleGeometry(.9,24),new THREE.MeshBasicMaterial({color:0x071018,transparent:true,opacity:.34,depthWrite:false}));
+  bikeShadow.rotation.x=-Math.PI/2;bikeShadow.position.set(0,.012,0);bikeShadow.scale.set(1.1,1.8,1);player.add(bikeShadow);
+  const originalMovementForRide=updateMovement;
+  updateMovement=function(dt){
+    originalMovementForRide(dt);
+    const ratio=Math.min(1,Math.abs(bikeSpeed)/25);
+    handle.rotation.y=THREE.MathUtils.lerp(handle.rotation.y,-move.x*.24,Math.min(1,dt*6));
+    rider.rotation.z=THREE.MathUtils.lerp(rider.rotation.z,-move.x*.045,Math.min(1,dt*4));
+    rider.position.y=riderBaseY+Math.sin(performance.now()*.012)*(ratio*.012);
+    chassis.position.y=.55+Math.sin(performance.now()*.02)*ratio*.012;
+  };
 
-    keys[key] = Date.now() + duration;
-    document.getElementById('customKey').value = '';
-    saveAndRender();
-    showToast('Đã tạo key: ' + key, '#43e97b');
-  }
-
-  function deleteKey(key) {
-    if (confirm('Xóa key ' + key + '?')) {
-      delete keys[key];
-      saveAndRender();
-      showToast('Đã xóa key', '#ff6b6b');
+  // Procedural, deterministic landscape detail: layered slopes, varied vegetation, poles and roadside life.
+  const originalBuild=buildScenery;
+  function seeded(n){const x=Math.sin(n*127.1+current*19.7)*43758.5453;return x-Math.floor(x)}
+  function addHill(x,z,sx,sy,sz,color){const m=addMesh(new THREE.SphereGeometry(1,18,12),mat(color,.98),x,sy*.38,z);m.scale.set(sx,sy,sz);m.rotation.z=(seeded(x+z)*.16-.08);return m}
+  function addBush(x,z,s=1,color=0x3e684c){const g=new THREE.Group();for(let i=0;i<4;i++){const b=new THREE.Mesh(new THREE.IcosahedronGeometry(.35*s,1),mat(color+((i%2)*0x030303),1));b.position.set((seeded(i+x)*.5-.25)*s,(.25+seeded(i+z)*.25)*s,(seeded(i+z*2)*.5-.25)*s);g.add(b)}g.position.set(x,0,z);world.add(g);worldItems.push(g)}
+  function addPole(x,z){const pole=addMesh(new THREE.CylinderGeometry(.075,.11,5.6,7),mat(0x645d4e),x,2.8,z);const cross=addMesh(new THREE.BoxGeometry(1.8,.09,.12),mat(0x514c43),x,5.25,z);for(let i=-1;i<=1;i++)addMesh(new THREE.SphereGeometry(.07,7,6),mat(0x242b2c,.4,.4),x+i*.55,5.13,z)}
+  function addRoadsideLife(p){
+    // Hills and exposed limestone / coastal headlands beyond the road.
+    for(let i=0;i<16;i++){
+      const side=i%2?1:-1,z=-12-Math.floor(i/2)*17,x=side*(18+seeded(i+2)*15);
+      const palette=p.kind==='beach'?[0x667d72,0x7f8d78]:p.kind==='bay'?[0x526f70,0x6e8580]:p.kind==='mountain'||p.kind==='pine'?[0x425e4e,0x5d7660]:[0x58715a,0x71806a];
+      addHill(x,z,8+seeded(i)*8,10+seeded(i+7)*15,12+seeded(i+3)*8,palette[i%2]);
+    }
+    // Bushes, rocks and grass clumps on both shoulders.
+    for(let i=0;i<76;i++){
+      const side=i%2?1:-1,z=4-seeded(i+9)*155;
+      const roadX=Math.sin((z-7)*.035)*4.2;
+      const x=roadX+side*(7.3+seeded(i+31)*8);
+      if(i%3===0)addBush(x,z,.65+seeded(i+41)*.8,p.kind==='beach'?0x718b62:0x426d4e);
+      else {const rock=addMesh(new THREE.DodecahedronGeometry(.28+seeded(i+4)*.55,0),mat(p.kind==='cave'?0x4b5550:0x777b6a,.98),x,.12,z);rock.rotation.set(seeded(i)*2,seeded(i+2)*2,seeded(i+3));}
+    }
+    // Reflective road markers and occasional utility poles.
+    for(let z=2;z>-160;z-=13){const cx=Math.sin((z-7)*.035)*4.2;for(const side of[-1,1]){
+      const post=addMesh(new THREE.CylinderGeometry(.045,.055,.58,7),mat(0xd6d0b9),cx+side*6.35,.28,z);
+      addMesh(new THREE.BoxGeometry(.13,.12,.08),new THREE.MeshBasicMaterial({color:0xffd78a}),cx+side*6.35,.48,z);
+    }}
+    if(p.kind==='mountain'||p.kind==='pine'||p.kind==='karst')for(let z=-12;z>-140;z-=36)addPole(Math.sin((z-7)*.035)*4.2+9,z);
+    // A tiny roadside coffee shack, made from separate pieces so it belongs to the 3D world.
+    const z=-48,cx=Math.sin((z-7)*.035)*4.2+10.4;
+    const cafe=new THREE.Group();
+    const wood=mat(0x76513a,.9),wall=mat(p.kind==='town'?0xe7c99b:0xc5b49a,.92),roof=mat(0x493b33,.88);
+    const base=new THREE.Mesh(new THREE.BoxGeometry(4.4,2.5,3.4),wall);base.position.y=1.25;cafe.add(base);
+    const roofMesh=new THREE.Mesh(new THREE.ConeGeometry(3.3,1.35,4),roof);roofMesh.position.y=3.15;roofMesh.rotation.y=Math.PI/4;cafe.add(roofMesh);
+    const awning=new THREE.Mesh(new THREE.BoxGeometry(4.7,.16,.85),wood);awning.position.set(0,2.05,1.95);cafe.add(awning);
+    const counter=new THREE.Mesh(new THREE.BoxGeometry(2.8,.9,.45),wood);counter.position.set(0,.65,1.8);cafe.add(counter);
+    const sign=new THREE.Mesh(new THREE.BoxGeometry(2.4,.55,.12),mat(0x263b36));sign.position.set(0,2.6,1.78);cafe.add(sign);
+    const letters=new THREE.Mesh(new THREE.PlaneGeometry(2.1,.34),new THREE.MeshBasicMaterial({color:0xffd99b}));letters.position.set(0,2.6,1.85);cafe.add(letters);
+    cafe.position.set(cx,0,z);cafe.rotation.y=-.18;world.add(cafe);worldItems.push(cafe);
+    // Local resident standing beside the café.
+    const local=makePerson(0xc58d56);local.scale.setScalar(.83);local.position.set(cx+2.8,0,z+1.5);local.rotation.y=-.6;world.add(local);worldItems.push(local);
+    // For Phong Nha, create a dramatic cave mouth and a small warm expedition camp.
+    if(p.kind==='cave'){
+      const mouth=new THREE.Mesh(new THREE.TorusGeometry(5.2,.95,12,32,Math.PI),mat(0x1c2927,.98));mouth.position.set(-15,4,-76);mouth.rotation.z=Math.PI;world.add(mouth);worldItems.push(mouth);
+      const dark=new THREE.Mesh(new THREE.CircleGeometry(4.4,32),new THREE.MeshBasicMaterial({color:0x050b0b}));dark.position.set(-15,3.9,-75.7);world.add(dark);worldItems.push(dark);
+      const lamp=new THREE.PointLight(0x7fc9b9,1.2,18);lamp.position.set(-15,2,-69);world.add(lamp);worldItems.push(lamp);
     }
   }
+  buildScenery=function(p){originalBuild(p);addRoadsideLife(p);};
+  // Rebuild once so the current starting destination also gets the new assets.
+  buildScenery(places[current]);setHUD();
 
-  function copyKey(key) {
-    navigator.clipboard.writeText(key);
-    showToast('Đã copy: ' + key, '#43e97b');
-  }
+  // Photo-friendly view modes. Third-person remains default; cockpit mode puts camera near the rider.
+  let cameraMode='chase';
+  $('#cameraToggle').onclick=()=>{cameraMode=cameraMode==='chase'?'cockpit':'chase';$('#cameraToggle').textContent=cameraMode==='chase'?'🎥 GÓC NHÌN':'🏍️ GÓC LÁI';toast(cameraMode==='cockpit'?'Đã chuyển sang góc nhìn người lái':'Đã chuyển sang góc quay bám theo xe')};
+  const baseFrame=frame;
+  frame=function(){
+    baseFrame();
+    if(cameraMode==='cockpit'){
+      const forward=new THREE.Vector3(0,1.62,1.08).applyEuler(player.rotation);
+      camera.position.copy(player.position).add(forward);
+      const look=new THREE.Vector3(0,1.35,-8).applyEuler(player.rotation).add(player.position);
+      camera.lookAt(look);camera.fov=68;camera.updateProjectionMatrix();renderer.render(scene,camera);
+    }else{camera.fov=60+Math.min(5,Math.abs(bikeSpeed)/5);camera.updateProjectionMatrix()}
+  };
 
-  function exportKeys() {
-    let active = {};
-    for (let k in keys) {
-      if (Date.now() < keys[k]) active[k] = keys[k];
-    }
-    let data = JSON.stringify({ active_keys: active }, null, 2);
-    
-    let blob = new Blob([data], {type: 'application/json'});
-    let url = URL.createObjectURL(blob);
-    let a = document.createElement('a');
-    a.href = url; a.download = 'keys.json'; a.click();
-    URL.revokeObjectURL(url);
-    showToast('Đã xuất file keys.json', '#4facfe');
-  }
+  // A persistent journal turns collected fragments and local work into a narrative record.
+  const journalKey='vn_chill_journal_v2';let journal=[];
+  try{journal=JSON.parse(localStorage.getItem(journalKey)||'[]')}catch(e){journal=[]}
+  function writeJournal(line){journal.unshift({place:places[current].name,line,date:new Date().toLocaleDateString('vi-VN')});journal=journal.slice(0,35);try{localStorage.setItem(journalKey,JSON.stringify(journal))}catch(e){}}
+  const oldAddMessage=addMessage;addMessage=function(name,text,system=false){oldAddMessage(name,text,system);if(system&&/đến|hoàn thành|Nhiệm vụ|ký ức|nghỉ ngơi/i.test(text))writeJournal(text)};
+  $('#journalToggle').onclick=()=>{
+    const rows=journal.map((j,i)=>`<div class="journalLine"><b>${j.date} · ${j.place}</b><br>${j.line}</div>`).join('');
+    featureOpen('Cuốn sổ của ông ngoại','NHẬT KÝ ĐƯỜNG XA',`<p>Những điều Minh đã nhìn thấy, nghe được và học được trên hành trình. Nhật ký được lưu trên iPhone này.</p><div class="realBadge">📍 ${places[current].name}</div><div style="margin-top:10px">${rows||'<p class="muted">Cuốn sổ còn trống. Hãy bắt đầu một chuyến đi và ghi lại điều đầu tiên bạn gặp.</p>'}</div><button class="secondaryBtn" id="clearJournal" style="width:100%;margin-top:12px">Xóa nhật ký</button>`);
+    $('#clearJournal').onclick=()=>{if(confirm('Xóa toàn bộ nhật ký trên thiết bị này?')){journal=[];localStorage.removeItem(journalKey);$('#journalToggle').click()}};
+  };
 
-  function renderTable() {
-    let tbody = document.getElementById('keyList');
-    let html = '';
-    let sortedKeys = Object.keys(keys).sort((a,b) => keys[b] - keys[a]);
-    
-    if (sortedKeys.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="4" class="empty-state">Chưa có key nào. Bấm "Tạo Key" để bắt đầu!</td></tr>';
-      return;
-    }
+  // Make local jobs playable as short, safe, fictional task sequences rather than a text-only notice.
+  const jobSteps={
+    'Chở nhu yếu phẩm':['Kiểm tra dây buộc hàng','Chọn lối đi ít trơn trượt','Bàn giao hàng cho trưởng bản'],
+    'Dọn lối mòn':['Nhặt rác ven đường','Phân loại vật liệu tái chế','Cùng nhóm kiểm tra lối đi'],
+    'Theo thuyền ra khơi':['Chuẩn bị áo phao','Phụ kéo lưới cùng ngư dân','Phân loại mẻ cá vừa về'],
+    'Một ngày làm nông':['Chuẩn bị dụng cụ','Thử cấy / thu hoạch cùng chủ ruộng','Thu dọn và cảm ơn gia đình']
+  };
+  const oldStory=showStory;showStory=function(){oldStory();const box=$('#storyPanel .panel');let b=$('#jobBoard');if(!b){b=document.createElement('button');b.id='jobBoard';b.className='secondaryBtn';b.style.width='100%';b.style.marginTop='8px';box.append(b)}b.textContent='🧤 NHẬN VIỆC CÙNG NGƯỜI DÂN';b.onclick=()=>{
+      const cards=jobs.map((j,i)=>`<button class="featureCard" data-job-v2="${i}">${j[0]} <b>${j[1]}</b><small>${j[2]}</small></button>`).join('');
+      featureOpen('Một ngày trải nghiệm','CÔNG VIỆC MƯU SINH',`<p>Đây là nhiệm vụ mô phỏng, lấy cảm hứng từ lao động địa phương. Hoàn thành ba bước để ghi thêm một trang vào nhật ký.</p><div class="featureGrid">${cards}</div>`);
+    }};
+  $('#storyBtn').onclick=showStory;
+  $('#featureBody').addEventListener('click',e=>{
+    const b=e.target.closest('[data-job-v2]');if(!b)return;
+    const job=jobs[+b.dataset.jobV2],steps=jobSteps[job[1]]||['Chuẩn bị','Thực hiện công việc','Hoàn tất và cảm ơn'];let done=[];
+    featureOpen(job[1],'NHIỆM VỤ ĐỊA PHƯƠNG',`<p>${job[2]}</p><div id="jobSteps">${steps.map((s,i)=>`<button class="featureCard" data-step="${i}" style="width:100%;margin:5px 0;text-align:left">◯ ${s}</button>`).join('')}</div><p class="muted" id="jobProgress">0 / 3 công đoạn</p>`);
+    $('#featureBody').onclick=ev=>{const step=ev.target.closest('[data-step]');if(!step)return;const i=+step.dataset.step;if(done.includes(i))return;done.push(i);step.textContent='✓ '+steps[i];step.style.borderColor='#8ce6c4';$('#jobProgress').textContent=done.length+' / 3 công đoạn';if(done.length===3){writeJournal('Hoàn thành công việc: '+job[1]+'. '+job[3]);addMessage('Nhật ký','Bạn đã hoàn thành '+job[1]+'. '+job[3],true);toast('Hoàn thành công việc · +1 trang nhật ký');setTimeout(featureClose,700)}};
+  });
 
-    for (let k of sortedKeys) {
-      let exp = keys[k];
-      let isExpired = Date.now() > exp;
-      let dateStr = new Date(exp).toLocaleString('vi-VN');
-      let statusHtml = isExpired ? '<span class="status expired">Hết hạn</span>' : '<span class="status active">Hoạt động</span>';
-      let actionHtml = `<button class="btn btn-danger" style="padding:6px 12px; font-size:12px;" onclick="deleteKey('${k}')">Xóa</button>`;
+  // Touch performance: pause animation when the tab is hidden and restore on return.
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){gamePaused=true}else if(started&&$('#featurePanel').hidden&&$('#storyPanel').hidden&&$('#mapPanel').hidden){gamePaused=false}});
+  // Better initial guidance for a phone-only player.
+  const welcomeNote=document.querySelector('#welcome .muted');
+  if(welcomeNote)welcomeNote.textContent='Thiết kế ưu tiên iPhone: xoay ngang để chơi, dùng cần trái để lái, giữ ga để tăng tốc. Chọn ĐỒ HỌA AUTO nếu máy nóng hoặc giật.';
+})();
 
-      html += `
-        <tr>
-          <td><span class="key-code" onclick="copyKey('${k}')" title="Click để copy">${k}</span></td>
-          <td>${dateStr}</td>
-          <td>${statusHtml}</td>
-          <td>${actionHtml}</td>
-        </tr>
-      `;
-    }
-    tbody.innerHTML = html;
-  }
 
-  function showToast(msg, color) {
-    let t = document.getElementById('toast');
-    t.textContent = msg; t.style.background = color;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
-  }
+/* ===== FINAL FRIENDS BUILD: shareable online rooms + safer setup UX ===== */
+(function(){
+  const oldStart=$('#saveName').onclick;
+  $('#saveName').onclick=function(){oldStart();try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(()=>{})}catch(e){}};
+  const oldTeam=$('#teamBtn').onclick;
+  $('#teamBtn').onclick=function(){
+    const room=(localStorage.getItem('vn_chill_room')||'public');
+    featureOpen('Đi cùng anh em','PHÒNG PHIÊU LƯU ONLINE',
+      `<p>Tạo một mã phòng riêng rồi gửi link cho bạn bè. Tất cả mọi người phải mở cùng link game và dùng cùng cấu hình Supabase. Nếu chưa cấu hình máy chủ, game vẫn chạy ở chế độ một người.</p>
+      <label style="display:block;font-size:.72rem;color:#b9cbc6;margin:10px 0 5px">MÃ PHÒNG (ví dụ: teamquan)</label>
+      <input id="roomCodeInput" maxlength="24" value="${room}" placeholder="team-cua-minh" style="width:100%;padding:12px;border-radius:11px;background:#ffffff10;border:1px solid #ffffff30;color:white;font-size:16px">
+      <label style="display:block;font-size:.72rem;color:#b9cbc6;margin:12px 0 5px">SUPABASE PROJECT URL</label>
+      <input id="sbUrl" placeholder="https://xxxx.supabase.co" value="${(JSON.parse(localStorage.getItem('vn_chill_online')||'{}').url||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" style="width:100%;padding:12px;border-radius:11px;background:#ffffff10;border:1px solid #ffffff30;color:white;font-size:16px">
+      <label style="display:block;font-size:.72rem;color:#b9cbc6;margin:12px 0 5px">SUPABASE ANON / PUBLISHABLE KEY</label>
+      <input id="sbKey" placeholder="Dán public anon key tại đây" value="${(JSON.parse(localStorage.getItem('vn_chill_online')||'{}').key||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" style="width:100%;padding:12px;border-radius:11px;background:#ffffff10;border:1px solid #ffffff30;color:white;font-size:16px">
+      <button class="primaryBtn" id="saveOnlineConfig">LƯU & KẾT NỐI PHÒNG</button>
+      <button class="secondaryBtn" id="shareRoom" style="width:100%;margin-top:8px">🔗 CHIA SẺ LINK MỜI BẠN BÈ</button>
+      <button class="secondaryBtn" id="newRoom" style="width:100%;margin-top:8px">🎲 TẠO MÃ PHÒNG NGẪU NHIÊN</button>
+      <p class="muted" style="margin-top:12px">Cấu hình chỉ lưu trên trình duyệt này. Chỉ dùng anon/public key, không bao giờ dán service_role key. Phòng chỉ hoạt động khi Supabase Realtime được bật và bạn bè nhập cùng URL, key, mã phòng.</p>
+      <p class="muted">Chưa có Supabase? Mở <a href="https://supabase.com/dashboard" target="_blank" rel="noopener" style="color:#9ce9d0">Supabase Dashboard</a> để tạo project miễn phí.</p>`);
+    $('#saveOnlineConfig').onclick=async()=>{
+      const code=($('#roomCodeInput').value||'public').toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,24)||'public';
+      const url=$('#sbUrl').value.trim(),key=$('#sbKey').value.trim();
+      localStorage.setItem('vn_chill_room',code);
+      if(url&&key){localStorage.setItem('vn_chill_online',JSON.stringify({url,key}))}
+      featureClose();toast('Đang kết nối phòng '+code+'…');await connectOnline();
+    };
+    $('#shareRoom').onclick=async()=>{
+      const code=($('#roomCodeInput').value||'public').toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,24)||'public';
+      localStorage.setItem('vn_chill_room',code);
+      const link=location.href.split('?')[0]+'?room='+encodeURIComponent(code);
+      const message='Vào phòng '+code+' cùng mình khám phá Việt Nam: '+link;
+      try{if(navigator.share)await navigator.share({title:'Vietnam Chill Journey',text:message,url:link});else if(navigator.clipboard){await navigator.clipboard.writeText(message);toast('Đã sao chép link mời!')}else prompt('Sao chép link mời bạn bè:',message)}catch(e){}
+    };
+    $('#newRoom').onclick=()=>{$('#roomCodeInput').value='team-'+Math.random().toString(36).slice(2,8)};
+  };
+  // If opened from a shared invite URL, display the room in the chat and connect using it.
+  const inviteRoom=new URLSearchParams(location.search).get('room');
+  if(inviteRoom){const code=inviteRoom.toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,24);if(code)localStorage.setItem('vn_chill_room',code)}
+  // Save a copy of each screenshot through the native share/download flow from the album.
+  const oldTakePhoto=takePhoto;
+  takePhoto=function(){oldTakePhoto();};
+})();
 
-  // Hiệu ứng tuyết rơi
-  const canvas = document.getElementById('snowCanvas');
-  const ctx = canvas.getContext('2d');
-  let width = window.innerWidth, height = window.innerHeight;
-  canvas.width = width; canvas.height = height;
-  const particles = Array.from({length: 50}).map(() => ({ x: Math.random() * width, y: Math.random() * height, r: Math.random() * 4 + 2, speedY: Math.random() * 1 + 0.5, speedX: Math.random() * 1 - 0.5, opacity: Math.random() * 0.5 + 0.4 }));
-  function drawSnow() {
-    ctx.clearRect(0, 0, width, height);
-    particles.forEach(p => {
-        ctx.beginPath(); ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
-        p.y += p.speedY; p.x += p.speedX + Math.sin(p.y / 50) * 0.5;
-        if (p.y > height + 10 || p.x > width + 10 || p.x < -10) { p.x = Math.random() * width; p.y = -10; }
-    });
-    requestAnimationFrame(drawSnow);
-  }
-  drawSnow();
-  window.addEventListener('resize', () => { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; });
-
-  renderTable();
 </script>
 
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
 </body>
 </html>
