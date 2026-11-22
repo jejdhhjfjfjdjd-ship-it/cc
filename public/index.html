@@ -2,24 +2,25 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>ttan control panel</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#0a0e1a;color:#e6edf3;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:20px;min-height:100vh;font-size:14px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#0a0e1a;color:#e6edf3;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:16px;min-height:100vh;font-size:14px}
 .wrap{max-width:1280px;margin:0 auto}
-h1{font-size:22px;margin-bottom:20px;letter-spacing:0.5px;display:flex;align-items:center;gap:10px}
+h1{font-size:20px;margin-bottom:18px;letter-spacing:0.5px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 h1 span{color:#4facfe}
 h1 .version{font-size:11px;color:#8899aa;background:rgba(255,255,255,0.05);padding:3px 8px;border-radius:4px;font-family:monospace}
 .card{background:rgba(20,25,40,0.7);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;margin-bottom:16px}
 .card h2{font-size:12px;margin-bottom:12px;color:#8899aa;text-transform:uppercase;letter-spacing:1.2px;font-weight:600}
 .row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;align-items:center}
 input,textarea,select{font-family:inherit;font-size:13px}
-input,textarea{flex:1;min-width:140px;padding:9px 11px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;outline:none;transition:border-color 0.2s}
+input,textarea{flex:1;min-width:140px;padding:10px 12px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;outline:none;transition:border-color 0.2s;-webkit-appearance:none}
 input:focus,textarea:focus{border-color:#4facfe}
 textarea{min-height:80px;resize:vertical;font-family:monospace;font-size:12px}
-button{padding:9px 15px;background:linear-gradient(135deg,#4facfe,#00f2fe);border:none;border-radius:6px;color:#fff;font-weight:700;cursor:pointer;font-size:12px;transition:transform 0.15s,opacity 0.15s}
+button{padding:10px 16px;background:linear-gradient(135deg,#4facfe,#00f2fe);border:none;border-radius:6px;color:#fff;font-weight:700;cursor:pointer;font-size:12px;transition:transform 0.15s,opacity 0.15s;-webkit-appearance:none}
 button:hover:not(:disabled){opacity:0.9;transform:translateY(-1px)}
+button:active:not(:disabled){transform:translateY(0)}
 button:disabled{opacity:0.5;cursor:not-allowed}
 button.danger{background:linear-gradient(135deg,#ff6b6b,#ee5a5a)}
 button.warn{background:linear-gradient(135deg,#feca57,#ff9f43);color:#1a1a2e}
@@ -31,46 +32,43 @@ button.ghost{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255
 .key-item .status{font-size:10px;padding:3px 8px;border-radius:4px;font-weight:700;letter-spacing:0.5px}
 .status.active{background:rgba(67,233,123,0.2);color:#43e97b}
 .status.revoked{background:rgba(255,107,107,0.2);color:#ff6b6b}
-.key-actions{display:flex;gap:4px}
+.key-actions{display:flex;gap:4px;flex-wrap:wrap}
 .key-actions button{padding:5px 10px;font-size:10px}
-.vocab-item{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:rgba(0,0,0,0.3);border-radius:5px;margin-bottom:4px;font-size:12px;gap:10px}
+.vocab-item{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(0,0,0,0.3);border-radius:5px;margin-bottom:4px;font-size:12px;gap:10px;flex-wrap:wrap}
 .vocab-item .en{color:#4facfe;font-weight:600;flex:1;min-width:100px;word-break:break-word}
 .vocab-item .vi{color:#e6edf3;flex:1;min-width:100px;word-break:break-word}
-.vocab-item .src{color:#8899aa;font-size:10px;font-family:monospace}
+.vocab-item .src{color:#8899aa;font-size:10px;font-family:monospace;display:none}
 .vocab-item .del{padding:3px 8px;font-size:11px;background:rgba(255,107,107,0.3);border:none;color:#fff;border-radius:4px;cursor:pointer;font-weight:700}
 #log{font-family:monospace;font-size:11px;max-height:400px;overflow-y:auto;background:rgba(0,0,0,0.5);padding:12px;border-radius:6px;line-height:1.7}
-#log>div{border-bottom:1px solid rgba(255,255,255,0.03);padding:2px 0}
-#log .info{color:#8899aa}
-#log .auth{color:#feca57}
-#log .learn{color:#43e97b}
-#log .vocab{color:#4facfe}
-#log .ws{color:#c9d1d9}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+#log>div{border-bottom:1px solid rgba(255,255,255,0.03);padding:2px 0;word-break:break-word}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
 .stat{background:rgba(0,0,0,0.3);padding:14px;border-radius:8px;text-align:center;border:1px solid rgba(255,255,255,0.05)}
-.stat .num{font-size:26px;font-weight:800;color:#4facfe;font-variant-numeric:tabular-nums}
+.stat .num{font-size:24px;font-weight:800;color:#4facfe;font-variant-numeric:tabular-nums}
 .stat .lbl{font-size:10px;color:#8899aa;margin-top:6px;text-transform:uppercase;letter-spacing:0.8px}
-#login{max-width:420px;margin:120px auto}
+#login{max-width:420px;margin:80px auto}
 #app{display:none}
-.tab{display:flex;gap:4px;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;flex-wrap:wrap}
-.tab button{background:transparent;color:#8899aa;border:none;padding:8px 16px;font-weight:600;font-size:12px;cursor:pointer;border-radius:6px}
-.tab button:hover{color:#e6edf3}
+.tab{display:flex;gap:4px;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;flex-wrap:wrap;overflow-x:auto}
+.tab button{background:transparent;color:#8899aa;border:none;padding:8px 14px;font-weight:600;font-size:12px;cursor:pointer;border-radius:6px;white-space:nowrap}
 .tab button.active{background:rgba(79,172,254,0.15);color:#4facfe}
 .tab-panel{display:none}
 .tab-panel.active{display:block}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:12px 20px;background:rgba(20,25,40,0.95);border:1px solid rgba(255,255,255,0.2);border-radius:8px;font-size:12px;z-index:9999;animation:slideUp 0.3s ease}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:12px 20px;background:rgba(20,25,40,0.95);border:1px solid rgba(255,255,255,0.2);border-radius:8px;font-size:12px;z-index:9999;animation:slideUp 0.3s ease;max-width:90vw}
 @keyframes slideUp{from{opacity:0;transform:translate(-50%,20px)}to{opacity:1;transform:translate(-50%,0)}}
 .toast.success{border-color:#43e97b;color:#43e97b}
 .toast.error{border-color:#ff6b6b;color:#ff6b6b}
 .toast.warn{border-color:#feca57;color:#feca57}
 .mono{font-family:monospace;font-size:11px}
 .empty{color:#8899aa;font-size:12px;padding:20px;text-align:center;font-style:italic}
+.pulse{display:inline-block;width:8px;height:8px;border-radius:50%;background:#43e97b;margin-right:6px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 </style>
 </head>
 <body>
 <div class="wrap">
 
+<!-- ═══════════ LOGIN ═══════════ -->
 <div id="login" class="card">
-  <h2>🔐 admin login</h2>
+  <h2>🔐 ADMIN LOGIN</h2>
   <div class="row">
     <input type="password" id="secret" placeholder="admin secret" autocomplete="current-password">
   </div>
@@ -78,17 +76,21 @@ button.ghost{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255
     <button onclick="doLogin()" style="width:100%">ENTER</button>
   </div>
   <div id="loginErr" style="color:#ff6b6b;font-size:12px;margin-top:8px;min-height:16px"></div>
+  <div style="color:#8899aa;font-size:11px;margin-top:12px;line-height:1.5">
+    Nhập <b style="color:#4facfe">ADMIN_SECRET</b> đã set trên Vercel Environment Variables.
+  </div>
 </div>
 
+<!-- ═══════════ APP ═══════════ -->
 <div id="app">
-  <h1>❄️ ttan <span>control</span> <span class="version" id="verBadge">v6</span></h1>
+  <h1>❄️ ttan <span>control</span> <span class="version" id="verBadge">vercel</span></h1>
 
   <div class="tab">
     <button class="active" data-tab="keys">🔑 KEYS</button>
     <button data-tab="vocab">📚 VOCAB</button>
     <button data-tab="stats">📊 STATS</button>
-    <button data-tab="log">📜 LOG</button>
     <button data-tab="tools">🛠 TOOLS</button>
+    <button onclick="logout()" style="margin-left:auto;color:#ff6b6b">LOGOUT</button>
   </div>
 
   <!-- KEYS -->
@@ -118,7 +120,7 @@ button.ghost{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255
     </div>
     <div class="card">
       <h2>bulk import</h2>
-      <textarea id="bulkText" placeholder="en = vi&#10;en = vi&#10;en = vi&#10;hoặc CSV: en,vi&#10;hoặc tab-separated"></textarea>
+      <textarea id="bulkText" placeholder="en = vi&#10;en = vi&#10;hoặc CSV: en,vi&#10;hoặc tab-separated"></textarea>
       <div class="row" style="margin-top:8px">
         <button onclick="bulkImport()">IMPORT</button>
         <button class="ghost" onclick="document.getElementById('bulkText').value=''">CLEAR</button>
@@ -127,10 +129,10 @@ button.ghost{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255
     <div class="card">
       <h2>vocab bank (<span id="vCount">0</span>)</h2>
       <div class="row" style="margin-bottom:8px">
-        <input id="vSearch" placeholder="search en / vi…" autocomplete="off">
-        <button class="ghost" onclick="renderVocab()">REFRESH</button>
+        <input id="vSearch" placeholder="search en / vi…" autocomplete="off" oninput="renderVocab()">
+        <button class="ghost" onclick="loadVocab()">REFRESH</button>
       </div>
-      <div id="vocabList" style="max-height:560px;overflow-y:auto"><div class="empty">loading…</div></div>
+      <div id="vocabList" style="max-height:600px;overflow-y:auto"><div class="empty">loading…</div></div>
     </div>
   </div>
 
@@ -138,15 +140,12 @@ button.ghost{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255
   <div id="tab-stats" class="tab-panel">
     <div class="card">
       <h2>global stats</h2>
-      <div class="stats-grid" id="statsBox"></div>
-    </div>
-  </div>
-
-  <!-- LOG -->
-  <div id="tab-log" class="tab-panel">
-    <div class="card">
-      <h2>live log <span style="float:right;font-size:10px;color:#43e97b" id="wsStatus">●</span></h2>
-      <div id="log"></div>
+      <div class="stats-grid" id="statsBox">
+        <div class="stat"><div class="num" id="statKeys">0</div><div class="lbl">keys</div></div>
+        <div class="stat"><div class="num" id="statVocab">0</div><div class="lbl">vocab</div></div>
+        <div class="stat"><div class="num" id="statSolves">0</div><div class="lbl">solves</div></div>
+        <div class="stat"><div class="num" id="statLearns">0</div><div class="lbl">learns</div></div>
+      </div>
     </div>
   </div>
 
@@ -163,14 +162,12 @@ button.ghost{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255
       <h2>import</h2>
       <textarea id="importText" placeholder="paste JSON export ở đây…"></textarea>
       <div class="row" style="margin-top:8px">
-        <button class="success" onclick="importData(true)">MERGE</button>
-        <button class="warn" onclick="importData(false)">REPLACE</button>
+        <button class="success" onclick="importData()">MERGE</button>
       </div>
     </div>
     <div class="card">
       <h2>danger zone</h2>
       <div class="row">
-        <button class="danger" onclick="clearVocab()">⚠ DELETE ALL VOCAB</button>
         <button class="danger" onclick="revokeAll()">⚠ REVOKE ALL KEYS</button>
       </div>
     </div>
@@ -180,356 +177,336 @@ button.ghost{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255
 </div>
 
 <script>
-let SECRET="";
-let WS=null;
-let VOCAB={};
-let KEYS={};
-let reconnectTimer=null;
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let SECRET = sessionStorage.getItem("ttan_secret") || "";
+let VOCAB = {};
+let KEYS = {};
+let POLL_TIMER = null;
 
-const $=id=>document.getElementById(id);
-const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+}[c]));
 
-const toast=(msg,type="success")=>{
-  const t=document.createElement("div");
-  t.className="toast "+type;
-  t.textContent=msg;
+const toast = (msg, type = "success") => {
+  const t = document.createElement("div");
+  t.className = "toast " + type;
+  t.textContent = msg;
   document.body.appendChild(t);
-  setTimeout(()=>t.remove(),2500);
+  setTimeout(() => t.remove(), 2500);
 };
 
-const api=(path,opts={})=>fetch(path,{
-  method:opts.method||"GET",
-  headers:{
-    "Content-Type":"application/json",
-    "X-Admin-Secret":SECRET,
-    ...(opts.headers||{})
+// ═══════════════════════════════════════════
+// API BRIDGE
+// ═══════════════════════════════════════════
+const api = (path, opts = {}) => fetch(path, {
+  method: opts.method || "GET",
+  headers: {
+    "Content-Type": "application/json",
+    "X-Admin-Secret": SECRET
   },
-  body:opts.body?JSON.stringify(opts.body):undefined
-}).then(r=>r.json()).catch(e=>({ok:false,error:e.message}));
+  body: opts.body ? JSON.stringify(opts.body) : undefined
+}).then(r => r.json()).catch(e => ({ ok: false, error: e.message }));
 
-// ═══════════ LOGIN ═══════════
-const doLogin=async()=>{
-  const s=$("secret").value.trim();
-  if(!s){$("loginErr").textContent="enter secret";return}
-  $("loginErr").textContent="";
-  const r=await api("/api/admin/login",{method:"POST",body:{secret:s}});
-  if(!r.ok){$("loginErr").textContent=r.error||"wrong secret";return}
-  SECRET=s;
-  sessionStorage.setItem("ttan_secret",s);
-  $("login").style.display="none";
-  $("app").style.display="block";
-  connectWS();
-  loadAll();
-};
+// ═══════════════════════════════════════════
+// LOGIN
+// ═══════════════════════════════════════════
+const doLogin = async () => {
+  const s = $("secret").value.trim();
+  if (!s) { $("loginErr").textContent = "nhập secret"; return }
+  $("loginErr").textContent = "";
+  const r = await fetch("/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ secret: s })
+  }).then(x => x.json()).catch(e => ({ ok: false, error: e.message }));
 
-// auto-login from session
-const autoLogin=async()=>{
-  const s=sessionStorage.getItem("ttan_secret");
-  if(!s)return;
-  SECRET=s;
-  const r=await api("/api/admin/login",{method:"POST",body:{secret:s}});
-  if(r.ok){
-    $("login").style.display="none";
-    $("app").style.display="block";
-    connectWS();
-    loadAll();
-  } else {
-    sessionStorage.removeItem("ttan_secret");
-    SECRET="";
+  if (!r.ok) {
+    $("loginErr").textContent = r.error || "wrong secret";
+    return;
   }
+  SECRET = s;
+  sessionStorage.setItem("ttan_secret", s);
+  enterApp();
 };
 
-// ═══════════ WS ═══════════
-const connectWS=()=>{
-  if(reconnectTimer){clearTimeout(reconnectTimer);reconnectTimer=null}
-  const proto=location.protocol==="https:"?"wss":"ws";
-  try{WS=new WebSocket(`${proto}://${location.host}`)}catch(_){scheduleReconnect();return}
-
-  WS.onopen=()=>{
-    $("wsStatus").style.color="#43e97b";
-    WS.send(JSON.stringify({type:"admin_auth",secret:SECRET}));
-    if(WS._pingTimer)clearInterval(WS._pingTimer);
-    WS._pingTimer=setInterval(()=>{
-      if(WS.readyState===1){try{WS.send(JSON.stringify({type:"ping"}))}catch(_){}}
-    },25000);
-  };
-
-  WS.onmessage=e=>{
-    let m;try{m=JSON.parse(e.data)}catch(_){return}
-    switch(m.type){
-      case "admin_ok":console.log("[ws] admin connected");break;
-      case "admin_fail":$("wsStatus").style.color="#ff6b6b";break;
-      case "log":addLog(m.entry);break;
-      case "vocab_update":loadVocab();break;
-      case "vocab_delete":loadVocab();break;
-      case "vocab_bulk":loadVocab();break;
-      case "stats":loadStats();break;
-    }
-  };
-
-  WS.onclose=()=>{
-    $("wsStatus").style.color="#ff6b6b";
-    if(WS._pingTimer)clearInterval(WS._pingTimer);
-    scheduleReconnect();
-  };
-  WS.onerror=()=>{
-    $("wsStatus").style.color="#ff6b6b";
-  };
+const enterApp = () => {
+  $("login").style.display = "none";
+  $("app").style.display = "block";
+  loadAll();
+  startPolling();
 };
 
-const scheduleReconnect=()=>{
-  if(reconnectTimer)return;
-  reconnectTimer=setTimeout(()=>{
-    reconnectTimer=null;
-    if(SECRET)connectWS();
-  },3000);
+const logout = () => {
+  sessionStorage.removeItem("ttan_secret");
+  SECRET = "";
+  if (POLL_TIMER) { clearInterval(POLL_TIMER); POLL_TIMER = null }
+  $("app").style.display = "none";
+  $("login").style.display = "block";
+  $("secret").value = "";
+  $("loginErr").textContent = "";
 };
 
-// ═══════════ DATA LOADERS ═══════════
-const loadAll=()=>{loadKeys();loadVocab();loadStats();loadLog()};
+// ═══════════════════════════════════════════
+// POLLING (thay WebSocket)
+// ═══════════════════════════════════════════
+const startPolling = () => {
+  if (POLL_TIMER) clearInterval(POLL_TIMER);
+  POLL_TIMER = setInterval(() => {
+    if (!SECRET) return;
+    loadStats();
+    // nếu đang ở tab keys thì refresh keys
+    if ($("tab-keys").classList.contains("active")) loadKeys();
+  }, 5000);
+};
 
-const loadKeys=async()=>{
-  const r=await api("/api/admin/keys");
-  if(!r.ok)return;
-  KEYS=r.keys||{};
+// ═══════════════════════════════════════════
+// DATA LOADERS
+// ═══════════════════════════════════════════
+const loadAll = () => {
+  loadKeys();
+  loadVocab();
+  loadStats();
+};
+
+const loadKeys = async () => {
+  const r = await api("/api/keys");
+  if (!r.ok) return;
+  KEYS = r.keys || {};
   renderKeys();
 };
 
-const renderKeys=()=>{
-  const box=$("keysList");
-  const arr=Object.values(KEYS).sort((a,b)=>b.created-a.created);
-  $("keyCount").textContent=arr.length;
-  box.innerHTML="";
-  if(!arr.length){box.innerHTML='<div class="empty">no keys yet</div>';return}
-  for(const k of arr){
-    const div=document.createElement("div");
-    div.className="key-item";
-    div.innerHTML=`
+const renderKeys = () => {
+  const box = $("keysList");
+  const arr = Object.values(KEYS).sort((a, b) => b.created - a.created);
+  $("keyCount").textContent = arr.length;
+  $("statKeys").textContent = arr.length;
+  box.innerHTML = "";
+  if (!arr.length) {
+    box.innerHTML = '<div class="empty">no keys yet</div>';
+    return;
+  }
+  for (const k of arr) {
+    const div = document.createElement("div");
+    div.className = "key-item";
+    div.innerHTML = `
       <div style="flex:1;min-width:180px">
         <div class="label">${esc(k.label)}</div>
         <div class="key-val">${esc(k.id)}</div>
         <div class="mono" style="color:#8899aa;margin-top:4px">
-          created ${new Date(k.created).toLocaleString()}${k.lastSeen?" · last seen "+new Date(k.lastSeen).toLocaleString():""}
-          ${k.stats?" · ✓ "+(k.stats.solves||0)+" · 📚 "+(k.stats.learns||0):""}
+          created ${new Date(k.created).toLocaleString()}${k.lastSeen ? " · last seen " + new Date(k.lastSeen).toLocaleString() : ""}
         </div>
       </div>
-      <span class="status ${k.active?"active":"revoked"}">${k.active?"ACTIVE":"REVOKED"}</span>
+      <span class="status ${k.active ? "active" : "revoked"}">${k.active ? "ACTIVE" : "REVOKED"}</span>
       <div class="key-actions">
         <button class="ghost" onclick="copyKey('${k.id}')">COPY</button>
-        <button class="ghost" onclick="toggleKey('${k.id}')">${k.active?"OFF":"ON"}</button>
+        <button class="ghost" onclick="toggleKey('${k.id}')">${k.active ? "OFF" : "ON"}</button>
         <button class="danger" onclick="deleteKey('${k.id}')">DEL</button>
       </div>`;
     box.appendChild(div);
   }
 };
 
-const loadVocab=async()=>{
-  const r=await api("/api/admin/vocab/all");
-  if(!r.ok)return;
-  VOCAB=r.vocab||{};
+const loadVocab = async () => {
+  const r = await api("/api/vocab");
+  if (!r.ok) return;
+  VOCAB = r.vocab || {};
   renderVocab();
 };
 
-const renderVocab=()=>{
-  const box=$("vocabList");
-  const search=$("vSearch").value.toLowerCase().trim();
-  const entries=Object.entries(VOCAB).filter(([en,d])=>{
-    if(!search)return true;
-    return en.includes(search)||(d.vi||"").toLowerCase().includes(search);
+const renderVocab = () => {
+  const box = $("vocabList");
+  const search = $("vSearch").value.toLowerCase().trim();
+  const entries = Object.entries(VOCAB).filter(([en, d]) => {
+    if (!search) return true;
+    return en.includes(search) || (d.vi || "").toLowerCase().includes(search);
   });
-  $("vCount").textContent=Object.keys(VOCAB).length;
-  box.innerHTML="";
-  if(!entries.length){box.innerHTML='<div class="empty">no entries</div>';return}
-  for(const [en,d] of entries.slice(0,500)){
-    const div=document.createElement("div");
-    div.className="vocab-item";
-    div.innerHTML=`
+  $("vCount").textContent = Object.keys(VOCAB).length;
+  $("statVocab").textContent = Object.keys(VOCAB).length;
+  box.innerHTML = "";
+  if (!entries.length) {
+    box.innerHTML = '<div class="empty">no entries</div>';
+    return;
+  }
+  for (const [en, d] of entries.slice(0, 500)) {
+    const div = document.createElement("div");
+    div.className = "vocab-item";
+    div.innerHTML = `
       <span class="en">${esc(en)}</span>
-      <span class="vi">${esc(d.vi||"")}</span>
-      <span class="src">${esc(d.source||"")}</span>
-      <button class="del" onclick="delVocab('${esc(en).replace(/'/g,"\\'")}')">×</button>`;
+      <span class="vi">${esc(d.vi || "")}</span>
+      <span class="src">${esc(d.source || "")}</span>
+      <button class="del" onclick="delVocab('${esc(en).replace(/'/g, "\\'")}')">×</button>`;
     box.appendChild(div);
   }
-  if(entries.length>500){
-    const more=document.createElement("div");
-    more.className="empty";
-    more.textContent=`+${entries.length-500} more (narrow search)`;
+  if (entries.length > 500) {
+    const more = document.createElement("div");
+    more.className = "empty";
+    more.textContent = `+${entries.length - 500} more (narrow search)`;
     box.appendChild(more);
   }
 };
 
-const loadStats=async()=>{
-  const r=await api("/api/admin/stats");
-  if(!r.ok)return;
-  const s=r.stats||{};
-  $("statsBox").innerHTML=`
-    <div class="stat"><div class="num">${s.solves||0}</div><div class="lbl">solves</div></div>
-    <div class="stat"><div class="num">${s.learns||0}</div><div class="lbl">learns</div></div>
-    <div class="stat"><div class="num">${s.keysCreated||0}</div><div class="lbl">keys</div></div>
-    <div class="stat"><div class="num">${r.activeSessions||0}</div><div class="lbl">live sessions</div></div>
-    <div class="stat"><div class="num">${r.vocabCount||0}</div><div class="lbl">vocab total</div></div>
-    <div class="stat"><div class="num">${s.requests||0}</div><div class="lbl">requests</div></div>
-    <div class="stat"><div class="num">${Math.floor((r.uptime||0)/60)}m</div><div class="lbl">uptime</div></div>`;
+const loadStats = async () => {
+  // đơn giản: lấy từ keys + vocab đã load
+  $("statSolves").textContent = Object.values(KEYS).reduce((a, k) => a + ((k.stats?.solves) || 0), 0);
+  $("statLearns").textContent = Object.values(KEYS).reduce((a, k) => a + ((k.stats?.learns) || 0), 0);
 };
 
-const loadLog=async()=>{
-  const r=await api("/api/admin/log");
-  if(!r.ok)return;
-  $("log").innerHTML="";
-  for(const e of (r.log||[]))addLog(e,false);
-  $("log").scrollTop=$("log").scrollHeight;
-};
-
-const addLog=(e,scroll=true)=>{
-  const box=$("log");
-  const div=document.createElement("div");
-  div.className=e.type||"info";
-  const time=new Date(e.t).toLocaleTimeString();
-  div.textContent=`[${time}] ${e.msg}`;
-  box.appendChild(div);
-  while(box.children.length>300)box.removeChild(box.firstChild);
-  if(scroll)box.scrollTop=box.scrollHeight;
-};
-
-// ═══════════ ACTIONS ═══════════
-const createKey=async()=>{
-  const label=$("newKeyLabel").value.trim()||"untitled";
-  const r=await api("/api/admin/keys",{method:"POST",body:{label}});
-  if(r.ok){
-    $("newKeyLabel").value="";
+// ═══════════════════════════════════════════
+// ACTIONS
+// ═══════════════════════════════════════════
+const createKey = async () => {
+  const label = $("newKeyLabel").value.trim() || "untitled";
+  const r = await api("/api/keys", { method: "POST", body: { label } });
+  if (r.ok) {
+    $("newKeyLabel").value = "";
     loadKeys();
-    await navigator.clipboard.writeText(r.key).catch(()=>{});
-    toast("key copied: "+r.key.slice(0,20)+"…","success");
-    alert("NEW KEY (đã copy):\n\n"+r.key+"\n\nLưu lại ngay!");
-  } else toast(r.error||"failed","error");
+    await navigator.clipboard.writeText(r.key).catch(() => {});
+    toast("key copied: " + r.key.slice(0, 20) + "…", "success");
+    setTimeout(() => alert("NEW KEY (đã copy):\n\n" + r.key + "\n\nLưu lại ngay!"), 100);
+  } else toast(r.error || "failed", "error");
 };
 
-const copyKey=k=>{navigator.clipboard.writeText(k).then(()=>toast("copied","success")).catch(()=>toast("copy failed","error"))};
-
-const toggleKey=async k=>{
-  const r=await api(`/api/admin/keys/${k}/toggle`,{method:"POST"});
-  if(r.ok){loadKeys();toast(r.active?"activated":"deactivated",r.active?"success":"warn")}
+const copyKey = k => {
+  navigator.clipboard.writeText(k).then(() => toast("copied", "success")).catch(() => toast("copy failed", "error"));
 };
 
-const deleteKey=async k=>{
-  if(!confirm("Revoke key này?\n"+k))return;
-  await api(`/api/admin/keys/${k}`,{method:"DELETE"});
+const toggleKey = async k => {
+  const r = await api("/api/keys?key=" + encodeURIComponent(k) + "&toggle=1", { method: "PATCH" });
+  if (r.ok) { loadKeys(); toast(r.active ? "activated" : "deactivated", r.active ? "success" : "warn") }
+};
+
+const deleteKey = async k => {
+  if (!confirm("Revoke key này?\n" + k)) return;
+  await api("/api/keys?key=" + encodeURIComponent(k), { method: "DELETE" });
   loadKeys();
-  toast("revoked","warn");
+  toast("revoked", "warn");
 };
 
-const addVocab=async()=>{
-  const en=$("vEn").value.trim();
-  const vi=$("vVi").value.trim();
-  if(!en||!vi){toast("need both fields","error");return}
-  const r=await api("/api/admin/vocab",{method:"POST",body:{en,vi,source:"manual"}});
-  if(r.ok){
-    $("vEn").value="";$("vVi").value="";
+const addVocab = async () => {
+  const en = $("vEn").value.trim();
+  const vi = $("vVi").value.trim();
+  if (!en || !vi) { toast("need both fields", "error"); return }
+  const r = await api("/api/vocab", { method: "POST", body: { en, vi, source: "manual" } });
+  if (r.ok) {
+    $("vEn").value = ""; $("vVi").value = "";
     loadVocab();
-    toast("added: "+en,"success");
-  } else toast(r.error||"failed","error");
+    toast("added: " + en, "success");
+  } else toast(r.error || "failed", "error");
 };
 
-const delVocab=async en=>{
-  await api(`/api/admin/vocab/${encodeURIComponent(en)}`,{method:"DELETE"});
+const delVocab = async en => {
+  await api("/api/vocab?en=" + encodeURIComponent(en), { method: "DELETE" });
   loadVocab();
 };
 
-const bulkImport=async()=>{
-  const text=$("bulkText").value;
-  const pairs=[];
-  for(const line of text.split(/\r?\n/)){
-    const t=line.trim();
-    if(!t||t.startsWith("#"))continue;
-    let en,vi;
-    if(t.includes("=")){[en,vi]=t.split("=").map(x=>x.trim())}
-    else if(t.includes("\t")){[en,vi]=t.split("\t").map(x=>x.trim())}
-    else if(t.includes("|")){[en,vi]=t.split("|").map(x=>x.trim())}
-    else if(t.includes(",")){const parts=t.split(",");if(parts.length>=2){en=parts[0].trim();vi=parts.slice(1).join(",").trim()}}
-    if(en&&vi)pairs.push({en,vi,source:"bulk"});
+const bulkImport = async () => {
+  const text = $("bulkText").value;
+  const pairs = [];
+  for (const line of text.split(/\r?\n/)) {
+    const t = line.trim();
+    if (!t || t.startsWith("#")) continue;
+    let en, vi;
+    if (t.includes("=")) { [en, vi] = t.split("=").map(x => x.trim()) }
+    else if (t.includes("\t")) { [en, vi] = t.split("\t").map(x => x.trim()) }
+    else if (t.includes("|")) { [en, vi] = t.split("|").map(x => x.trim()) }
+    else if (t.includes(",")) { const p = t.split(","); if (p.length >= 2) { en = p[0].trim(); vi = p.slice(1).join(",").trim() } }
+    if (en && vi) pairs.push({ en, vi, source: "bulk" });
   }
-  if(!pairs.length){toast("no valid lines","error");return}
-  const r=await api("/api/admin/vocab/bulk",{method:"POST",body:{pairs}});
-  if(r.ok){
-    toast(`added ${r.added}${r.skipped?" · skipped "+r.skipped:""}`,"success");
-    $("bulkText").value="";
-    loadVocab();
-  } else toast(r.error||"failed","error");
-};
-
-const exportData=async()=>{
-  const r=await api("/api/admin/export",{method:"POST"});
-  if(!r.ok){toast("export failed","error");return}
-  const blob=new Blob([JSON.stringify(r.data,null,2)],{type:"application/json"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download=`ttan-export-${Date.now()}.json`;
-  a.click();
-  toast("exported","success");
-};
-
-const exportCSV=()=>{
-  const rows=["en,vi,source"];
-  for(const [en,d] of Object.entries(VOCAB)){
-    rows.push(`"${en.replace(/"/g,'""')}","${(d.vi||"").replace(/"/g,'""')}","${(d.source||"").replace(/"/g,'""')}"`);
+  if (!pairs.length) { toast("no valid lines", "error"); return }
+  // gửi từng pair (vì Vercel function đơn giản)
+  let ok = 0;
+  for (const p of pairs) {
+    const r = await api("/api/vocab", { method: "POST", body: p });
+    if (r.ok) ok++;
   }
-  const blob=new Blob([rows.join("\n")],{type:"text/csv"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download=`ttan-vocab-${Date.now()}.csv`;
-  a.click();
-  toast("exported csv","success");
+  toast(`added ${ok}/${pairs.length}`, ok === pairs.length ? "success" : "warn");
+  $("bulkText").value = "";
+  loadVocab();
 };
 
-const importData=async merge=>{
-  const text=$("importText").value.trim();
-  if(!text){toast("paste JSON first","error");return}
+const exportData = async () => {
+  const data = { vocab: VOCAB, keys: KEYS, exportedAt: Date.now() };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `ttan-export-${Date.now()}.json`;
+  a.click();
+  toast("exported", "success");
+};
+
+const exportCSV = () => {
+  const rows = ["en,vi,source"];
+  for (const [en, d] of Object.entries(VOCAB)) {
+    rows.push(`"${en.replace(/"/g, '""')}","${(d.vi || "").replace(/"/g, '""')}","${(d.source || "").replace(/"/g, '""')}"`);
+  }
+  const blob = new Blob([rows.join("\n")], { type: "text/csv" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `ttan-vocab-${Date.now()}.csv`;
+  a.click();
+  toast("exported csv", "success");
+};
+
+const importData = async () => {
+  const text = $("importText").value.trim();
+  if (!text) { toast("paste JSON first", "error"); return }
   let data;
-  try{data=JSON.parse(text)}catch(e){toast("invalid JSON","error");return}
-  const payload=data.data||data;
-  if(!payload.vocab&&!payload.pairs){toast("no vocab/pairs in JSON","error");return}
-  if(!merge&&!confirm("REPLACE mode sẽ không xoá entries hiện có, chỉ ghi đè trùng. tiếp tục?"))return;
-  const r=await api("/api/admin/import",{method:"POST",body:{...payload,merge}});
-  if(r.ok){toast(`imported ${r.imported}`,"success");$("importText").value="";loadVocab()}
-  else toast(r.error||"failed","error");
-};
-
-const clearVocab=async()=>{
-  if(!confirm("XOÁ TOÀN BỘ vocab? không thể hoàn tác!"))return;
-  if(!confirm("chắc chắn?"))return;
-  await api("/api/admin/import",{method:"POST",body:{vocab:{},pairs:[],merge:false}});
-  // manual: delete each
-  const all=Object.keys(VOCAB);
-  for(const en of all)await api(`/api/admin/vocab/${encodeURIComponent(en)}`,{method:"DELETE"});
+  try { data = JSON.parse(text) } catch (e) { toast("invalid JSON", "error"); return }
+  const payload = data.data || data;
+  if (!payload.vocab) { toast("no vocab in JSON", "error"); return }
+  const entries = Object.entries(payload.vocab);
+  let ok = 0;
+  for (const [en, d] of entries) {
+    const r = await api("/api/vocab", { method: "POST", body: { en, vi: d.vi, source: d.source || "import" } });
+    if (r.ok) ok++;
+  }
+  toast(`imported ${ok}/${entries.length}`, "success");
+  $("importText").value = "";
   loadVocab();
-  toast("cleared","warn");
 };
 
-const revokeAll=async()=>{
-  if(!confirm("REVOKE tất cả keys đang active?"))return;
-  const active=Object.values(KEYS).filter(k=>k.active);
-  for(const k of active)await api(`/api/admin/keys/${k.id}/toggle`,{method:"POST"});
+const revokeAll = async () => {
+  if (!confirm("REVOKE tất cả keys đang active?")) return;
+  const active = Object.values(KEYS).filter(k => k.active);
+  for (const k of active) await api("/api/keys?key=" + encodeURIComponent(k.id), { method: "DELETE" });
   loadKeys();
-  toast("revoked "+active.length,"warn");
+  toast("revoked " + active.length, "warn");
 };
 
-// ═══════════ TABS ═══════════
-document.querySelectorAll(".tab button").forEach(b=>{
-  b.onclick=()=>{
-    const name=b.dataset.tab;
-    document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));
-    document.querySelectorAll(".tab button").forEach(x=>x.classList.remove("active"));
-    $("tab-"+name).classList.add("active");
+// ═══════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════
+document.querySelectorAll(".tab button[data-tab]").forEach(b => {
+  b.onclick = () => {
+    const name = b.dataset.tab;
+    document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+    document.querySelectorAll(".tab button").forEach(x => x.classList.remove("active"));
+    $("tab-" + name).classList.add("active");
     b.classList.add("active");
-    if(name==="vocab")loadVocab();
-    if(name==="stats")loadStats();
-    if(name==="log")loadLog();
+    if (name === "vocab") loadVocab();
+    if (name === "stats") loadStats();
   };
 });
 
-// ═══════════ BOOT ═══════════
-$("secret").addEventListener("keydown",e=>{if(e.key==="Enter")doLogin()});
-autoLogin();
+// ═══════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════
+$("secret").addEventListener("keydown", e => { if (e.key === "Enter") doLogin() });
+
+// auto-login
+(async () => {
+  if (!SECRET) return;
+  const r = await fetch("/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ secret: SECRET })
+  }).then(x => x.json()).catch(() => ({ ok: false }));
+  if (r.ok) enterApp();
+  else { SECRET = ""; sessionStorage.removeItem("ttan_secret") }
+})();
 </script>
 </body>
 </html>
