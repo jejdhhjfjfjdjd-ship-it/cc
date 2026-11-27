@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Công thức Toán lớp 8 và 9</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&display=swap">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --paper:#fbfcff;--grid:#dfe7f5;--ink:#16213e;--soft:#55607a;--line:#1f3a8a;
+  --g8:#1f3a8a;--g9:#c2303b;--card:#ffffff;--hl:#fff3b0;--bar:#fbfcff;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#10162a;--grid:#1d2744;--ink:#e8ecf8;--soft:#9aa5c4;--line:#7f9cf5;
+    --g8:#7f9cf5;--g9:#ff7b86;--card:#161e38;--hl:#5a4d10;--bar:#10162a;color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10162a;--grid:#1d2744;--ink:#e8ecf8;--soft:#9aa5c4;--line:#7f9cf5;
+  --g8:#7f9cf5;--g9:#ff7b86;--card:#161e38;--hl:#5a4d10;--bar:#10162a;color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 130px)}
+body{
+  margin:0;font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color:var(--ink);background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;line-height:1.55;
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bar);z-index:20}
+header{padding:28px 18px 8px;max-width:980px;margin:0 auto}
+h1{font-size:clamp(26px,6vw,44px);line-height:1.1;margin:0 0 6px;font-weight:800;letter-spacing:-.02em}
+header p{margin:0;color:var(--soft);max-width:60ch}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bar);border-bottom:2px solid var(--line);margin-top:16px}
+.bar-in{max-width:980px;margin:0 auto;padding:10px 18px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tabs{display:flex;gap:6px}
+.tab{font:inherit;font-weight:700;padding:7px 14px;border:2px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;border-radius:6px}
+.tab[aria-pressed="true"]{background:var(--line);color:var(--paper)}
+.tab:focus-visible,#q:focus-visible,.chip:focus-visible{outline:3px solid var(--g9);outline-offset:2px}
+#q{flex:1 1 180px;min-width:0;font:inherit;padding:7px 12px;border:2px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink)}
+.chips{max-width:980px;margin:0 auto;padding:0 18px 10px;display:flex;gap:6px;overflow-x:auto}
+.chip{flex:none;font-size:13px;text-decoration:none;color:var(--ink);border:1.5px solid var(--soft);padding:3px 10px;border-radius:99px;white-space:nowrap}
+.chip.g8{border-color:var(--g8)}.chip.g9{border-color:var(--g9)}
+main{max-width:980px;margin:0 auto;padding:18px 18px 60px;display:grid;gap:22px}
+h2.grade{margin:10px 0 0;font-size:22px;font-weight:800;display:flex;align-items:center;gap:10px}
+h2.grade::after{content:"";flex:1;height:3px;background:currentColor}
+h2.grade.g8{color:var(--g8)}h2.grade.g9{color:var(--g9)}
+section{background:var(--card);border:2px solid var(--c);border-radius:8px;overflow:hidden;box-shadow:4px 4px 0 var(--c)}
+section.g8{--c:var(--g8)}section.g9{--c:var(--g9)}
+section h3{margin:0;padding:10px 14px;font-size:17px;font-weight:700;background:var(--c);color:var(--paper)}
+.row{display:grid;grid-template-columns:minmax(110px,30%) 1fr;border-top:1.5px solid var(--grid)}
+.row:first-of-type{border-top:0}
+.row>div{padding:9px 14px}
+.lab{color:var(--soft);font-size:14px;border-right:2px solid var(--c);background:color-mix(in srgb,var(--c) 6%,transparent)}
+.f{font-weight:500;font-size:16px;overflow-wrap:anywhere}
+.row.key .f{font-weight:800}
+.row.key .lab::before{content:"★ ";color:var(--g9)}
+mark{background:var(--hl);color:inherit;padding:0 2px}
+.empty{text-align:center;color:var(--soft);padding:30px}
+footer{max-width:980px;margin:0 auto;padding:0 18px 40px;color:var(--soft);font-size:13px}
+@media (max-width:560px){.row{grid-template-columns:1fr}.lab{border-right:0;border-bottom:1.5px dashed var(--c);padding-bottom:4px}.row>div{padding:7px 14px}}
+@media print{.bar,.chips,body::before{display:none}body{background:#fff;color:#000}section{box-shadow:none;break-inside:avoid}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Công thức Toán lớp 8 và 9</h1>
+  <p>Ôn thi học kỳ 1, học kỳ 2 và tuyển sinh lớp 10. Dòng có dấu ★ là công thức dễ gặp nhất trong đề.</p>
+</header>
+<div class="bar"><div class="bar-in">
+  <div class="tabs" role="group" aria-label="Chọn lớp">
+    <button class="tab" data-g="all" aria-pressed="true">Tất cả</button>
+    <button class="tab" data-g="8" aria-pressed="false">Lớp 8</button>
+    <button class="tab" data-g="9" aria-pressed="false">Lớp 9</button>
+  </div>
+  <input id="q" type="search" placeholder="Tìm công thức (vd: Vi-ét, nón, sin)" aria-label="Tìm công thức">
+</div><nav class="chips" id="chips" aria-label="Mục lục"></nav></div>
+<main id="out"></main>
+<footer>Điều kiện: A, B ≥ 0 khi có căn; mẫu số ≠ 0. Luôn kiểm tra điều kiện trước khi biến đổi.</footer>
+
+<script>
+var D=[
+[8,"Hằng đẳng thức",[
+["Bình phương một tổng","(a + b)² = a² + 2ab + b²",1],
+["Bình phương một hiệu","(a − b)² = a² − 2ab + b²",1],
+["Hiệu hai bình phương","a² − b² = (a − b)(a + b)",1],
+["Lập phương một tổng","(a + b)³ = a³ + 3a²b + 3ab² + b³"],
+["Lập phương một hiệu","(a − b)³ = a³ − 3a²b + 3ab² − b³"],
+["Tổng hai lập phương","a³ + b³ = (a + b)(a² − ab + b²)"],
+["Hiệu hai lập phương","a³ − b³ = (a − b)(a² + ab + b²)"]]],
+[8,"Phân thức và phương trình",[
+["Cộng, trừ cùng mẫu","a/b ± c/b = (a ± c)/b"],
+["Nhân","a/b · c/d = ac/bd"],
+["Chia","a/b : c/d = ad/bc"],
+["PT bậc nhất","ax + b = 0 ⇒ x = −b/a (a ≠ 0)",1]]],
+[8,"Diện tích hình phẳng",[
+["Chữ nhật, vuông","S = a·b; S = a²"],
+["Tam giác","S = ½ · a · h",1],
+["Hình thang","S = ½ (a + b) · h",1],
+["Bình hành","S = a · h"],
+["Hình thoi","S = ½ · d₁ · d₂"]]],
+[8,"Talet, đồng dạng, Pythagoras",[
+["Talet (DE ∥ BC)","AD/AB = AE/AC = DE/BC",1],
+["Đồng dạng","Tỉ số diện tích = (tỉ số đồng dạng)²"],
+["Pythagoras","a² + b² = c² (c là cạnh huyền)",1]]],
+[8,"Hình không gian",[
+["Lăng trụ đứng","V = S đáy · h; Sxq = chu vi đáy · h"],
+["Chóp đều","V = ⅓ · S đáy · h; Sxq = nửa chu vi đáy · trung đoạn"]]],
+[8,"Phân tích đa thức thành nhân tử",[
+["Đặt nhân tử chung","AB + AC = A(B + C)",1],
+["Nhóm hạng tử","ax + ay + bx + by = (a + b)(x + y)",1],
+["Dùng hằng đẳng thức","Nhận dạng (a ± b)², a² − b², a³ ± b³"],
+["Tách hạng tử","ax² + bx + c = a(x − x₁)(x − x₂) với x₁, x₂ là nghiệm"]]],
+[8,"Phương trình, bất phương trình, bài toán thực tế",[
+["Phương trình tích","A·B = 0 ⇔ A = 0 hoặc B = 0",1],
+["Phương trình chứa ẩn ở mẫu","Tìm ĐKXĐ (mẫu ≠ 0) → quy đồng → giải → đối chiếu ĐKXĐ",1],
+["Bất phương trình bậc nhất","ax + b > 0; nhân hoặc chia số âm thì đổi chiều"],
+["Chuyển động","s = v · t; xuôi dòng v + vnước; ngược dòng v − vnước",1],
+["Công việc","Năng suất = 1/thời gian; (năng suất chung) = tổng năng suất riêng"],
+["Xác suất","P(A) = số kết quả thuận lợi / tổng số kết quả có thể"]]],
+[8,"Tứ giác, đường trung bình, đồng dạng",[
+["Tổng góc tứ giác","Bằng 360°"],
+["Hình bình hành","Các cạnh đối song song (hoặc bằng nhau); hai đường chéo cắt nhau tại trung điểm mỗi đường",1],
+["Hình chữ nhật","Bình hành có 1 góc vuông; hai đường chéo bằng nhau"],
+["Hình thoi","Bình hành có hai cạnh kề bằng nhau; hai đường chéo vuông góc"],
+["Hình vuông","Vừa là hình chữ nhật, vừa là hình thoi"],
+["Đường trung bình tam giác","MN ∥ BC và MN = ½ BC",1],
+["Đường trung bình hình thang","MN ∥ đáy và MN = ½ (a + b)"],
+["Đường phân giác trong","DB/DC = AB/AC (AD là phân giác góc A)",1],
+["Ba trường hợp đồng dạng","c.c.c; c.g.c; g.g",1]]],
+
+[9,"Căn thức",[
+["Căn của bình phương","√(A²) = |A|",1],
+["Căn của tích, thương","√(AB) = √A·√B; √(A/B) = √A/√B (A ≥ 0, B > 0)"],
+["Đưa thừa số vào, ra","A√B = √(A²B) (A ≥ 0, B ≥ 0)"],
+["Trục căn một số hạng","1/√a = √a/a"],
+["Trục căn hai số hạng","1/(√a ± √b) = (√a ∓ √b)/(a − b)",1],
+["Căn bậc ba","∛(a³) = a"]]],
+[9,"Hàm số y = ax + b",[
+["Song song","a = a′ và b ≠ b′",1],
+["Vuông góc","a · a′ = −1",1],
+["Hệ số góc","a = tan α (α là góc với trục Ox)"],
+["Hệ hai phương trình","Giải bằng phương pháp thế hoặc cộng đại số"]]],
+[9,"Phương trình bậc hai ax² + bx + c = 0",[
+["Biệt thức","Δ = b² − 4ac",1],
+["Δ > 0","x₁,₂ = (−b ± √Δ) / 2a",1],
+["Δ = 0","x₁ = x₂ = −b / 2a"],
+["Δ < 0","Vô nghiệm"],
+["Công thức thu gọn (b = 2b′)","Δ′ = b′² − ac; x = (−b′ ± √Δ′) / a"],
+["Nhẩm nghiệm 1","a + b + c = 0 ⇒ x₁ = 1, x₂ = c/a"],
+["Nhẩm nghiệm 2","a − b + c = 0 ⇒ x₁ = −1, x₂ = −c/a"]]],
+[9,"Định lý Vi-ét",[
+["Tổng và tích","S = x₁ + x₂ = −b/a; P = x₁x₂ = c/a",1],
+["Tìm hai số biết S, P","Là nghiệm của X² − SX + P = 0"],
+["Tổng bình phương","x₁² + x₂² = S² − 2P",1],
+["Bình phương hiệu","(x₁ − x₂)² = S² − 4P"],
+["Tổng lập phương","x₁³ + x₂³ = S³ − 3SP"]]],
+[9,"Parabol y = ax²",[
+["Giao với y = mx + n","Giải phương trình hoành độ: ax² = mx + n",1],
+["Số giao điểm","Δ > 0: 2 điểm; Δ = 0: tiếp xúc; Δ < 0: không cắt"]]],
+[9,"Hệ thức lượng trong tam giác vuông (cao AH)",[
+["Cạnh góc vuông","AB² = BH · BC; AC² = CH · BC",1],
+["Đường cao","AH² = BH · CH",1],
+["Tích cạnh và cao","AB · AC = AH · BC"],
+["Nghịch đảo","1/AH² = 1/AB² + 1/AC²"]]],
+[9,"Tỉ số lượng giác",[
+["Định nghĩa","sin = đối/huyền; cos = kề/huyền; tan = đối/kề; cot = kề/đối",1],
+["Hệ thức cơ bản","sin²α + cos²α = 1; tan α · cot α = 1; tan α = sin α/cos α"],
+["Hai góc phụ nhau","α + β = 90° ⇒ sin α = cos β; tan α = cot β"],
+["Cạnh và góc","b = a·sin B = a·cos C = c·tan B = c·cot C"]]],
+[9,"Đường tròn",[
+["Chu vi, diện tích","C = 2πR; S = πR²",1],
+["Độ dài cung n°","l = πRn / 180"],
+["Diện tích quạt","S = πR²n / 360 = lR / 2"],
+["Góc ở tâm","= số đo cung bị chắn"],
+["Góc nội tiếp, góc tiếp tuyến–dây","= ½ số đo cung bị chắn",1],
+["Tứ giác nội tiếp","Tổng hai góc đối = 180°",1]]],
+[9,"Hình trụ, nón, cầu",[
+["Hình trụ","Sxq = 2πRh; Stp = 2πRh + 2πR²; V = πR²h",1],
+["Hình nón","Sxq = πRl; Stp = πRl + πR²; V = ⅓πR²h; l² = R² + h²",1],
+["Hình cầu","S = 4πR²; V = (4/3)πR³",1]]],
+[9,"Rút gọn biểu thức chứa căn",[
+["Các bước","Tìm ĐKXĐ → quy đồng, trục căn → rút gọn → kết luận",1],
+["Căn kép","√(A ± 2√B) = √m ± √n với m + n = A, m·n = B (m > n)"],
+["Bình phương tổng căn","(√a ± √b)² = a + b ± 2√(ab)"],
+["P nguyên","Biến đổi P = số + k/(√x ± m), tìm ước của k"],
+["P = m có nghiệm","Đưa về phương trình ẩn √x, điều kiện √x ≥ 0"]]],
+[9,"Phương trình quy về bậc hai",[
+["Trùng phương","ax⁴ + bx² + c = 0: đặt t = x² (t ≥ 0)",1],
+["Chứa căn √A = √B","A = B, với A ≥ 0 (hoặc B ≥ 0)"],
+["Chứa căn √A = B","B ≥ 0 và A = B²"],
+["Chứa ẩn ở mẫu","Tìm ĐKXĐ, quy đồng, giải, loại nghiệm không thỏa"]]],
+[9,"Điều kiện nghiệm phương trình bậc hai",[
+["Hai nghiệm phân biệt","Δ > 0 (hoặc Δ′ > 0)",1],
+["Có nghiệm","Δ ≥ 0"],
+["Hai nghiệm trái dấu","ac < 0 (P < 0)",1],
+["Hai nghiệm cùng dấu","Δ ≥ 0 và P > 0"],
+["Hai nghiệm dương","Δ ≥ 0, S > 0, P > 0"],
+["Hai nghiệm âm","Δ ≥ 0, S < 0, P > 0"],
+["Có một nghiệm bằng x₀","Thay x = x₀ vào phương trình, tìm tham số"]]],
+[9,"Hàm số, hệ phương trình, tọa độ",[
+["Đồng biến, nghịch biến","y = ax + b: a > 0 đồng biến; a < 0 nghịch biến"],
+["Giao với trục","Ox: cho y = 0; Oy: cho x = 0"],
+["Đường thẳng qua 2 điểm","Thay tọa độ hai điểm vào y = ax + b, giải hệ tìm a, b",1],
+["Khoảng cách hai điểm","AB = √[(xB − xA)² + (yB − yA)²]"],
+["Trung điểm","M((xA + xB)/2; (yA + yB)/2)"],
+["Số nghiệm của hệ","a/a′ ≠ b/b′: 1 nghiệm; a/a′ = b/b′ = c/c′: vô số; a/a′ = b/b′ ≠ c/c′: vô nghiệm"],
+["Parabol y = ax²","a > 0: đỉnh O là điểm thấp nhất; a < 0: đỉnh O là điểm cao nhất"]]],
+[9,"Bất đẳng thức, GTLN và GTNN",[
+["Cô-si 2 số","a + b ≥ 2√(ab) (a, b ≥ 0); dấu = khi a = b",1],
+["Bình phương","a² + b² ≥ 2ab; (a + b)² ≥ 4ab",1],
+["Nghịch đảo","1/a + 1/b ≥ 4/(a + b) (a, b > 0)"],
+["Bunyakovsky","(a² + b²)(c² + d²) ≥ (ac + bd)²"],
+["Giá trị tuyệt đối","|a| + |b| ≥ |a + b|"],
+["Tam thức bậc hai","y = ax² + bx + c đạt cực trị tại x = −b/2a; a > 0: GTNN = −Δ/4a; a < 0: GTLN = −Δ/4a",1]]],
+[9,"Giải bài toán bằng cách lập phương trình, hệ phương trình",[
+["Chuyển động","s = v·t; xuôi dòng v + vn; ngược dòng v − vn",1],
+["Làm chung, làm riêng","1/x + 1/y = 1/t (x, y, t là thời gian hoàn thành)",1],
+["Số có hai chữ số","ab = 10a + b (0 < a ≤ 9, 0 ≤ b ≤ 9)"],
+["Hình chữ nhật","Chu vi = 2(a + b); diện tích = a·b"],
+["Phần trăm","Tăng p%: × (1 + p/100); giảm p%: × (1 − p/100)"],
+["Bước làm","Chọn ẩn, đặt điều kiện → lập phương trình → giải → đối chiếu điều kiện → kết luận"]]],
+[9,"Đường tròn nâng cao",[
+["Đường thẳng và đường tròn","d > R: không giao; d = R: tiếp xúc; d < R: cắt nhau",1],
+["Hai đường tròn","d > R + r: ngoài nhau; d = R + r: tiếp xúc ngoài; |R − r| < d < R + r: cắt nhau; d = |R − r|: tiếp xúc trong"],
+["Tính chất tiếp tuyến","Vuông góc với bán kính tại tiếp điểm",1],
+["Hai tiếp tuyến cắt nhau","MA = MB; MO là phân giác góc AMB"],
+["Góc có đỉnh bên trong","= ½ (sđ cung bị chắn + sđ cung đối)"],
+["Góc có đỉnh bên ngoài","= ½ (sđ cung lớn − sđ cung nhỏ)"],
+["Dấu hiệu tứ giác nội tiếp","Tổng hai góc đối = 180°; góc ngoài = góc trong đối; hai đỉnh cùng nhìn một cạnh dưới hai góc bằng nhau",1],
+["Đường kính, dây","Đường kính vuông góc dây thì đi qua trung điểm dây; góc nội tiếp chắn nửa đường tròn = 90°",1],
+["Tam giác đều cạnh a","R = a√3/3; r = a√3/6; S = a²√3/4"]]],
+[9,"Thống kê và xác suất",[
+["Xác suất","P(A) = m/n (m: kết quả thuận lợi, n: tổng kết quả)",1],
+["Tần số tương đối","f = n₁/N (n₁: tần số, N: tổng số)"],
+["Giá trị xác suất","0 ≤ P(A) ≤ 1; P(không xảy ra A) = 1 − P(A)"]]]
+];
+var grade="all",term="",out=document.getElementById("out"),chips=document.getElementById("chips");
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function hi(s){
+  s=esc(s);if(!term)return s;
+  var i=s.toLowerCase().indexOf(term);
+  return i<0?s:s.slice(0,i)+"<mark>"+s.slice(i,i+term.length)+"</mark>"+s.slice(i+term.length);
+}
+function render(){
+  var h="",c="",last=0,n=0;
+  D.forEach(function(s,i){
+    if(grade!=="all"&&String(s[0])!==grade)return;
+    var rows=s[2].filter(function(r){return !term||(s[1]+" "+r[0]+" "+r[1]).toLowerCase().indexOf(term)>-1});
+    if(!rows.length)return;
+    n++;
+    if(s[0]!==last){last=s[0];h+='<h2 class="grade g'+s[0]+'">Lớp '+s[0]+'</h2>'}
+    h+='<section id="s'+i+'" class="g'+s[0]+'"><h3>'+esc(s[1])+'</h3>';
+    rows.forEach(function(r){
+      h+='<div class="row'+(r[2]?' key':'')+'"><div class="lab">'+hi(r[0])+'</div><div class="f">'+hi(r[1])+'</div></div>';
+    });
+    h+='</section>';
+    c+='<a class="chip g'+s[0]+'" href="#s'+i+'">'+esc(s[1].split(" (")[0].split(" ax")[0])+'</a>';
+  });
+  out.innerHTML=h||'<p class="empty">Không tìm thấy. Thử từ khóa ngắn hơn.</p>';
+  chips.innerHTML=c;
+}
+document.querySelectorAll(".tab").forEach(function(b){
+  b.addEventListener("click",function(){
+    grade=b.dataset.g;
+    document.querySelectorAll(".tab").forEach(function(x){x.setAttribute("aria-pressed",x===b)});
+    render();
+  });
+});
+document.getElementById("q").addEventListener("input",function(e){term=e.target.value.trim().toLowerCase();render()});
+render();
+</script>
+</body>
+</html>
