@@ -64,23 +64,52 @@ mark{background:var(--hl);color:inherit;padding:0 2px}
 .empty{text-align:center;color:var(--soft);padding:30px}
 footer{max-width:980px;margin:0 auto;padding:0 18px 40px;color:var(--soft);font-size:13px}
 @media (max-width:560px){.row{grid-template-columns:1fr}.lab{border-right:0;border-bottom:1.5px dashed var(--c);padding-bottom:4px}.row>div{padding:7px 14px}}
-@media print{.bar,.chips,body::before{display:none}body{background:#fff;color:#000}section{box-shadow:none;break-inside:avoid}}
+[hidden]{display:none!important}
+.ex{border-top:2px solid var(--c)}
+.ex summary{cursor:pointer;padding:10px 14px;font-weight:700;color:var(--c);background:color-mix(in srgb,var(--c) 8%,transparent)}
+.exb{padding:6px 14px 12px}.exb ol{margin:6px 0;padding-left:22px}.exb p{margin:6px 0}
+.tip{padding:8px 10px;border-left:4px solid var(--g9);background:var(--hl)}
+.examwrap{max-width:980px;margin:0 auto;padding:18px 18px 60px}
+.pad{padding:14px}.pad ul{margin:6px 0;padding-left:20px}
+.exgrid{display:grid;grid-template-columns:1fr 310px;gap:18px;align-items:start}
+@media(max-width:760px){.exgrid{grid-template-columns:1fr}}
+.qt{font-size:19px;font-weight:700;margin:0 0 12px}
+.opt{display:block;width:100%;text-align:left;font:inherit;padding:10px 12px;margin:8px 0;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;cursor:pointer}
+.opt.sel{background:var(--line);color:var(--paper)}
+.btn{font:inherit;font-weight:700;padding:9px 16px;border:2px solid var(--line);background:var(--line);color:var(--paper);border-radius:6px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink)}.btn:disabled{opacity:.4;cursor:not-allowed}
+.opt:focus-visible,.btn:focus-visible,details summary:focus-visible{outline:3px solid var(--g9);outline-offset:2px}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:12px}
+.tm{float:right;font-variant-numeric:tabular-nums}
+.lg{list-style:none;margin:0;padding:0;max-height:280px;overflow:auto;font-size:13px}
+.lg li{padding:5px 0;border-top:1px dashed var(--grid)}.lg .st{color:var(--g9);font-weight:700}
+.mut{color:var(--soft)}.nosel{user-select:none;-webkit-user-select:none}
+.ck{display:flex;gap:8px;align-items:center;margin:12px 0}
+.ok{color:#2e9d57;font-weight:700}.bad{color:var(--g9);font-weight:700}
+.code{font-family:ui-monospace,Menlo,monospace;word-break:break-all;font-size:12px}
+.rv{padding:8px 0;border-top:1px dashed var(--grid)}
+.lk{position:fixed;inset:0;z-index:100;background:var(--paper);display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
+.lk h2{margin:0 0 8px}
+@media print{#exam,#lk{display:none!important}.bar,.chips,body::before{display:none}body{background:#fff;color:#000}section{box-shadow:none;break-inside:avoid}}
 </style>
 </head>
 <body>
 <header>
   <h1>Công thức Toán lớp 8 và 9</h1>
-  <p>Ôn thi học kỳ 1, học kỳ 2 và tuyển sinh lớp 10. Dòng có dấu ★ là công thức dễ gặp nhất trong đề.</p>
+  <p>Ôn thi học kỳ 1, học kỳ 2 và tuyển sinh lớp 10. Mỗi mục có ví dụ giải từng bước cho người mất gốc, có tab Làm bài thi để tự kiểm tra. Dòng ★ là công thức dễ gặp nhất.</p>
 </header>
 <div class="bar"><div class="bar-in">
   <div class="tabs" role="group" aria-label="Chọn lớp">
     <button class="tab" data-g="all" aria-pressed="true">Tất cả</button>
     <button class="tab" data-g="8" aria-pressed="false">Lớp 8</button>
     <button class="tab" data-g="9" aria-pressed="false">Lớp 9</button>
+    <button class="tab" data-g="exam" aria-pressed="false">Làm bài thi</button>
   </div>
   <input id="q" type="search" placeholder="Tìm công thức (vd: Vi-ét, nón, sin)" aria-label="Tìm công thức">
 </div><nav class="chips" id="chips" aria-label="Mục lục"></nav></div>
 <main id="out"></main>
+<div id="exam" class="examwrap" hidden></div>
+<div id="lk" class="lk" hidden></div>
 <footer>Điều kiện: A, B ≥ 0 khi có căn; mẫu số ≠ 0. Luôn kiểm tra điều kiện trước khi biến đổi.</footer>
 
 <script>
@@ -240,6 +269,22 @@ var D=[
 ["Tần số tương đối","f = n₁/N (n₁: tần số, N: tổng số)"],
 ["Giá trị xác suất","0 ≤ P(A) ≤ 1; P(không xảy ra A) = 1 − P(A)"]]]
 ];
+var EX={
+"Hằng đẳng thức":["Tính nhanh 99².",["Thấy 99 gần 100 nên viết 99 = 100 − 1.","Dùng (a − b)² = a² − 2ab + b² với a = 100, b = 1.","99² = 10000 − 200 + 1 = 9801."],"Số gần tròn chục, tròn trăm thì tách thành tổng hoặc hiệu rồi dùng hằng đẳng thức."],
+"Phân tích đa thức thành nhân tử":["Phân tích x² − 5x + 6.",["Cần hai số có tích bằng 6 và tổng bằng −5.","Hai số đó là −2 và −3.","Kết quả: (x − 2)(x − 3)."],"Thử theo thứ tự: nhân tử chung, hằng đẳng thức, nhóm hạng tử, tách hạng tử."],
+"Phương trình, bất phương trình, bài toán thực tế":["Giải 1/(x − 1) = 2.",["ĐKXĐ: x ≠ 1.","Nhân hai vế với (x − 1): 1 = 2(x − 1).","Giải ra x = 3/2, khác 1 nên thỏa ĐKXĐ."],"Có ẩn ở mẫu thì viết ĐKXĐ trước tiên, rồi mới giải."],
+"Tứ giác, đường trung bình, đồng dạng":["Tam giác ABC có M, N là trung điểm AB, AC; BC = 10 cm. Tính MN.",["MN nối hai trung điểm nên là đường trung bình.","MN = ½ BC = 5 cm."],"Thấy hai trung điểm của hai cạnh thì nghĩ ngay đến đường trung bình."],
+"Căn thức":["Rút gọn √12 + √27 − √3.",["Tách số chính phương: √12 = 2√3, √27 = 3√3.","Cộng trừ các căn giống nhau: 2√3 + 3√3 − √3.","Kết quả: 4√3."],"Tách số trong căn thành tích có một thừa số là số chính phương (4, 9, 16, 25...)."],
+"Phương trình bậc hai ax² + bx + c = 0":["Giải x² − 5x + 6 = 0.",["Xác định a = 1, b = −5, c = 6.","Δ = (−5)² − 4·1·6 = 1 > 0.","x = (5 ± 1)/2 nên x = 3 hoặc x = 2."],"Làm đúng thứ tự: tìm a, b, c, tính Δ, xét dấu Δ, rồi mới tính nghiệm."],
+"Định lý Vi-ét":["x₁, x₂ là nghiệm của x² − 7x + 10 = 0. Tính x₁² + x₂² mà không giải phương trình.",["S = −b/a = 7; P = c/a = 10.","x₁² + x₂² = S² − 2P = 49 − 20 = 29."],"Đề có từ khóa tổng, tích, không giải phương trình thì dùng Vi-ét."],
+"Hàm số, hệ phương trình, tọa độ":["Tìm đường thẳng y = ax + b đi qua A(1; 3) và B(2; 5).",["Thay A: a + b = 3. Thay B: 2a + b = 5.","Trừ hai phương trình: a = 2, suy ra b = 1.","Kết quả: y = 2x + 1."],"Đi qua điểm nào thì thay tọa độ điểm đó vào phương trình."],
+"Hệ thức lượng trong tam giác vuông (cao AH)":["Tam giác ABC vuông tại A, AB = 3, AC = 4. Tính AH.",["BC² = 9 + 16 = 25 nên BC = 5.","AB·AC = AH·BC nên AH = 12/5 = 2,4."],"Vẽ hình, ghi số liệu lên hình, rồi chọn hệ thức có chứa cạnh cần tìm."],
+"Tỉ số lượng giác":["Tam giác ABC vuông tại A, BC = 10, góc B = 30°. Tính AC.",["AC là cạnh đối của góc B, BC là cạnh huyền.","AC = BC · sin B = 10 · 0,5 = 5."],"Sin đi học (đối/huyền), cos không hư (kề/huyền), tan đoàn kết (đối/kề), cot kết đoàn (kề/đối)."],
+"Đường tròn":["Tính độ dài cung 60° của đường tròn bán kính 6.",["Dùng l = πRn/180.","l = π·6·60/180 = 2π ≈ 6,28."],"Cung n° chiếm n/360 của cả đường tròn."],
+"Hình trụ, nón, cầu":["Hình nón có R = 3, h = 4. Tính Sxq và V.",["Đường sinh l = √(3² + 4²) = 5.","Sxq = πRl = 15π.","V = ⅓πR²h = ⅓π·9·4 = 12π."],"Hình nón cần đường sinh l thì tính từ l² = R² + h² trước."],
+"Giải bài toán bằng cách lập phương trình, hệ phương trình":["Vòi A chảy đầy bể trong 6 giờ, vòi B trong 3 giờ. Mở cả hai thì mấy giờ đầy?",["Mỗi giờ A chảy 1/6 bể, B chảy 1/3 bể.","Cả hai: 1/6 + 1/3 = 1/2 bể mỗi giờ.","Thời gian đầy bể: 1 : 1/2 = 2 giờ."],"Đổi mọi thứ về phần việc làm được trong một đơn vị thời gian."],
+"Bất đẳng thức, GTLN và GTNN":["Tìm GTNN của y = x² − 4x + 5.",["Viết y = (x² − 4x + 4) + 1 = (x − 2)² + 1.","Vì (x − 2)² ≥ 0 nên y ≥ 1.","GTNN bằng 1 khi x = 2."],"Biến đổi về dạng bình phương cộng hằng số rồi dùng bình phương ≥ 0."]
+};
 var grade="all",term="",out=document.getElementById("out"),chips=document.getElementById("chips");
 function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
 function hi(s){
@@ -259,6 +304,8 @@ function render(){
     rows.forEach(function(r){
       h+='<div class="row'+(r[2]?' key':'')+'"><div class="lab">'+hi(r[0])+'</div><div class="f">'+hi(r[1])+'</div></div>';
     });
+    var e=EX[s[1]];
+    if(e)h+='<details class="ex"><summary>Ví dụ cho người mất gốc</summary><div class="exb"><p><b>Đề:</b> '+esc(e[0])+'</p><ol>'+e[1].map(function(t){return'<li>'+esc(t)+'</li>'}).join('')+'</ol><p class="tip"><b>Mẹo:</b> '+esc(e[2])+'</p></div></details>';
     h+='</section>';
     c+='<a class="chip g'+s[0]+'" href="#s'+i+'">'+esc(s[1].split(" (")[0].split(" ax")[0])+'</a>';
   });
@@ -267,13 +314,181 @@ function render(){
 }
 document.querySelectorAll(".tab").forEach(function(b){
   b.addEventListener("click",function(){
+    if(ex.on)return;
     grade=b.dataset.g;
     document.querySelectorAll(".tab").forEach(function(x){x.setAttribute("aria-pressed",x===b)});
-    render();
+    if(grade==="exam"){showExam(true);if(!$("exam").innerHTML)intro()}else{showExam(false);render()}
   });
 });
 document.getElementById("q").addEventListener("input",function(e){term=e.target.value.trim().toLowerCase();render()});
 render();
+var Q=[
+["Hằng đẳng thức","(a + b)² bằng:",["a² + b²","a² + 2ab + b²","a² − 2ab + b²","a² + ab + b²"],1,"Bình phương một tổng: a² + 2ab + b²."],
+["Hằng đẳng thức","Tính 51² − 49².",["100","200","400","2"],1,"a² − b² = (a − b)(a + b) = 2 · 100 = 200."],
+["Căn thức","√(A²) bằng:",["A","−A","|A|","A²"],2,"Căn bậc hai của bình phương luôn là giá trị tuyệt đối."],
+["Phương trình bậc hai","Nghiệm của x² − 5x + 6 = 0:",["1 và 6","2 và 3","−2 và −3","Vô nghiệm"],1,"Δ = 1, x = (5 ± 1)/2 = 3 hoặc 2."],
+["Định lý Vi-ét","Tích hai nghiệm của 2x² − 6x + 1 = 0:",["3","1/2","−3","−1/2"],1,"P = c/a = 1/2."],
+["Phương trình bậc hai","Phương trình có Δ < 0 thì:",["Có hai nghiệm phân biệt","Có nghiệm kép","Vô nghiệm thực","Có đúng một nghiệm"],2,"Δ < 0 nên không có nghiệm thực."],
+["Hàm số y = ax + b","Đường thẳng vuông góc với y = 2x + 1:",["y = 2x − 3","y = −2x + 1","y = −½x + 3","y = ½x + 1"],2,"Vuông góc khi a · a′ = −1: 2 · (−½) = −1."],
+["Hệ thức lượng","Tam giác ABC vuông tại A, AB = 6, AC = 8. Đường cao AH bằng:",["4,8","5","6","4"],0,"BC = 10; AH = AB·AC/BC = 48/10 = 4,8."],
+["Tỉ số lượng giác","sin²α + cos²α bằng:",["0","1","2","sin 2α"],1,"Hệ thức cơ bản: sin²α + cos²α = 1."],
+["Đường tròn","Chu vi đường tròn bán kính 5:",["5π","10π","25π","100π"],1,"C = 2πR = 10π."],
+["Hình trụ, nón, cầu","Thể tích hình nón có R = 3, h = 4:",["12π","36π","15π","9π"],0,"V = ⅓πR²h = ⅓π · 9 · 4 = 12π."],
+["Bất đẳng thức, GTLN và GTNN","GTNN của y = x² − 4x + 5:",["0","1","2","5"],1,"y = (x − 2)² + 1 ≥ 1."]
+];
+var DE=[
+{n:"Đề 0: Khởi động tổng hợp",m:15,q:Q},
+{n:"Đề 1: Căn thức và hàm số",m:15,q:[
+["Căn thức","√48 − √12 bằng:",["2√3","4√3","6√3","√36"],0,"√48 = 4√3, √12 = 2√3 nên hiệu bằng 2√3."],
+["Căn thức","Điều kiện xác định của √(2x − 6):",["x ≥ 3","x ≤ 3","x > 3","x ≥ −3"],0,"Cần 2x − 6 ≥ 0 nên x ≥ 3."],
+["Căn thức","1/(√3 − 1) bằng:",["(√3 + 1)/2","(√3 − 1)/2","√3 + 1","√3 − 1"],0,"Nhân liên hợp: (√3 + 1)/(3 − 1)."],
+["Căn thức","√(7 − 4√3) bằng:",["2 − √3","2 + √3","√3 − 2","7 − 2√3"],0,"(2 − √3)² = 7 − 4√3 và 2 − √3 > 0."],
+["Hàm số bậc nhất","y = (m − 1)x + 2 đồng biến khi:",["m > 1","m < 1","m > 0","m = 1"],0,"Đồng biến khi hệ số góc m − 1 > 0."],
+["Hàm số bậc nhất","y = 2x + 3 song song với y = (m + 1)x − 5 khi:",["m = 1","m = 2","m = −1","m = 3"],0,"m + 1 = 2 và 3 ≠ −5."],
+["Hàm số bậc nhất","y = 3x − 6 cắt trục hoành tại:",["(2; 0)","(0; −6)","(−2; 0)","(6; 0)"],0,"Cho y = 0 thì x = 2."],
+["Hệ phương trình","Nghiệm của x + y = 5 và x − y = 1:",["(3; 2)","(2; 3)","(4; 1)","(1; 4)"],0,"Cộng hai vế: 2x = 6, x = 3, y = 2."],
+["Parabol","Parabol y = −2x² có:",["Bề lõm hướng xuống","Bề lõm hướng lên","Đi qua (1; 2)","Nằm phía trên Ox"],0,"a < 0 nên bề lõm hướng xuống; tại x = 1 thì y = −2."],
+["Parabol","Hoành độ giao điểm của y = x² và y = x + 2:",["x = −1 và x = 2","x = 1 và x = −2","x = 1 và x = 2","x = −1 và x = −2"],0,"x² − x − 2 = 0 cho x = −1 hoặc x = 2."]]},
+{n:"Đề 2: Phương trình bậc hai và Vi-ét",m:15,q:[
+["Phương trình bậc hai","Δ của x² − 6x + 5 = 0:",["16","56","4","−16"],0,"Δ = 36 − 20 = 16."],
+["Phương trình bậc hai","Nghiệm của 2x² − 3x + 1 = 0:",["1 và 1/2","−1 và −1/2","2 và 1","3 và 1/2"],0,"Δ = 1, x = (3 ± 1)/4."],
+["Phương trình bậc hai","x² − 2x + m = 0 có nghiệm kép khi:",["m = 1","m = −1","m = 2","m = 0"],0,"Δ′ = 1 − m = 0."],
+["Phương trình bậc hai","x² − 4x + m − 1 = 0 có hai nghiệm phân biệt khi:",["m < 5","m > 5","m ≤ 5","m < 1"],0,"Δ′ = 4 − (m − 1) = 5 − m > 0."],
+["Định lý Vi-ét","Tổng hai nghiệm của x² − 5x + 3 = 0:",["5","−5","3","−3"],0,"S = −b/a = 5."],
+["Định lý Vi-ét","Với phương trình trên, x₁² + x₂² bằng:",["19","25","31","13"],0,"S² − 2P = 25 − 6 = 19."],
+["Điều kiện nghiệm","x² + mx − 3 = 0 luôn có hai nghiệm phân biệt vì:",["ac < 0","Δ < 0","a + b + c = 0","P > 0"],0,"ac = −3 < 0 nên Δ > 0 với mọi m."],
+["Nhẩm nghiệm","Nghiệm của 3x² − 7x + 4 = 0:",["1 và 4/3","−1 và −4/3","1 và 3/4","2 và 2"],0,"a + b + c = 0 nên x₁ = 1, x₂ = c/a = 4/3."],
+["Định lý Vi-ét","Hai số có tổng 7, tích 12 là:",["3 và 4","2 và 5","1 và 6","−3 và −4"],0,"Giải X² − 7X + 12 = 0."],
+["Phương trình quy về bậc hai","Nghiệm của x⁴ − 5x² + 4 = 0:",["x = ±1 và x = ±2","x = 1 và x = 4","x = ±1 và x = ±4","x = 2 và x = 8"],0,"t = x²: t = 1 hoặc t = 4."]]},
+{n:"Đề 3: Hình học 9",m:15,q:[
+["Hệ thức lượng","ABC vuông tại A, đường cao AH, BH = 4, CH = 9. AH bằng:",["6","13","36","5"],0,"AH² = BH · CH = 36."],
+["Hệ thức lượng","Với BH = 4, CH = 9 thì AB bằng:",["2√13","3√13","6","√13"],0,"AB² = BH · BC = 4 · 13 = 52."],
+["Tỉ số lượng giác","sin 30° bằng:",["1/2","√3/2","√2/2","1"],0,"Giá trị đặc biệt cần thuộc."],
+["Tỉ số lượng giác","tan 45° bằng:",["1","√3","1/2","0"],0,"Tam giác vuông cân có đối = kề."],
+["Tỉ số lượng giác","sin 35° bằng:",["cos 55°","cos 35°","tan 55°","sin 55°"],0,"Hai góc phụ nhau: sin α = cos(90° − α)."],
+["Đường tròn","Diện tích hình tròn bán kính 4:",["16π","8π","4π","64π"],0,"S = πR² = 16π."],
+["Đường tròn","Góc nội tiếp chắn cung 80° bằng:",["40°","80°","160°","20°"],0,"Góc nội tiếp bằng nửa số đo cung bị chắn."],
+["Đường tròn","Tứ giác ABCD nội tiếp, góc A = 70°. Góc C bằng:",["110°","70°","20°","290°"],0,"Tổng hai góc đối bằng 180°."],
+["Đường tròn","MA là tiếp tuyến (O; 3), MO = 5. MA bằng:",["4","2","8","√34"],0,"MA² = MO² − R² = 25 − 9 = 16."],
+["Hình không gian","Thể tích hình trụ R = 2, h = 5:",["20π","10π","40π","50π"],0,"V = πR²h = π · 4 · 5."]]},
+{n:"Đề 4: Tổng hợp thi vào lớp 10",m:20,q:[
+["Căn thức","(√7 + √3)(√7 − √3) bằng:",["4","10","2√7","√10"],0,"Hiệu hai bình phương: 7 − 3."],
+["Rút gọn","Giá trị của √x/(√x + 1) khi x = 4:",["2/3","1/3","2/5","4/5"],0,"2/(2 + 1)."],
+["Hàm số","y = 2x − 1 và y = −x + 5 cắt nhau tại:",["(2; 3)","(3; 2)","(1; 1)","(2; 5)"],0,"2x − 1 = −x + 5 nên x = 2, y = 3."],
+["Lập hệ phương trình","Hai số có tổng 20, hiệu 6. Số lớn là:",["13","14","12","15"],0,"(20 + 6)/2 = 13."],
+["Lập phương trình","Hình chữ nhật chu vi 28 cm, dài hơn rộng 2 cm. Diện tích:",["48 cm²","56 cm²","40 cm²","24 cm²"],0,"Nửa chu vi 14: dài 8, rộng 6."],
+["Bài toán phần trăm","Giảm giá 20% cho món 500 000 đồng. Giá mới:",["400 000","450 000","480 000","300 000"],0,"500 000 × 0,8."],
+["GTLN, GTNN","GTLN của y = −x² + 4x − 1:",["3","−1","4","2"],0,"y = −(x − 2)² + 3 ≤ 3."],
+["Bất đẳng thức","Với x > 0, x + 1/x ≥ :",["2","1","4","x"],0,"Cô-si: x + 1/x ≥ 2√(x · 1/x) = 2."],
+["Hình học","Đường cao tam giác đều cạnh 6:",["3√3","6√3","3","√3"],0,"h = a√3/2."],
+["Xác suất","Hộp có 3 bi đỏ, 5 bi xanh. Xác suất lấy được bi đỏ:",["3/8","5/8","3/5","1/3"],0,"3 thuận lợi trên 8 kết quả."]]}
+];
+var cur=0,carry=0;
+try{if(sessionStorage.getItem("examOn")){carry=1;sessionStorage.removeItem("examOn")}}catch(e){}
+var ex={on:false,log:[],i:0,ans:[],qs:[],t0:0,left:0,tm:null,last:0,strikes:0,dt:false,fs:false,w:0},MAXV=3;
+function shuf(a){return a.sort(function(){return Math.random()-.5})}
+function lock(m){
+  var l=$("lk");
+  l.innerHTML='<div><h2>Bài thi đang bị khóa</h2><p>'+esc(m)+'</p><p class="mut">Vi phạm: '+ex.strikes+'/'+MAXV+'. Đồng hồ vẫn chạy.</p><button class="btn" id="lkb">Tiếp tục làm bài</button></div>';
+  l.hidden=false;
+  $("lkb").onclick=function(){var el=document.documentElement;try{if(!document.fullscreenElement&&el.requestFullscreen){var p=el.requestFullscreen();if(p&&p.catch)p.catch(function(){})}}catch(e){}l.hidden=true};
+}
+
+function $(id){return document.getElementById(id)}
+function showExam(v){$("exam").hidden=!v;out.hidden=v;chips.hidden=v;$("q").hidden=v}
+function intro(){
+  $("exam").innerHTML='<section class="g9"><h3>Chọn đề và đọc quy định</h3><div class="pad"><p><b>Chọn đề:</b></p>'+DE.map(function(d,k){return'<label class="ck"><input type="radio" name="de" value="'+k+'"'+(k===cur?' checked':'')+'> '+d.n+' ('+d.q.length+' câu, '+d.m+' phút)</label>'}).join('')+(carry?'<p class="bad">Lần thi trước bị gián đoạn (tải lại hoặc đóng trang), nên bài này bắt đầu với 1 vi phạm.</p>':'')+
+  '<p><b>Trang này sẽ ghi nhận:</b></p><ul><li>Rời tab, thu nhỏ trình duyệt hoặc chuyển sang cửa sổ khác</li><li>Thoát chế độ toàn màn hình</li><li>Phím tắt mở công cụ nhà phát triển (F12, Ctrl+Shift+I/J/C), xem mã nguồn, lưu, in, chụp màn hình</li><li>Sao chép, cắt, dán, bấm chuột phải (các thao tác này bị chặn)</li><li>Mở DevTools (phát hiện qua việc trình duyệt bị tạm dừng gỡ lỗi), thu nhỏ hoặc chia đôi cửa sổ, in trang</li><li>Tải lại hoặc đóng trang giữa chừng</li><li>Có nhiều màn hình hoặc trình duyệt tự động hóa (chỉ ghi chú)</li></ul>'+
+  '<p><b>Không ghi nhận:</b> camera, micro, nội dung màn hình, vị trí. Không gửi dữ liệu đi đâu: mọi thứ nằm trên thiết bị của bạn.</p>'+
+  '<p><b>Quy tắc:</b> mỗi lần vi phạm, màn hình bài thi bị khóa cho đến khi bạn bấm tiếp tục (đồng hồ vẫn chạy). Đủ '+MAXV+' vi phạm thì bài tự nộp. Mọi ghi nhận hiện ngay ở bảng nhật ký bên cạnh bài làm và có trong báo cáo cuối bài.</p>'+
+  '<p class="mut">Lưu ý: các biện pháp này chạy ngay trong trình duyệt nên chỉ hỗ trợ bạn tự ôn luyện trung thực, không thay thế giám thị thật. Trên điện thoại, toàn màn hình và kiểm tra DevTools có thể không hoạt động.</p>'+
+  '<label class="ck"><input type="checkbox" id="agree"> Tôi đã đọc và đồng ý với những điều trên</label><button class="btn" id="go" disabled>Bắt đầu làm bài</button></div></section>';
+  $("agree").onchange=function(){$("go").disabled=!this.checked};
+  $("go").onclick=start;
+}
+function start(){
+  cur=+document.querySelector('input[name=de]:checked').value;
+  ex.qs=shuf(DE[cur].q.slice()).map(function(q){var o=shuf(q[2].map(function(t,k){return[t,k===q[3]]}));return[q[0],q[1],o.map(function(x){return x[0]}),o.findIndex(function(x){return x[1]}),q[4]]});
+  ex.i=0;ex.ans=[];ex.log=[];ex.strikes=0;ex.t0=Date.now();ex.left=DE[cur].m*60;ex.w=window.innerWidth;ex.last=0;ex.dt=false;ex.fs=false;ex.on=true;
+  var el=document.documentElement;
+  if(el.requestFullscreen){try{var p=el.requestFullscreen();if(p&&p.catch)p.catch(function(){})}catch(e){}}
+  try{sessionStorage.setItem("examOn","1")}catch(e){}
+  if(carry){ex.strikes=1;ex.log.push({gio:new Date().toLocaleTimeString("vi-VN"),loai:"Tải lại hoặc đóng trang khi đang thi",chi_tiet:"Bài thi trước bị gián đoạn",tinh_vi_pham:true});carry=0}
+  if(window.screen&&screen.isExtended)viol("Phát hiện nhiều màn hình","screen.isExtended = true",false);
+  setTimeout(function(){if(ex.on&&!ex.fs&&el.requestFullscreen&&!("ontouchstart" in window))lock("Cần vào chế độ toàn màn hình để làm bài.")},1500);
+  if(navigator.webdriver)viol("Trình duyệt tự động hóa","navigator.webdriver = true",false);
+  draw();ex.tm=setInterval(tick,1000);
+}
+function viol(t,d,strike){
+  if(!ex.on)return;
+  var n=Date.now();if(n-ex.last<800)return;ex.last=n;
+  var s=strike!==false;if(s)ex.strikes++;
+  ex.log.push({gio:new Date().toLocaleTimeString("vi-VN"),loai:t,chi_tiet:d,tinh_vi_pham:s});
+  if(s&&ex.strikes>=MAXV){finish("Tự nộp do đủ "+MAXV+" vi phạm");return}
+  rl();if(s)lock("Vi phạm: "+t+".");
+}
+function rl(){
+  var l=$("lg");if(!l)return;$("sc").textContent=ex.strikes;
+  l.innerHTML=ex.log.length?ex.log.map(function(e){return'<li><span class="'+(e.tinh_vi_pham?'st':'')+'">'+e.gio+' '+(e.tinh_vi_pham?'Vi phạm':'Ghi chú')+':</span> '+esc(e.loai)+' ('+esc(e.chi_tiet)+')</li>'}).join(''):'<li class="mut">Chưa có ghi nhận nào.</li>';
+}
+function tick(){
+  ex.left--;
+  if(!("ontouchstart" in window)){
+    var d=window.outerWidth-window.innerWidth>200||window.outerHeight-window.innerHeight>200;
+    if(d&&!ex.dt)viol("Nghi mở DevTools","Kích thước cửa sổ lệch bất thường (chỉ là suy đoán)",false);
+    ex.dt=d;
+    var t0=performance.now();try{(new Function("debugger"))()}catch(e){}
+    if(performance.now()-t0>150)viol("DevTools đang mở","Trình duyệt bị tạm dừng gỡ lỗi");
+  }
+  if(ex.left<=0){finish("Hết giờ");return}
+  tm();
+}
+function tm(){var e=$("tm");if(e)e.textContent=Math.floor(ex.left/60)+":"+("0"+ex.left%60).slice(-2)}
+function draw(){
+  var q=ex.qs[ex.i],last=ex.i===ex.qs.length-1;
+  var h='<div class="exgrid"><section class="g8"><h3>Câu '+(ex.i+1)+'/'+ex.qs.length+'<span id="tm" class="tm"></span></h3><div class="pad nosel"><p class="qt">'+esc(q[1])+'</p>';
+  q[2].forEach(function(o,k){h+='<button class="opt'+(ex.ans[ex.i]===k?' sel':'')+'" data-k="'+k+'">'+"ABCD"[k]+'. '+esc(o)+'</button>'});
+  h+='<div class="nav"><button class="btn ghost" id="pv"'+(ex.i?'':' disabled')+'>Câu trước</button>'+(last?'<button class="btn" id="sb">Nộp bài</button>':'<button class="btn" id="nx">Câu sau</button>')+'</div></div></section>'+
+  '<section class="g9"><h3>Nhật ký giám sát</h3><div class="pad"><p class="mut">Vi phạm: <b id="sc">0</b>/'+MAXV+'</p><ul id="lg" class="lg"></ul></div></section></div>';
+  $("exam").innerHTML=h;
+  document.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){ex.ans[ex.i]=+b.dataset.k;draw()}});
+  if($("pv"))$("pv").onclick=function(){ex.i--;draw()};
+  if($("nx"))$("nx").onclick=function(){ex.i++;draw()};
+  if($("sb"))$("sb").onclick=function(){finish("Tự nộp bài")};
+  rl();tm();
+}
+function finish(why){
+  clearInterval(ex.tm);ex.on=false;$("lk").hidden=true;try{sessionStorage.removeItem("examOn")}catch(e){}
+  if(document.fullscreenElement&&document.exitFullscreen){try{document.exitFullscreen().catch(function(){})}catch(e){}}
+  var sc=0;ex.qs.forEach(function(q,i){if(ex.ans[i]===q[3])sc++});
+  var rep={de:DE[cur].n,thoi_diem:new Date().toISOString(),ly_do_ket_thuc:why,diem:sc+"/"+ex.qs.length,thoi_gian_giay:Math.round((Date.now()-ex.t0)/1000),so_vi_pham:ex.strikes,nhat_ky:ex.log,tra_loi:ex.qs.map(function(q,i){return{cau:q[1],chon:ex.ans[i]==null?null:q[2][ex.ans[i]],dap_an:q[2][q[3]]}})};
+  var js=JSON.stringify(rep,null,1);
+  var h='<section class="g8"><h3>Kết quả: '+sc+'/'+ex.qs.length+' điểm</h3><div class="pad"><p>Kết thúc: <b>'+esc(why)+'</b>. Thời gian: '+rep.thoi_gian_giay+' giây. Vi phạm: <b class="'+(ex.strikes?'bad':'ok')+'">'+ex.strikes+'</b>.</p>'+
+  '<p><b>Nhật ký giám sát đầy đủ</b></p><ul class="lg">'+(ex.log.length?ex.log.map(function(e){return'<li>'+e.gio+' ('+(e.tinh_vi_pham?'vi phạm':'ghi chú')+'): '+esc(e.loai)+' - '+esc(e.chi_tiet)+'</li>'}).join(''):'<li>Không có ghi nhận nào.</li>')+'</ul>'+
+  '<p><b>Mã xác thực báo cáo (SHA-256):</b></p><p class="code" id="hs">Đang tạo...</p><p class="mut">Đổi bất kỳ nội dung nào của báo cáo thì mã này sẽ khác.</p>'+
+  '<p><b>Xem lại đáp án</b></p>'+ex.qs.map(function(q,i){var ok=ex.ans[i]===q[3];return'<div class="rv"><b>Câu '+(i+1)+': '+esc(q[1])+'</b><br><span class="'+(ok?'ok':'bad')+'">'+(ok?'Đúng':'Sai')+'</span> - bạn chọn: '+(ex.ans[i]==null?'(bỏ trống)':esc(q[2][ex.ans[i]]))+'; đáp án: '+esc(q[2][q[3]])+'<br>'+esc(q[4])+' <span class="mut">Ôn lại: '+esc(q[0])+'</span></div>'}).join('')+
+  '<div class="nav"><button class="btn ghost" id="dl">Tải báo cáo</button><button class="btn" id="again">Làm lại</button></div></div></section>';
+  $("exam").innerHTML=h;
+  var hs=$("hs");
+  if(window.crypto&&crypto.subtle){crypto.subtle.digest("SHA-256",new TextEncoder().encode(js)).then(function(b){hs.textContent=Array.from(new Uint8Array(b)).map(function(x){return("0"+x.toString(16)).slice(-2)}).join("")}).catch(function(){hs.textContent="Không tạo được mã"})}else hs.textContent="Cần HTTPS để tạo mã";
+  $("dl").onclick=function(){try{var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([js+"\nSHA-256: "+hs.textContent],{type:"text/plain"}));a.download="bao-cao-lam-bai.txt";a.click()}catch(e){}};
+  $("again").onclick=intro;
+  window.scrollTo(0,0);
+}
+document.addEventListener("visibilitychange",function(){if(document.hidden)viol("Rời tab hoặc thu nhỏ trình duyệt","Trang bị ẩn")});
+window.addEventListener("blur",function(){viol("Cửa sổ mất tiêu điểm","Chuyển sang ứng dụng hoặc cửa sổ khác")});
+document.addEventListener("fullscreenchange",function(){if(document.fullscreenElement)ex.fs=true;else if(ex.fs&&ex.on){ex.fs=false;viol("Thoát toàn màn hình","Đã thoát chế độ toàn màn hình")}});
+var CN={copy:"Sao chép",cut:"Cắt",paste:"Dán",contextmenu:"Bấm chuột phải"};
+Object.keys(CN).forEach(function(t){document.addEventListener(t,function(e){if(ex.on){e.preventDefault();viol(CN[t],"Thao tác đã bị chặn")}})});
+document.addEventListener("keydown",function(e){
+  if(!ex.on)return;var k=e.key.toLowerCase(),c=e.ctrlKey||e.metaKey;
+  if(e.key==="F12"||(c&&e.shiftKey&&"ijck".indexOf(k)>-1)||(c&&"uspfg".indexOf(k)>-1&&k.length===1)){e.preventDefault();viol("Phím tắt công cụ, mã nguồn, lưu hoặc in",(c?"Ctrl+":"")+(e.shiftKey?"Shift+":"")+e.key)}
+});
+document.addEventListener("keyup",function(e){if(e.key==="PrintScreen")viol("Chụp màn hình","Phím PrintScreen")});
+window.addEventListener("beforeprint",function(){viol("In trang","Lệnh in")});
+window.addEventListener("resize",function(){if(ex.on&&ex.w&&!("ontouchstart" in window)&&window.innerWidth<ex.w*0.75)viol("Thu nhỏ hoặc chia đôi cửa sổ","Chiều rộng giảm hơn 25%")});
+["dragstart","selectstart"].forEach(function(t){document.addEventListener(t,function(e){if(ex.on)e.preventDefault()})});
+window.addEventListener("beforeunload",function(e){if(ex.on){e.preventDefault();e.returnValue=""}});
 </script>
 </body>
 </html>
