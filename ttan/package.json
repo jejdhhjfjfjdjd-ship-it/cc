@@ -1,7 +1,0 @@
-{
-  "name": "ttan-vercel",
-  "version": "7.0.0",
-  "dependencies": {
-    "@vercel/kv": "^1.0.1"
-  }
-}
