@@ -1,290 +1,346 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>♛ Cờ Vua Online</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/board.css">
-  <link rel="stylesheet" href="css/modals.css">
-  <link rel="stylesheet" href="css/music.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>♛ Cờ Vua Online</title>
+<style>
+:root{--bg:#0b0e17;--card:rgba(255,255,255,.045);--line:rgba(255,255,255,.09);--txt:#ecebe6;--mut:#8e93a3;--gold:#e3b95f;--gold2:#c9953a;--ok:#4cc38a;--bad:#ef5b5b}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:radial-gradient(1200px 600px at 15% -10%,#1f2a4d 0,transparent 60%),radial-gradient(900px 500px at 100% 0,#3a2a1a 0,transparent 55%),var(--bg);color:var(--txt);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0)}
+button,input,select{font:inherit;color:var(--txt)}
+.top{display:flex;align-items:center;gap:8px;padding:12px 18px;flex-wrap:wrap}
+.logo{font:700 22px Georgia,serif;letter-spacing:.5px;margin-right:auto}.logo b{color:var(--gold)}
+.btn{background:var(--card);border:1px solid var(--line);padding:8px 14px;border-radius:10px;cursor:pointer;font-weight:600;transition:.15s}
+.btn:hover{border-color:var(--gold);transform:translateY(-1px)}.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#2a1c05;border:0}
+.btn.sm{padding:5px 10px;font-size:13px}
+.user{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);padding:5px 5px 5px 12px;border-radius:10px}
+.grid{display:grid;grid-template-columns:minmax(0,640px) minmax(0,390px);gap:20px;justify-content:center;padding:6px 18px 30px}
+@media(max-width:1010px){.grid{grid-template-columns:minmax(0,640px);padding:6px 10px 30px}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;backdrop-filter:blur(8px)}
+.panel h3{margin:0 0 10px;font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--mut)}
+aside{display:flex;flex-direction:column;gap:14px}
+.pcard{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:14px;background:var(--card);border:1px solid var(--line);transition:.2s}
+.pcard.act{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset,0 0 18px rgba(227,185,95,.2)}
+.av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:20px;border:2px solid #0006}
+.av.w{background:#f3ead7;color:#222}.av.b{background:#23262e;color:#eee}
+.pi{flex:1;min-width:0}.pn{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cap{font-size:15px;letter-spacing:-3px;color:var(--mut);min-height:20px}
+.clock{font:700 22px ui-monospace,Menlo,monospace;background:#0007;padding:4px 12px;border-radius:8px;min-width:84px;text-align:center}
+.clock.low{color:var(--bad)}
+.bw{position:relative;margin:10px 0;border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,.55),0 0 0 7px #4a3322,0 0 0 8px var(--gold2)}
+.board{display:grid;grid-template-columns:repeat(8,1fr);aspect-ratio:1;border-radius:6px;overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.sq{position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer;container-type:size}
+.sq.l{background:#f0dcb4}.sq.d{background:#b4854f}
+.sq.last::before,.sq.sel::before,.sq.chk::before{content:"";position:absolute;inset:0}
+.sq.last::before{background:rgba(255,215,60,.42)}.sq.sel::before{background:rgba(76,195,138,.55)}
+.sq.chk::before{background:radial-gradient(circle,rgba(255,40,40,.9),rgba(255,40,40,0) 72%)}
+.sq.mv::after{content:"";position:absolute;width:28%;height:28%;border-radius:50%;background:rgba(20,50,35,.38)}
+.sq.cp::after{content:"";position:absolute;inset:5%;border-radius:50%;border:5px solid rgba(20,50,35,.38)}
+.pc{position:relative;z-index:1;font-size:78cqmin;line-height:1;font-family:"Segoe UI Symbol","Noto Sans Symbols 2","Apple Symbols",serif;transition:transform .12s}
+.sq:hover .pc{transform:scale(1.06)}
+.pc.w{color:#fffaf0;text-shadow:0 0 2px #000,0 1px 3px rgba(0,0,0,.75)}.pc.b{color:#17171c;text-shadow:0 1px 1px rgba(255,255,255,.3)}
+.co{position:absolute;font-size:10px;font-weight:700;opacity:.7;z-index:2;pointer-events:none}.sq.l .co{color:#b4854f}.sq.d .co{color:#f0dcb4}.rk{top:2px;left:3px}.fl{bottom:1px;right:3px}
+.ov{position:absolute;inset:0;background:rgba(8,10,18,.78);display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;border-radius:6px;z-index:5;text-align:center;padding:16px}
+.ov.show{display:flex}.ov h2{margin:0;font:700 26px Georgia,serif;color:var(--gold)}
+.promo{display:flex;gap:10px}.promo button{width:64px;height:64px;font-size:44px;line-height:1;border-radius:12px;background:#f0dcb4;border:2px solid var(--gold);cursor:pointer;font-family:"Segoe UI Symbol","Noto Sans Symbols 2",serif}
+.seg{display:flex;background:#0006;border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:none;color:var(--mut);padding:8px 4px;border-radius:9px;font-weight:700;cursor:pointer}.seg button.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#2a1c05}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+input,select{background:#0007;border:1px solid var(--line);border-radius:9px;padding:8px 10px;min-width:0}input:focus,select:focus{outline:0;border-color:var(--gold)}
+.status{font-weight:700;margin-top:10px;padding:10px 12px;border-radius:10px;background:#0005;border-left:4px solid var(--gold)}
+.room{margin-top:10px;padding:10px;border-radius:10px;border:1px dashed var(--gold2);display:none}.room.show{display:block}
+.code{font:700 22px ui-monospace,Menlo,monospace;letter-spacing:4px;color:var(--gold);cursor:pointer}
+.pl{display:grid;gap:8px;max-height:190px;overflow:auto}
+.pos{text-align:left;background:#0005;border:1px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer}.pos:hover{border-color:var(--gold)}.pos b{display:block}.pos small{color:var(--mut)}
+.mlist{height:130px;overflow:auto;font:13px/1.8 ui-monospace,Menlo,monospace;color:var(--mut)}.mlist b{color:var(--txt)}
+.chat{display:none}.chat.show{display:block}.clog{height:120px;overflow:auto;background:#0005;border-radius:10px;padding:8px 10px;font-size:14px}.clog b{color:var(--gold)}
+small,.mut{color:var(--mut)}
+/* music */
+.music{position:fixed;top:60px;right:14px;width:300px;max-width:calc(100vw - 28px);background:rgba(18,21,33,.96);border:1px solid var(--gold2);border-radius:16px;padding:14px;z-index:40;display:none;box-shadow:0 20px 50px #000a}.music.show{display:block}
+.mh{display:flex;justify-content:space-between;font-weight:700;margin-bottom:10px}
+.now{display:flex;gap:12px;align-items:center}.disc{width:48px;height:48px;border-radius:50%;background:conic-gradient(#222,#444,#222,#444,#222);display:grid;place-items:center;border:2px solid var(--gold2);font-size:20px}.disc.spin{animation:sp 3s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+.mc{display:flex;justify-content:center;gap:10px;margin:12px 0}.mc button{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);cursor:pointer;font-size:16px}.mc .pp{background:linear-gradient(135deg,var(--gold),var(--gold2));width:46px;height:46px}
+.mv2{display:flex;align-items:center;gap:8px}.mv2 input{flex:1;padding:0;accent-color:var(--gold)}
+.tl{margin-top:10px;max-height:150px;overflow:auto}.ti{padding:7px 8px;border-radius:8px;cursor:pointer;font-size:14px}.ti:hover{background:var(--card)}.ti.on{color:var(--gold);font-weight:700}
+/* modal & toast */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;z-index:60;padding:14px}.modal.show{display:flex}
+.mbox{background:#141826;border:1px solid var(--gold2);border-radius:18px;padding:20px;width:min(420px,100%);max-height:90vh;overflow:auto}
+.mbox h2{margin:0 0 12px;font:700 20px Georgia,serif}.mbox input{width:100%;margin-top:8px}
+.tabs{display:flex;gap:6px;margin-bottom:6px}.tabs .btn{flex:1}.tabs .btn.on{border-color:var(--gold);color:var(--gold)}
+.toasts{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;z-index:90;pointer-events:none}
+.toast{background:#1c2133;border:1px solid var(--gold2);padding:10px 16px;border-radius:12px;animation:in .2s}.toast.error{border-color:var(--bad)}.toast.success{border-color:var(--ok)}@keyframes in{from{opacity:0;transform:translateY(8px)}}
+.arow{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)}
+</style>
 </head>
 <body>
-
-<!-- ============ TOPBAR ============ -->
-<header class="topbar">
-  <div class="logo">♛ <span>Cờ Vua</span></div>
-  <div class="topbar-right">
-    <button class="btn-ghost music-toggle" id="musicBtn" onclick="Music.togglePanel()">🎵 Nhạc</button>
-    <span class="user-tag" id="userTag" style="display:none">
-      <span id="userName">Khách</span>
-      <button class="btn-ghost" onclick="Auth.logout()">Đăng xuất</button>
-    </span>
-    <button class="btn-ghost" id="loginBtn" onclick="UI.openModal('authModal')">Đăng nhập</button>
-    <button class="btn-ghost admin-btn" id="adminBtn" style="display:none" onclick="Admin.open()">👑 Admin</button>
-  </div>
-</header>
-
-<!-- ============ MUSIC PANEL (floating) ============ -->
-<div class="music-panel" id="musicPanel">
-  <div class="music-header">
-    <span>🎵 Nhạc nền</span>
-    <button class="music-close" onclick="Music.togglePanel()">✕</button>
-  </div>
-
-  <div class="music-now" id="musicNow">
-    <div class="music-disc" id="musicDisc">🎵</div>
-    <div class="music-info">
-      <div class="music-title" id="musicTitle">Chưa chọn nhạc</div>
-      <div class="music-sub" id="musicSub">Bấm để chọn bài</div>
-    </div>
-  </div>
-
-  <div class="music-controls">
-    <button onclick="Music.prev()">⏮</button>
-    <button class="music-play" id="musicPlayBtn" onclick="Music.togglePlay()">▶</button>
-    <button onclick="Music.next()">⏭</button>
-    <button onclick="Music.toggleMute()" id="muteBtn">🔊</button>
-  </div>
-
-  <div class="music-volume">
-    <span>🔈</span>
-    <input type="range" id="musicVolume" min="0" max="100" value="50" 
-           oninput="Music.setVolume(this.value)">
-    <span>🔊</span>
-  </div>
-
-  <div class="music-playlist" id="musicPlaylist">
-    <!-- Render từ Music.tracks -->
-  </div>
-
-  <div class="music-note">
-    💡 Nhạc chỉ bạn nghe. Đối thủ có thể chọn nhạc riêng!
-  </div>
+<div class="top">
+  <div class="logo">♛ Cờ Vua <b>Online</b></div>
+  <button class="btn" id="musicBtn">🎵 Nhạc</button>
+  <button class="btn" id="adminBtn" hidden>👑 Admin</button>
+  <span class="user" id="userTag" hidden><span>👤 <b id="uName"></b></span><button class="btn sm" id="logout">Thoát</button></span>
+  <button class="btn gold" id="loginBtn">Đăng nhập</button>
 </div>
 
-<!-- ============ MAIN ============ -->
-<main class="main-grid">
+<div class="music" id="music">
+  <div class="mh"><span>🎵 Nhạc nền</span><button class="btn sm" id="mClose">✕</button></div>
+  <div class="now"><div class="disc" id="disc">🎵</div><div style="min-width:0"><div id="mTitle" style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Chưa chọn nhạc</div><small id="mSub">Bấm để chọn bài</small></div></div>
+  <div class="mc"><button id="mPrev">⏮</button><button class="pp" id="mPlay">▶</button><button id="mNext">⏭</button><button id="mMute">🔊</button></div>
+  <div class="mv2"><span>🔈</span><input type="range" id="mVol" min="0" max="100" value="50"><span>🔊</span></div>
+  <div class="tl" id="mList"></div>
+  <small id="mNote">💡 Nhạc chỉ bạn nghe. Đối thủ chọn nhạc riêng.</small>
+</div>
 
-  <!-- Board -->
-  <section class="board-area">
-    <div class="board-wrap">
-      <div id="board" class="board"></div>
-      <div class="game-over" id="gameOver">
-        <div class="go-content">
-          <h2 id="gameOverText">Chiếu hết!</h2>
-          <button class="btn-primary" onclick="Game.reset()">Chơi lại</button>
-        </div>
-      </div>
+<main class="grid">
+  <section>
+    <div class="pcard" id="cTop"><div class="av" id="aTop"></div><div class="pi"><div class="pn" id="nTop"></div><div class="cap" id="capTop"></div></div><div class="clock" id="kTop"></div></div>
+    <div class="bw">
+      <div class="board" id="board"></div>
+      <div class="ov" id="promo"><b>Phong cấp thành:</b><div class="promo" id="promoBtns"></div></div>
+      <div class="ov" id="over"><h2 id="overTxt"></h2><button class="btn gold" id="overNew">Ván mới</button></div>
     </div>
-    <div class="board-controls">
-      <button class="btn-ghost" onclick="Game.reset()">🔄 Chơi lại</button>
-      <button class="btn-ghost" onclick="Game.undo()">↩️ Hoàn tác</button>
-      <button class="btn-ghost" onclick="UI.flipBoard()">🔃 Xoay bàn</button>
-    </div>
+    <div class="pcard" id="cBot"><div class="av" id="aBot"></div><div class="pi"><div class="pn" id="nBot"></div><div class="cap" id="capBot"></div></div><div class="clock" id="kBot"></div></div>
   </section>
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
-
+  <aside>
     <div class="panel">
-      <h3>🎮 Chế độ chơi</h3>
-      <div class="mode-buttons">
-        <button class="mode-btn active" data-mode="local" onclick="Game.setMode('local')">👥 2 Người</button>
-        <button class="mode-btn" data-mode="ai" onclick="Game.setMode('ai')">🤖 Đấu Máy</button>
-        <button class="mode-btn" data-mode="online" onclick="Online.openMenu()">🌐 Online</button>
+      <div class="seg" id="modes"><button data-m="local" class="on">2 người</button><button data-m="ai">Với máy</button><button data-m="online">Online</button></div>
+      <div class="status" id="status"></div>
+      <div class="row" id="optRow">
+        <select id="tcSel"><option value="0">Không giới hạn</option><option value="180">3 phút</option><option value="300">5 phút</option><option value="600" selected>10 phút</option><option value="900">15 phút</option></select>
+        <span id="aiOpt" class="row" style="margin:0" hidden><select id="lvl"><option value="1">Dễ</option><option value="2" selected>Vừa</option><option value="3">Khó</option></select><button class="btn sm" id="swap">Đổi bên</button></span>
       </div>
-    </div>
-
-    <div class="room-info" id="roomInfo">
-      <div class="room-label">Mã phòng:</div>
-      <div class="room-row">
-        <span class="room-code" id="roomCode">----</span>
-        <button class="copy-btn" onclick="Online.copyCode()">📋 Copy</button>
+      <div id="onOpt" hidden>
+        <div class="row"><button class="btn gold" id="mk">Tạo phòng</button><input id="cin" maxlength="6" placeholder="Mã phòng" style="width:110px;text-transform:uppercase"><button class="btn" id="jn">Vào</button></div>
+        <div class="room" id="room"><small>Mã phòng (bấm để copy)</small><div class="code" id="rcode"></div><div class="row"><small id="rstat"></small><button class="btn sm" id="leave" style="margin-left:auto">Rời phòng</button></div></div>
       </div>
-      <div class="room-status" id="roomStatus">Đang chờ đối thủ...</div>
+      <div class="row"><button class="btn" id="new">Ván mới</button><button class="btn" id="undo">Đi lại</button><button class="btn" id="flip">Lật bàn</button><button class="btn" id="resign">Đầu hàng</button></div>
     </div>
-
-    <div class="player-card" id="blackCard">
-      <div class="avatar">♚</div>
-      <div class="info">
-        <div class="name" id="blackName">Người chơi Đen</div>
-        <div class="status" id="blackStatus">Đang chờ...</div>
-      </div>
-      <div class="clock" id="blackClock">10:00</div>
-    </div>
-
-    <div class="player-card active" id="whiteCard">
-      <div class="avatar">♔</div>
-      <div class="info">
-        <div class="name" id="whiteName">Người chơi Trắng</div>
-        <div class="status" id="whiteStatus">Lượt của bạn</div>
-      </div>
-      <div class="clock" id="whiteClock">10:00</div>
-    </div>
-
-    <div class="panel" id="positionsPanel" style="display:none">
-      <h3>🏆 Thế cờ nổi tiếng</h3>
-      <div class="positions-grid" id="positionsList"></div>
-    </div>
-
-    <div class="panel">
-      <h3>📜 Lịch sử</h3>
-      <div class="moves-list" id="movesList">
-        <div class="empty">Chưa có nước đi</div>
-      </div>
-    </div>
-
-    <div class="panel chat-panel" id="chatPanel">
-      <h3>💬 Chat</h3>
-      <div class="chat-messages" id="chatMessages"></div>
-      <div class="chat-input">
-        <input type="text" id="chatInput" placeholder="Nhập tin nhắn..." 
-               onkeypress="if(event.key==='Enter')Online.sendChat()">
-        <button class="btn-primary" onclick="Online.sendChat()">Gửi</button>
-      </div>
-    </div>
-
+    <div class="panel"><h3>♟ Thế cờ nổi tiếng</h3><div class="pl" id="plist"></div></div>
+    <div class="panel"><h3>Nước đi</h3><div class="mlist" id="mlist"></div></div>
+    <div class="panel chat" id="chat"><h3>💬 Chat</h3><div class="clog" id="clog"></div><div class="row"><input id="cmsg" placeholder="Nhập tin nhắn…" maxlength="200" style="flex:1"><button class="btn" id="csend">Gửi</button></div></div>
   </aside>
 </main>
 
-<!-- ============ MODALS ============ -->
+<div class="modal" id="authM"><div class="mbox">
+  <div class="tabs"><button class="btn on" data-t="login">Đăng nhập</button><button class="btn" data-t="reg">Đăng ký</button></div>
+  <input id="aU" placeholder="Tên đăng nhập" autocomplete="username"><input id="aP" type="password" placeholder="Mật khẩu" autocomplete="current-password"><input id="aP2" type="password" placeholder="Nhập lại mật khẩu" hidden>
+  <div class="row"><button class="btn gold" id="aGo" style="flex:1">Đăng nhập</button><button class="btn" data-close>Đóng</button></div>
+</div></div>
 
-<div class="modal" id="authModal">
-  <div class="modal-content">
-    <h2>🔐 Đăng nhập</h2>
-    <div class="tabs">
-      <button class="tab active" data-tab="login" onclick="Auth.switchTab('login')">Đăng nhập</button>
-      <button class="tab" data-tab="register" onclick="Auth.switchTab('register')">Đăng ký</button>
-    </div>
-    <div id="loginTab">
-      <label>Tên đăng nhập</label>
-      <input type="text" id="loginUser" placeholder="username">
-      <label>Mật khẩu</label>
-      <input type="password" id="loginPass" placeholder="••••••••" 
-             onkeypress="if(event.key==='Enter')Auth.login()">
-      <div class="actions">
-        <button class="btn-secondary" onclick="UI.closeModal('authModal')">Hủy</button>
-        <button class="btn-primary" onclick="Auth.login()">Đăng nhập</button>
-      </div>
-    </div>
-    <div id="registerTab" style="display:none">
-      <label>Tên đăng nhập</label>
-      <input type="text" id="regUser" placeholder="Ít nhất 3 ký tự">
-      <label>Mật khẩu</label>
-      <input type="password" id="regPass" placeholder="Ít nhất 4 ký tự">
-      <label>Nhập lại mật khẩu</label>
-      <input type="password" id="regPass2" placeholder="••••••••">
-      <div class="actions">
-        <button class="btn-secondary" onclick="UI.closeModal('authModal')">Hủy</button>
-        <button class="btn-primary" onclick="Auth.register()">Tạo tài khoản</button>
-      </div>
-    </div>
-  </div>
-</div>
+<div class="modal" id="admM"><div class="mbox">
+  <h2>👑 Quản lý thế cờ</h2>
+  <div id="admList"></div>
+  <h3 class="mut" style="margin:14px 0 0;font-size:13px">THÊM THẾ MỚI</h3>
+  <input id="pN" placeholder="Tên thế cờ"><input id="pD" placeholder="Mô tả ngắn"><input id="pF" placeholder="FEN">
+  <div class="row"><button class="btn" id="pCur">Lấy thế đang trên bàn</button><button class="btn gold" id="pAdd">Lưu</button><button class="btn" data-close>Đóng</button></div>
+</div></div>
+<div class="toasts" id="toasts"></div>
 
-<div class="modal" id="onlineModal">
-  <div class="modal-content">
-    <h2>🌐 Chơi Online</h2>
-    <div class="notice">Kết nối P2P qua WebRTC — không cần server. Chia sẻ mã phòng cho đối thủ.</div>
-    <label>Tên hiển thị</label>
-    <input type="text" id="onlineName" placeholder="Tên của bạn" maxlength="20">
-    <div class="actions" style="flex-direction:column;gap:10px">
-      <button class="btn-primary" style="width:100%" onclick="Online.createRoom()">🎮 Tạo phòng mới</button>
-      <div style="display:flex;gap:8px;width:100%">
-        <input type="text" id="joinCode" placeholder="Mã phòng" style="flex:1;text-transform:uppercase">
-        <button class="btn-primary" onclick="Online.joinRoom()">Vào</button>
-      </div>
-    </div>
-    <div class="actions">
-      <button class="btn-secondary" style="width:100%" onclick="UI.closeModal('onlineModal')">Đóng</button>
-    </div>
-  </div>
-</div>
+<script>
+const K=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]],N=[[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]];
+const G={k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟\uFE0E'},V={p:100,n:320,b:330,r:500,q:900,k:0};
+const isW=p=>p<'a';
+const ok=(r,f)=>r>=0&&r<8&&f>=0&&f<8;
+function init(){const b=[];for(const ch of'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'){if(ch==='/')continue;if(ch>='1'&&ch<='8')for(let i=0;i<+ch;i++)b.push(null);else b.push(ch)}return{b,t:'w',c:{K:1,Q:1,k:1,q:1},ep:-1}}
+function att(b,s,w){const r=s>>3,f=s&7,pr=w?r+1:r-1;
+ for(const d of[-1,1])if(ok(pr,f+d)&&b[pr*8+f+d]===(w?'P':'p'))return true;
+ for(const[a,c]of N)if(ok(r+a,f+c)&&b[(r+a)*8+f+c]===(w?'N':'n'))return true;
+ for(const[a,c]of K)if(ok(r+a,f+c)&&b[(r+a)*8+f+c]===(w?'K':'k'))return true;
+ for(const[a,c]of K){let rr=r+a,ff=f+c;while(ok(rr,ff)){const p=b[rr*8+ff];if(p){const l=p.toLowerCase();if(isW(p)===w&&(l==='q'||(a&&c?l==='b':l==='r')))return true;break}rr+=a;ff+=c}}
+ return false}
+function gen(S){const{b,t,c,ep}=S,w=t==='w',out=[];
+ for(let i=0;i<64;i++){const p=b[i];if(!p||isW(p)!==w)continue;const l=p.toLowerCase(),r=i>>3,f=i&7;
+  if(l==='p'){const d=w?-1:1,nr=r+d;if(!ok(nr,0))continue;
+   const add=(to,x)=>out.push({f:i,t:to,pr:nr===(w?0:7),...x});
+   if(!b[nr*8+f]){add(nr*8+f);if(r===(w?6:1)&&!b[(nr+d)*8+f])add((nr+d)*8+f,{dp:1})}
+   for(const df of[-1,1]){if(!ok(nr,f+df))continue;const to=nr*8+f+df,q=b[to];if(q&&isW(q)!==w)add(to);else if(to===ep)add(to,{ep:1})}
+  }else{const jump=l==='n'||l==='k';
+   const dirs=l==='n'?N:l==='b'?K.filter(x=>x[0]&&x[1]):l==='r'?K.filter(x=>!(x[0]&&x[1])):K;
+   for(const[a,cc]of dirs){let rr=r+a,ff=f+cc;while(ok(rr,ff)){const to=rr*8+ff,q=b[to];if(!q||isW(q)!==w)out.push({f:i,t:to});if(q||jump)break;rr+=a;ff+=cc}}}}
+ const row=w?56:0,k=w?'K':'k',rk=w?'R':'r';
+ if(b[row+4]===k&&!att(b,row+4,!w)){
+  if(c[w?'K':'k']&&b[row+7]===rk&&!b[row+5]&&!b[row+6]&&!att(b,row+5,!w)&&!att(b,row+6,!w))out.push({f:row+4,t:row+6,ca:1});
+  if(c[w?'Q':'q']&&b[row]===rk&&!b[row+1]&&!b[row+2]&&!b[row+3]&&!att(b,row+3,!w)&&!att(b,row+2,!w))out.push({f:row+4,t:row+2,ca:1})}
+ return out}
+function ap(S,m){const b=S.b.slice(),p=b[m.f],w=isW(p),c={...S.c};
+ b[m.t]=m.pr?(w?(m.pc||'q').toUpperCase():(m.pc||'q')):p;b[m.f]=null;
+ if(m.ep)b[m.t+(w?8:-8)]=null;
+ if(m.ca){if(m.t>m.f){b[m.t-1]=b[m.t+1];b[m.t+1]=null}else{b[m.t+1]=b[m.t-2];b[m.t-2]=null}}
+ if(p==='K'){c.K=c.Q=0}if(p==='k'){c.k=c.q=0}
+ for(const s of[m.f,m.t]){if(s===0)c.q=0;if(s===7)c.k=0;if(s===56)c.Q=0;if(s===63)c.K=0}
+ return{b,t:w?'b':'w',c,ep:m.dp?(m.f+m.t)/2:-1}}
+const inChk=S=>att(S.b,S.b.indexOf(S.t==='w'?'K':'k'),S.t!=='w');
+const legal=S=>gen(S).filter(m=>{const n=ap(S,m);return!att(n.b,n.b.indexOf(S.t==='w'?'K':'k'),S.t!=='w')});
+const sq=i=>'abcdefgh'[i&7]+(8-(i>>3));
+function san(S,m){const p=S.b[m.f],l=p.toLowerCase();if(m.ca)return m.t>m.f?'O-O':'O-O-O';
+ const cap=S.b[m.t]||m.ep;let s=(l==='p'?(cap?'abcdefgh'[m.f&7]:''):l.toUpperCase())+(cap?'x':'')+sq(m.t)+(m.pr?'='+(m.pc||'q').toUpperCase():'');
+ const n=ap(S,m);if(inChk(n))s+=legal(n).length?'+':'#';return s}
+function ev(S){let s=0;for(let i=0;i<64;i++){const p=S.b[i];if(!p)continue;const l=p.toLowerCase(),r=i>>3,f=i&7,w=isW(p);
+ let v=V[l];if(l==='p')v+=(w?6-r:r-1)*6;else if(l!=='k'&&l!=='r')v+=8-(Math.abs(r-3.5)+Math.abs(f-3.5))*2;s+=w?v:-v}return s}
+function nm(S,d,a,b){const L=legal(S);if(!L.length)return inChk(S)?-99999-d:0;if(!d)return(S.t==='w'?1:-1)*ev(S);
+ L.sort((x,y)=>(S.b[y.t]?1:0)-(S.b[x.t]?1:0));let best=-Infinity;
+ for(const m of L){const s=-nm(ap(S,m),d-1,-b,-a);if(s>best)best=s;if(best>a)a=best;if(a>=b)break}return best}
+function aiPick(S,d){const L=legal(S).sort(()=>Math.random()-.5);let best=null,bs=-Infinity;
+ for(const m of L){const s=-nm(ap(S,m),d-1,-Infinity,-bs)+(d===1?Math.random()*60:0);if(s>bs){bs=s;best=m}}return best}
 
-<div class="modal" id="adminModal">
-  <div class="modal-content" style="max-width:640px">
-    <h2>👑 Admin Panel</h2>
-    <div class="tabs">
-      <button class="tab active" data-tab="strong" onclick="Admin.switchTab('strong')">⚡ Thế cờ mạnh</button>
-      <button class="tab" data-tab="list" onclick="Admin.switchTab('list')">📋 Thế cờ thường</button>
-      <button class="tab" data-tab="add" onclick="Admin.switchTab('add')">➕ Thêm</button>
-      <button class="tab" data-tab="users" onclick="Admin.switchTab('users')">👥 User</button>
-    </div>
+function fromFen(f){const[pl,t,ca='',ep='-']=f.trim().split(/\s+/);const b=[];for(const ch of pl){if(ch==='/')continue;if(ch>='1'&&ch<='8')for(let i=0;i<+ch;i++)b.push(null);else b.push(ch)}
+return{b,t:t==='b'?'b':'w',c:{K:+ca.includes('K'),Q:+ca.includes('Q'),k:+ca.includes('k'),q:+ca.includes('q')},ep:ep!=='-'?(8-ep[1])*8+'abcdefgh'.indexOf(ep[0]):-1}}
+function toFen(S){let o=[];for(let r=0;r<8;r++){let s='',e=0;for(let f=0;f<8;f++){const p=S.b[r*8+f];if(p){if(e)s+=e;e=0;s+=p}else e++}if(e)s+=e;o.push(s)}
+const c=(S.c.K?'K':'')+(S.c.Q?'Q':'')+(S.c.k?'k':'')+(S.c.q?'q':'');return o.join('/')+' '+S.t+' '+(c||'-')+' '+(S.ep>=0?sq(S.ep):'-')+' 0 1'}
 
-    <div id="adminStrong">
-      <div class="notice">⚡ Chỉ admin thấy. Áp dụng thế này → admin cầm bên lợi thế, đối thủ cầm bên yếu.</div>
-      <div class="positions-grid" id="adminStrongGrid"></div>
-    </div>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ls={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}}};
+function toast(m,t=''){const e=document.createElement('div');e.className='toast '+t;e.textContent=m;$('#toasts').append(e);setTimeout(()=>e.remove(),3000)}
+let TOK=ls.get('cc_tok')||'',USER=null;
+async function api(url,method='GET',body){const r=await fetch(url,{method,headers:{'content-type':'application/json','x-token':TOK},body:body?JSON.stringify(body):undefined});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'Lỗi '+r.status);return j}
+const guest=ls.get('cc_guest')||('Khách'+Math.floor(100+Math.random()*900));ls.set('cc_guest',guest);
+const myName=()=>USER?USER.name:guest;
 
-    <div id="adminList" style="display:none">
-      <div class="positions-grid" id="adminPositionsGrid"></div>
-    </div>
+/* ===== game state ===== */
+let S,H=[],mode='local',my='w',flip=false,sel=null,mv=[],last=null,over=null,busy=false,gid=0,BASE=null,BASEFEN='';
+let tc=600,wt=600,bt=600,lt=Date.now(),host=false,opp=false,inRoom=false,oppName='Đối thủ',code='',PL=[];
+const CNT={p:8,n:2,b:2,r:2,q:1},fmt=s=>{s=Math.max(0,Math.ceil(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+function setBase(f){BASEFEN=f||'';BASE=f?fromFen(f):null}
+const key=s=>toFen(s).split(' ').slice(0,4).join(' ');
+const insuf=b=>{const p=b.filter(x=>x&&x.toLowerCase()!=='k');return p.length===0||(p.length===1&&'nb'.includes(p[0].toLowerCase()))};
+function result(){if(!legal(S).length)return inChk(S)?`Chiếu hết! ${S.t==='w'?'Đen':'Trắng'} thắng`:'Hòa — hết nước đi (pat)';
+ if(insuf(S.b))return'Hòa — không đủ quân chiếu hết';const k=key(S);if(H.filter(h=>key(h.S)===k).length>=2)return'Hòa — lặp thế cờ 3 lần';return null}
+function newGame(remote){gid++;S=BASE||init();H=[];sel=null;mv=[];last=null;over=null;busy=false;wt=bt=tc;lt=Date.now();$('#promo').classList.remove('show');
+ if(mode==='online'&&!remote)Net.emit('reset',{});render();maybeAI()}
+const canMove=()=>!over&&!busy&&(mode==='local'||S.t===my)&&(mode!=='online'||(inRoom&&opp));
+function doMove(m,remote){H.push({S,m,s:san(S,m),wt,bt});S=ap(S,m);last=m;sel=null;mv=[];lt=Date.now();const r=result();if(r)over=r;busy=false;
+ if(mode==='online'&&!remote)Net.emit('move',{f:m.f,t:m.t,pc:m.pc,wt,bt});render();maybeAI()}
+function maybeAI(){if(mode!=='ai'||over||S.t===my)return;busy=true;render();const g=gid;
+ setTimeout(()=>{if(g!==gid)return;const m=aiPick(S,+$('#lvl').value);if(g!==gid)return;busy=false;if(m)doMove(m);else render()},300)}
+function end(msg){if(over)return;over=msg;busy=false;render()}
+function flag(c,remote){end(`Hết giờ! ${c==='w'?'Đen':'Trắng'} thắng`);if(mode==='online'&&!remote&&c===my)Net.emit('flag',{c})}
+setInterval(()=>{const n=Date.now(),d=(n-lt)/1000;lt=n;if(!tc||over||H.length<1||(mode==='online'&&!opp))return;
+ if(S.t==='w')wt-=d;else bt-=d;if(wt<=0||bt<=0){const c=wt<=0?'w':'b';wt=Math.max(wt,0);bt=Math.max(bt,0);flag(c)}else clocks()},250);
+function clocks(){for(const[c,id]of[['w',flip?'#kTop':'#kBot'],['b',flip?'#kBot':'#kTop']]){const e=$(id),v=c==='w'?wt:bt;e.textContent=tc?fmt(v):'∞';e.classList.toggle('low',!!tc&&v<30)}}
 
-    <div id="adminAdd" style="display:none">
-      <label>Tên thế cờ</label>
-      <input type="text" id="posName" placeholder="VD: Khai cuộc Ý">
-      <label>Mô tả</label>
-      <input type="text" id="posDesc" placeholder="VD: Thế cờ tấn công">
-      <label>FEN</label>
-      <textarea id="posFen" rows="3" placeholder="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"></textarea>
-      <label>Loại</label>
-      <select id="posType">
-        <option value="normal">Thường (mọi người thấy)</option>
-        <option value="strong">⚡ Mạnh (chỉ admin)</option>
-      </select>
-      <div id="strongOptions" style="display:none">
-        <label>Bên có lợi thế</label>
-        <select id="posAdvantage">
-          <option value="w">Trắng</option>
-          <option value="b">Đen</option>
-        </select>
-        <label>Ghi chú chiến thuật</label>
-        <input type="text" id="posNote" placeholder="VD: Bxh7+ mở đường tấn công">
-      </div>
-      <div class="actions" style="margin-top:10px">
-        <button class="btn-secondary" style="flex:1" onclick="Admin.captureFen()">📋 Lấy FEN hiện tại</button>
-      </div>
-      <button class="btn-primary" style="width:100%;margin-top:10px" onclick="Admin.addPosition()">➕ Thêm</button>
-    </div>
+/* ===== board input ===== */
+$('#board').onclick=e=>{const el=e.target.closest('.sq');if(!el)return;const i=+el.dataset.i,m=mv.find(x=>x.t===i);
+ if(sel!==null&&m&&canMove()){if(m.pr)return askPromo(m);return doMove(m)}
+ const p=S.b[i];if(p&&canMove()&&(isW(p)?'w':'b')===S.t){sel=i;mv=legal(S).filter(x=>x.f===i)}else{sel=null;mv=[]}render()};
+function askPromo(m){const w=S.t==='w';$('#promoBtns').innerHTML=['q','r','b','n'].map(k=>`<button data-k="${k}" style="color:${w?'#fffaf0':'#17171c'}">${G[k]}</button>`).join('');
+ $('#promo').classList.add('show');$('#promoBtns').onclick=e=>{const b=e.target.closest('button');if(!b)return;m.pc=b.dataset.k;$('#promo').classList.remove('show');doMove(m)}}
 
-    <div id="adminUsers" style="display:none">
-      <div class="positions-grid" id="adminUsersGrid"></div>
-    </div>
+/* ===== render ===== */
+const capt=c=>{const n={};for(const p of S.b)if(p&&(isW(p)?'w':'b')===c)n[p.toLowerCase()]=(n[p.toLowerCase()]||0)+1;let s='';for(const k of['q','r','b','n','p'])for(let i=0;i<Math.max(0,CNT[k]-(n[k]||0));i++)s+=G[k];return s};
+const pname=c=>mode==='online'?(c===my?myName():oppName):mode==='ai'?(c===my?myName():'Máy 🤖'):(c==='w'?'Trắng':'Đen');
+function render(){const ks=S.b.indexOf(S.t==='w'?'K':'k'),chk=inChk(S);let h='';
+ for(let n=0;n<64;n++){const i=flip?63-n:n,r=i>>3,f=i&7,p=S.b[i],c=['sq',(r+f)%2?'d':'l'];
+  if(last&&(last.f===i||last.t===i))c.push('last');if(i===sel)c.push('sel');if(chk&&i===ks)c.push('chk');
+  const x=mv.find(m=>m.t===i);if(x)c.push(S.b[i]||x.ep?'cp':'mv');
+  h+=`<div class="${c.join(' ')}" data-i="${i}">`+(n%8===0?`<span class="co rk">${8-r}</span>`:'')+(n>=56?`<span class="co fl">${'abcdefgh'[f]}</span>`:'')+(p?`<span class="pc ${isW(p)?'w':'b'}">${G[p.toLowerCase()]}</span>`:'')+'</div>'}
+ $('#board').innerHTML=h;
+ const top=flip?'w':'b',bot=flip?'b':'w';
+ for(const[c,s]of[[top,'Top'],[bot,'Bot']]){$('#n'+s).textContent=pname(c);$('#a'+s).textContent=G.k;$('#a'+s).className='av '+c;$('#cap'+s).textContent=capt(c==='w'?'b':'w');$('#c'+s).classList.toggle('act',!over&&S.t===c)}
+ clocks();
+ let st='Lượt '+(S.t==='w'?'Trắng':'Đen')+(chk?' — Chiếu!':'');if(busy)st='Máy đang nghĩ…';
+ if(mode==='online')st=!inRoom?'Hãy tạo hoặc vào một phòng':!opp?'Đang chờ đối thủ…':S.t===my?'Đến lượt bạn ('+(my==='w'?'Trắng':'Đen')+')':'Đối thủ đang nghĩ…';
+ if(over)st='🏁 '+over;$('#status').textContent=st;
+ $('#over').classList.toggle('show',!!over);$('#overTxt').textContent=over||'';
+ let hs='';for(let i=0;i<H.length;i+=2)hs+=`${i/2+1}. <b>${esc(H[i].s)}</b> ${H[i+1]?'<b>'+esc(H[i+1].s)+'</b>':''}<br>`;
+ const ml=$('#mlist');ml.innerHTML=hs||'Chưa có nước đi.';ml.scrollTop=1e5;
+ $('#undo').disabled=mode==='online'||busy;$('#resign').disabled=!!over||(mode==='online'&&!opp);
+ $('#chat').classList.toggle('show',mode==='online'&&inRoom);$('#rstat').textContent=opp?'✅ Đối thủ đã vào':'⏳ Chờ đối thủ…'}
 
-    <div class="actions">
-      <button class="btn-secondary" style="width:100%" onclick="UI.closeModal('adminModal')">Đóng</button>
-    </div>
-  </div>
-</div>
+/* ===== controls ===== */
+function setMode(m){if(m!=='online')leaveRoom(true);mode=m;my='w';flip=false;$$('#modes button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+ $('#aiOpt').hidden=m!=='ai';$('#onOpt').hidden=m!=='online';$('#tcSel').parentElement.hidden=false;newGame(true)}
+$$('#modes button').forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+$('#new').onclick=()=>newGame();$('#overNew').onclick=()=>newGame();
+$('#flip').onclick=()=>{flip=!flip;render()};
+$('#swap').onclick=()=>{my=my==='w'?'b':'w';flip=my==='b';newGame(true)};
+$('#tcSel').onchange=()=>{if(mode==='online'&&!host&&inRoom)return;tc=+$('#tcSel').value;newGame()};
+$('#lvl').onchange=()=>{};
+$('#undo').onclick=()=>{if(busy||!H.length)return;let n=mode==='ai'&&S.t===my&&H.length>1?2:1;gid++;let x;while(n--&&H.length)x=H.pop();S=x.S;wt=x.wt;bt=x.bt;last=H.length?H[H.length-1].m:null;over=null;sel=null;mv=[];lt=Date.now();render();maybeAI()};
+$('#resign').onclick=()=>{if(over||!confirm('Bạn muốn đầu hàng?'))return;const c=mode==='online'?my:S.t;end(`${c==='w'?'Trắng':'Đen'} đầu hàng — ${c==='w'?'Đen':'Trắng'} thắng`);if(mode==='online')Net.emit('resign',{c})};
 
-<!-- Challenge modal (khi admin áp dụng thế cờ mạnh) -->
-<div class="modal" id="challengeModal">
-  <div class="modal-content">
-    <h2>⚡ Thế cờ mạnh</h2>
-    <div class="notice" id="challengeNotice"></div>
-    <div id="challengeInfo"></div>
-    <div class="actions">
-      <button class="btn-secondary" onclick="UI.closeModal('challengeModal')">Hủy</button>
-      <button class="btn-primary" onclick="Admin.confirmStrongApply()">Áp dụng</button>
-    </div>
-  </div>
-</div>
+/* ===== online (SSE) ===== */
+const Net={es:null,id:Math.random().toString(36).slice(2,10),room:'',h:{},
+ join(room,onPeers,onFull){this.leave();this.room=room;this.es=new EventSource('/api/events?room='+encodeURIComponent(room)+'&id='+this.id);
+  this.es.onmessage=e=>{const m=JSON.parse(e.data);if(m.topic==='_peers')return onPeers(m.n);if(m.topic==='_full')return onFull();(this.h[m.topic]||(()=>{}))(m.data||{},m.from===this.id)}},
+ emit(t,d){if(!this.room)return;fetch('/api/emit',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({room:this.room,id:this.id,topic:t,data:d})}).catch(()=>{})},
+ leave(){if(this.es)this.es.close();this.es=null;this.room=''}};
+const bad=n=>typeof n!=='number'||!isFinite(n);
+function replay(list){S=BASE||init();H=[];last=null;over=null;for(const x of list){const m=legal(S).find(y=>y.f===x.f&&y.t===x.t);if(!m)break;if(m.pr)m.pc=['q','r','b','n'].includes(x.pc)?x.pc:'q';H.push({S,m,s:san(S,m),wt,bt});S=ap(S,m);last=m}over=result()}
+Net.h={
+ hello:(d,me)=>{if(me||!host)return;oppName=String(d.name||'Đối thủ').slice(0,20);Net.emit('state',{name:myName(),fen:BASEFEN,tc,wt,bt,moves:H.map(h=>({f:h.m.f,t:h.m.t,pc:h.m.pc}))});render()},
+ state:(d,me)=>{if(me||host)return;oppName=String(d.name||'Đối thủ').slice(0,20);try{setBase(d.fen)}catch{setBase('')}tc=bad(d.tc)?600:d.tc;$('#tcSel').value=String(tc);
+  replay(Array.isArray(d.moves)?d.moves:[]);if(!bad(d.wt)){wt=d.wt;bt=d.bt}else wt=bt=tc;lt=Date.now();render()},
+ move:(d,me)=>{if(me||S.t===my||over)return;const x=legal(S).find(y=>y.f===d.f&&y.t===d.t);if(!x)return;if(x.pr)x.pc=['q','r','b','n'].includes(d.pc)?d.pc:'q';doMove(x,true);if(!bad(d.wt)&&!bad(d.bt)){wt=d.wt;bt=d.bt;clocks()}},
+ reset:(d,me)=>{if(!me)newGame(true)},
+ pos:(d,me)=>{if(me)return;try{setBase(d.fen)}catch{return}newGame(true)},
+ chat:(d,me)=>addChat(d,me),
+ resign:(d,me)=>{if(me||over)return;const c=d.c==='b'?'b':'w';end(`${c==='w'?'Trắng':'Đen'} đầu hàng — ${c==='w'?'Đen':'Trắng'} thắng`)},
+ flag:(d,me)=>{if(!me&&(d.c==='w'||d.c==='b'))flag(d.c,true)}};
+function enter(c,color){leaveRoom(true);code=c;my=color;host=color==='w';flip=color==='b';inRoom=true;opp=false;oppName='Đối thủ';
+ if(host)tc=+$('#tcSel').value;
+ Net.join('chess-'+c.toLowerCase(),n=>{const was=opp;opp=n>1;if(!host&&opp&&!was)Net.emit('hello',{name:myName()});if(was&&!opp){oppName='Đối thủ';toast('Đối thủ đã rời phòng')}if(opp&&!was)toast('Đối thủ đã vào phòng!','success');lt=Date.now();render()},
+  ()=>{toast('Phòng đã đủ 2 người','error');leaveRoom()});
+ $('#room').classList.add('show');$('#rcode').textContent=c;newGame(true)}
+function leaveRoom(silent){Net.leave();inRoom=false;opp=false;host=false;$('#room').classList.remove('show');$('#clog').innerHTML='';if(!silent){flip=false;my='w';render()}}
+$('#mk').onclick=()=>{const ch='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='';for(let i=0;i<6;i++)c+=ch[Math.floor(Math.random()*ch.length)];enter(c,'w')};
+$('#jn').onclick=()=>{const c=$('#cin').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,'');if(c.length<4)return toast('Nhập mã phòng','error');enter(c,'b')};
+$('#leave').onclick=()=>leaveRoom();
+$('#rcode').onclick=()=>{try{navigator.clipboard.writeText(code);toast('Đã copy mã phòng','success')}catch{}};
+function addChat(d,me){const l=$('#clog'),e=document.createElement('div'),b=document.createElement('b');b.textContent=String(d.name||'Khách').slice(0,20)+': ';e.append(b,String(d.text||'').slice(0,200));if(me)e.style.opacity=.85;l.append(e);l.scrollTop=1e5}
+function sendChat(){const t=$('#cmsg').value.trim();if(!t||!inRoom)return;Net.emit('chat',{name:myName(),text:t.slice(0,200)});$('#cmsg').value=''}
+$('#csend').onclick=sendChat;$('#cmsg').onkeydown=e=>{if(e.key==='Enter')sendChat()};
 
-<div class="toast" id="toast"></div>
+/* ===== positions & admin ===== */
+async function loadPos(){try{PL=await api('/api/positions')}catch{PL=[]}
+ $('#plist').innerHTML=PL.map(p=>`<button class="pos" data-id="${esc(p.id)}"><b>${esc(p.name)}</b><small>${esc(p.desc)}</small></button>`).join('')||'<small>Chưa có thế cờ.</small>';
+ if($('#admM').classList.contains('show'))admList()}
+$('#plist').onclick=e=>{const b=e.target.closest('.pos');if(!b)return;const p=PL.find(x=>x.id===b.dataset.id);if(!p)return;
+ if(mode==='online'&&inRoom&&!opp)return toast('Chờ đối thủ vào phòng trước','error');
+ try{setBase(p.fen)}catch{return toast('FEN lỗi','error')}newGame(true);if(mode==='online')Net.emit('pos',{fen:p.fen});toast('Đã tải: '+p.name,'success')};
+function admList(){$('#admList').innerHTML=PL.map(p=>`<div class="arow"><span>${esc(p.name)}</span><button class="btn sm" data-del="${esc(p.id)}">Xóa</button></div>`).join('')}
+$('#admList').onclick=async e=>{const id=e.target.dataset.del;if(!id||!confirm('Xóa thế cờ này?'))return;try{await api('/api/positions?id='+encodeURIComponent(id),'DELETE');loadPos()}catch(x){toast(x.message,'error')}};
+$('#adminBtn').onclick=()=>{admList();$('#admM').classList.add('show')};
+$('#pCur').onclick=()=>{$('#pF').value=toFen(S)};
+$('#pAdd').onclick=async()=>{const fen=$('#pF').value.trim();try{const t=fromFen(fen);if(t.b.length!==64||!t.b.includes('K')||!t.b.includes('k'))throw 0}catch{return toast('FEN không hợp lệ','error')}
+ try{await api('/api/positions','POST',{name:$('#pN').value||'Thế cờ mới',desc:$('#pD').value,fen});$('#pN').value=$('#pD').value=$('#pF').value='';toast('Đã lưu','success');loadPos()}catch(x){toast(x.message,'error')}};
 
-<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-<script src="js/config.js"></script>
-<script src="js/storage.js"></script>
-<script src="js/chess-engine.js"></script>
-<script src="js/ai.js"></script>
-<script src="js/music.js"></script>
-<script src="js/online.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/admin.js"></script>
-<script src="js/ui.js"></script>
-<script src="js/main.js"></script>
+/* ===== auth ===== */
+let authTab='login';
+$$('.tabs .btn').forEach(b=>b.onclick=()=>{authTab=b.dataset.t;$$('.tabs .btn').forEach(x=>x.classList.toggle('on',x===b));$('#aP2').hidden=authTab!=='reg';$('#aGo').textContent=authTab==='reg'?'Tạo tài khoản':'Đăng nhập'});
+$('#loginBtn').onclick=()=>$('#authM').classList.add('show');
+$$('[data-close]').forEach(b=>b.onclick=()=>b.closest('.modal').classList.remove('show'));
+$$('.modal').forEach(m=>m.onmousedown=e=>{if(e.target===m)m.classList.remove('show')});
+$('#aGo').onclick=async()=>{const username=$('#aU').value.trim(),password=$('#aP').value;
+ if(authTab==='reg'&&password!==$('#aP2').value)return toast('Mật khẩu nhập lại không khớp','error');
+ try{const r=await api(authTab==='reg'?'/api/register':'/api/login','POST',{username,password});TOK=r.token;ls.set('cc_tok',TOK);USER=r.user;authUI();$('#authM').classList.remove('show');$('#aP').value=$('#aP2').value='';toast('Xin chào '+USER.name+'!','success');loadPos()}catch(x){toast(x.message,'error')}};
+$('#logout').onclick=()=>{TOK='';ls.set('cc_tok','');USER=null;authUI();toast('Đã đăng xuất')};
+function authUI(){$('#loginBtn').hidden=!!USER;$('#userTag').hidden=!USER;$('#adminBtn').hidden=!(USER&&USER.role==='admin');if(USER)$('#uName').textContent=USER.name;render()}
+
+/* ===== music ===== */
+const Music={tr:[],i:-1,a:new Audio(),on:false,paused:false,
+ async init(){try{this.tr=await api('/api/tracks')}catch{}
+  const v=ls.get('cc_vol');if(v!==null){$('#mVol').value=v}this.a.volume=$('#mVol').value/100;this.a.muted=ls.get('cc_mute')==='1';$('#mMute').textContent=this.a.muted?'🔇':'🔊';
+  this.a.onended=()=>this.next();this.a.onerror=()=>{if(this.tr.length>1)this.next(1)};
+  this.list();if(!this.tr.length){$('#mNote').textContent='💡 Chưa có nhạc: bỏ file .mp3 vào thư mục public/music/ rồi tải lại trang.';return}
+  this.i=0;this.ui();const first=()=>{if(!this.paused&&!this.on)this.play(0);removeEventListener('pointerdown',first)};addEventListener('pointerdown',first)},
+ list(){$('#mList').innerHTML=this.tr.map((t,i)=>`<div class="ti ${i===this.i?'on':''}" data-i="${i}">${i===this.i&&this.on?'▶ ':''}${esc(t.name)}</div>`).join('')},
+ play(i){if(!this.tr.length)return;if(i!==this.i||!this.a.src){this.i=i;this.a.src=this.tr[i].src}this.a.play().then(()=>{this.on=true;this.ui()}).catch(()=>{this.on=false;this.ui()})},
+ toggle(){if(this.on){this.a.pause();this.on=false;this.paused=true}else{this.paused=false;this.play(Math.max(0,this.i))}this.ui()},
+ next(s){if(this.tr.length)this.play((this.i+1)%this.tr.length)},prev(){if(this.tr.length)this.play((this.i-1+this.tr.length)%this.tr.length)},
+ ui(){const t=this.tr[this.i];$('#mTitle').textContent=t?t.name:'Chưa chọn nhạc';$('#mSub').textContent=t?(this.on?'Đang phát':'Tạm dừng'):'Bấm để chọn bài';$('#mPlay').textContent=this.on?'⏸':'▶';$('#disc').classList.toggle('spin',this.on);$('#musicBtn').textContent=this.on?'🎵 Đang phát':'🎵 Nhạc';this.list()}};
+$('#musicBtn').onclick=()=>$('#music').classList.toggle('show');$('#mClose').onclick=()=>$('#music').classList.remove('show');
+$('#mPlay').onclick=()=>Music.toggle();$('#mNext').onclick=()=>Music.next();$('#mPrev').onclick=()=>Music.prev();
+$('#mList').onclick=e=>{const t=e.target.closest('.ti');if(t){Music.paused=false;Music.play(+t.dataset.i)}};
+$('#mMute').onclick=()=>{Music.a.muted=!Music.a.muted;ls.set('cc_mute',Music.a.muted?'1':'0');$('#mMute').textContent=Music.a.muted?'🔇':'🔊'};
+$('#mVol').oninput=e=>{Music.a.volume=e.target.value/100;ls.set('cc_vol',e.target.value)};
+
+/* ===== boot ===== */
+(async()=>{tc=+$('#tcSel').value;newGame(true);Music.init();loadPos();
+ if(TOK)try{USER=await api('/api/me')}catch{TOK='';ls.set('cc_tok','')}authUI()})();
+</script>
 </body>
 </html>
